@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EAED05E7246BF1B70005FEF9 /* LogosUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAED05E6246BF1B70005FEF9 /* LogosUtils.swift */; };
+		EAED05EF246BF1D70005FEF9 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAED05EE246BF1D70005FEF9 /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +24,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EA0DB36B246C091F003936E1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EAC58370246BFED200FEAABC /* LogosUtils.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = LogosUtils.podspec; sourceTree = "<group>"; };
+		EAC58371246C030600FEAABC /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		EAED05E3246BF1B70005FEF9 /* libLogosUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLogosUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAED05E6246BF1B70005FEF9 /* LogosUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogosUtils.swift; sourceTree = "<group>"; };
+		EAED05EE246BF1D70005FEF9 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +46,9 @@
 		EAED05DA246BF1B70005FEF9 = {
 			isa = PBXGroup;
 			children = (
+				EA0DB36B246C091F003936E1 /* README.md */,
+				EAC58371246C030600FEAABC /* LICENSE */,
+				EAC58370246BFED200FEAABC /* LogosUtils.podspec */,
 				EAED05E5246BF1B70005FEF9 /* LogosUtils */,
 				EAED05E4246BF1B70005FEF9 /* Products */,
 			);
@@ -57,9 +65,18 @@
 		EAED05E5246BF1B70005FEF9 /* LogosUtils */ = {
 			isa = PBXGroup;
 			children = (
+				EAED05ED246BF1BD0005FEF9 /* SwiftStdlib */,
 				EAED05E6246BF1B70005FEF9 /* LogosUtils.swift */,
 			);
 			path = LogosUtils;
+			sourceTree = "<group>";
+		};
+		EAED05ED246BF1BD0005FEF9 /* SwiftStdlib */ = {
+			isa = PBXGroup;
+			children = (
+				EAED05EE246BF1D70005FEF9 /* String.swift */,
+			);
+			path = SwiftStdlib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,6 +137,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAED05EF246BF1D70005FEF9 /* String.swift in Sources */,
 				EAED05E7246BF1B70005FEF9 /* LogosUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
