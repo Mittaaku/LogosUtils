@@ -10,10 +10,15 @@ import Foundation
 
 public extension String {
     enum RegexUnicodeCategory: String {
-        case latin = "Latin"
         case han = "Han" // Chinese Hanzi, Japanese Kanji, and Korean Hanja.
         case hiragana = "Hiragana"
         case katakana = "Katakana"
+        case latin = "Latin"
+        case letter = "L"
+        case letterLowercase = "Li"
+        case letterUppercase = "Lu"
+        case number = "N"
+        case numberDecimalDigit = "Nd"
     }
 }
 
@@ -34,7 +39,7 @@ public extension String {
     ///   - category: the unicode category(s) to check against (Variadic).
     /// - Returns: true if the String contains contains one or more of the characters in the input category(s).
     func contains(category: RegexUnicodeCategory ...) -> Bool {
-        let pattern = category.reduce(into: "") { $0 += "\\p{\($1)}" }
+        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
         return self.range(of: "[\(pattern)]", options: .regularExpression) != nil
     }
     
@@ -59,7 +64,7 @@ public extension String {
     ///   - category: the unicode category(s) to check against (Variadic).
     /// - Returns: true if the String only contains characters in the input category(s).
     func consists(ofCategory category: RegexUnicodeCategory ...) -> Bool {
-        let pattern = category.reduce(into: "") { $0 += "\\p{\($1)}" }
+        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
         return self.range(of: "[^\(pattern)]", options: .regularExpression) == nil
     }
     
