@@ -25,6 +25,11 @@ public extension String {
 // MARK: - Methods
 public extension String {
     
+    func blacklisting(category: RegexUnicodeCategory ...) throws -> String {
+        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
+        return try self.removing(regexPattern: "[\(pattern)]+")
+    }
+    
     func blacklisting(set: CharacterSet) -> String {
         let filtered = self.unicodeScalars.filter { !set.contains($0) }
         return String(filtered)
@@ -80,8 +85,19 @@ public extension String {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
     }
     
+    func removing(regexPattern: String, options: NSRegularExpression.Options = []) throws -> String {
+        let regex = try NSRegularExpression(pattern: regexPattern, options: options)
+        let range = NSMakeRange(0, self.count)
+        return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "")
+    }
+    
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
+    }
+    
+    func whitelisting(category: RegexUnicodeCategory ...) throws -> String {
+        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
+        return try self.removing(regexPattern: "[^\(pattern)]+")
     }
     
     func whitelisting(set: CharacterSet) -> String {
