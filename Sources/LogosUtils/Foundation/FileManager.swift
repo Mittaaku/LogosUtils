@@ -41,7 +41,12 @@ public extension FileManager {
     }
     
     
-    func prepareUrl(toFolder folder: SystemFolder, toSubfolder subfolder: String = "", creatingSubfolders: Bool) throws -> URL? {
+    func prepareUrl(toFolder folder: SystemFolder) throws -> URL {
+        return try prepareUrl(toFolder: folder, toSubfolder: "", creatingSubfolders: false)!
+    }
+    
+    
+    func prepareUrl(toFolder folder: SystemFolder, toSubfolder subfolder: String, creatingSubfolders: Bool) throws -> URL? {
         var url: URL
         switch folder {
         case .mainBundle:
