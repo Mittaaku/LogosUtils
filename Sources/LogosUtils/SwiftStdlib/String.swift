@@ -25,15 +25,22 @@ public extension String {
 // MARK: - Methods
 public extension String {
     
+    func blacklisting(charactersFromString string: String) -> String {
+        return blacklisting(set: CharacterSet(charactersIn: string))
+    }
+    
+    
     func blacklisting(category: RegexUnicodeCategory ...) -> String {
         let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
         return try! self.removing(pattern: "[\(pattern)]+")
     }
     
+    
     func blacklisting(set: CharacterSet) -> String {
         let filtered = self.unicodeScalars.filter { !set.contains($0) }
         return String(filtered)
     }
+    
     
     /// LogosUtils: Check whether the String contains one or more of the characters in the input unicode category(s).
     ///
@@ -48,6 +55,7 @@ public extension String {
         return self.range(of: "[\(pattern)]", options: .regularExpression) != nil
     }
     
+    
     /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet.
     ///
     ///        "123abc".contains(set: .letters) -> true
@@ -59,6 +67,7 @@ public extension String {
     func contains(set: CharacterSet) -> Bool {
         return !self.whitelisting(set: set).isEmpty
     }
+    
     
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input unicode category(s).
     ///
@@ -73,6 +82,7 @@ public extension String {
         return self.range(of: "[^\(pattern)]", options: .regularExpression) == nil
     }
     
+    
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
     ///
     ///        "123abc".consists(ofSet: .letters) -> false
@@ -85,17 +95,20 @@ public extension String {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
     }
     
+    
     func removing(pattern: String, options: NSRegularExpression.Options = []) throws -> String {
         let regex = try NSRegularExpression(pattern: pattern, options: options)
         let range = NSMakeRange(0, self.count)
         return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "")
     }
     
+    
     func replacing(pattern: String, withTemplate: String, options: NSRegularExpression.Options = []) throws -> String {
         let regex = try NSRegularExpression(pattern: pattern, options: options)
         let range = NSMakeRange(0, self.count)
         return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: withTemplate)
     }
+    
     
     func splitting(byPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
         let range = NSMakeRange(0, self.count)
@@ -125,14 +138,22 @@ public extension String {
         return result
     }
     
+    
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
     }
+    
+    
+    func whitelisting(charactersFromString string: String) -> String {
+        return whitelisting(set: CharacterSet(charactersIn: string))
+    }
+    
     
     func whitelisting(category: RegexUnicodeCategory ...) -> String {
         let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
         return try! self.removing(pattern: "[^\(pattern)]+")
     }
+    
     
     func whitelisting(set: CharacterSet) -> String {
         let filtered = self.unicodeScalars.filter { set.contains($0) }

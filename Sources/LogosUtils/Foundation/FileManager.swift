@@ -20,18 +20,19 @@ public extension FileManager {
     
     @available(OSX 10.15, *)
     @discardableResult func encode<T: Encodable>(value: T, intoJsonFile file: String, inFolder folder: SystemFolder, inSubfolder subfolder: String = "", outputFormatting: JSONEncoder.OutputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]) throws  -> URL {
+        var url = try getUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: true)!
+        url.appendPathComponent(file)
+        
         let encoder = JSONEncoder()
         encoder.outputFormatting = outputFormatting
         let jsonData = try encoder.encode(value)
-        let folderUrl = try prepareUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: true)!
-        let jsonURL = folderUrl.appendingPathComponent(file)
-        try jsonData.write(to: jsonURL)
-        return jsonURL
+        try jsonData.write(to: url)
+        return url
     }
 
     
     func decode<T: Decodable>(jsonFile: String, intoType type: T.Type, inFolder folder: SystemFolder, inSubfolder subfolder: String = "") throws -> T? {
-        guard var url = try prepareUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: false) else {
+        guard var url = try getUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: false) else {
             return nil
         }
         url.appendPathComponent(jsonFile)
@@ -41,12 +42,12 @@ public extension FileManager {
     }
     
     
-    func prepareUrl(toFolder folder: SystemFolder) throws -> URL {
-        return try prepareUrl(toFolder: folder, toSubfolder: "", creatingSubfolders: false)!
+    func getUrl(toFolder folder: SystemFolder) throws -> URL {
+        return try getUrl(toFolder: folder, toSubfolder: "", creatingSubfolders: false)!
     }
     
     
-    func prepareUrl(toFolder folder: SystemFolder, toSubfolder subfolder: String, creatingSubfolders: Bool) throws -> URL? {
+    func getUrl(toFolder folder: SystemFolder, toSubfolder subfolder: String, creatingSubfolders: Bool) throws -> URL? {
         var url: URL
         switch folder {
         case .mainBundle:
