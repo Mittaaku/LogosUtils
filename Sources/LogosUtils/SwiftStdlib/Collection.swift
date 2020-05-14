@@ -6,9 +6,7 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
-import Foundation
-
-extension Collection {
+public extension Collection {
     
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil

@@ -6,8 +6,7 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
-import Foundation
-extension Set {
+public extension Set {
     
     static func union(ofSets sets: Self ...) -> Self {
         return sets.reduce(into: Set<Element>()) {
