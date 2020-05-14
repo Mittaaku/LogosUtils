@@ -25,9 +25,9 @@ public extension String {
 // MARK: - Methods
 public extension String {
     
-    func blacklisting(category: RegexUnicodeCategory ...) throws -> String {
+    func blacklisting(category: RegexUnicodeCategory ...) -> String {
         let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
-        return try self.removing(regexPattern: "[\(pattern)]+")
+        return try! self.removing(pattern: "[\(pattern)]+")
     }
     
     func blacklisting(set: CharacterSet) -> String {
@@ -85,19 +85,53 @@ public extension String {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
     }
     
-    func removing(regexPattern: String, options: NSRegularExpression.Options = []) throws -> String {
-        let regex = try NSRegularExpression(pattern: regexPattern, options: options)
+    func removing(pattern: String, options: NSRegularExpression.Options = []) throws -> String {
+        let regex = try NSRegularExpression(pattern: pattern, options: options)
         let range = NSMakeRange(0, self.count)
         return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "")
+    }
+    
+    func replacing(pattern: String, withTemplate: String, options: NSRegularExpression.Options = []) throws -> String {
+        let regex = try NSRegularExpression(pattern: pattern, options: options)
+        let range = NSMakeRange(0, self.count)
+        return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: withTemplate)
+    }
+    
+    func splitting(byPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
+        let range = NSMakeRange(0, self.count)
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        
+        var result = Array<String>()
+        let matches = regex.matches(in: self, range: range)
+        var lastRange = self.startIndex ..< self.startIndex
+        for match in matches {
+            // Extract the piece before the match
+            let matchRange = Range<String.Index>(match.range, in: self)!
+            let range = lastRange.upperBound ..< matchRange.lowerBound
+            result.append(String(self[range]))
+            lastRange = matchRange
+            // Extract the groups
+            for i in 1 ..< match.numberOfRanges {
+                let range = match.range(at: i)
+                if range.location != NSNotFound {
+                    let stringRange = Range<String.Index>(range, in: self)!
+                    result.append(String(self[stringRange]))
+                }
+            }
+        }
+        // Extract the final piece after the match
+        let rest = String(self[lastRange.upperBound...])
+        result.append(rest)
+        return result
     }
     
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
     }
     
-    func whitelisting(category: RegexUnicodeCategory ...) throws -> String {
+    func whitelisting(category: RegexUnicodeCategory ...) -> String {
         let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
-        return try self.removing(regexPattern: "[^\(pattern)]+")
+        return try! self.removing(pattern: "[^\(pattern)]+")
     }
     
     func whitelisting(set: CharacterSet) -> String {
