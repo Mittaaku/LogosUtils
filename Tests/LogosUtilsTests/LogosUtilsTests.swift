@@ -56,7 +56,7 @@ final class LogosUtilsTests: XCTestCase {
                 let unencoded = ["Hello", "World"]
                 let fileManager = FileManager.default
                 try fileManager.encode(value: unencoded, intoJsonFile: "LogosUtilsTest", inFolder: .documents, inSubfolder: "LogosUtils")
-                let decoded = try fileManager.decode(jsonFile: "LogosUtilsTest", inFolder: .documents, inSubfolder: "LogosUtils", intoType: Array<String>.self)!
+                let decoded = try fileManager.decode(jsonFile: "LogosUtilsTest", intoType: Array<String>.self, inFolder: .documents, inSubfolder: "LogosUtils")!
                 XCTAssertEqual(decoded, unencoded)
             } catch let error {
                 print(error)
