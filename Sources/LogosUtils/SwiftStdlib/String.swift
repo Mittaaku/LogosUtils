@@ -111,30 +111,29 @@ public extension String {
     
     
     func splitting(byPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
-        let range = NSMakeRange(0, self.count)
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        
         var result = Array<String>()
-        let matches = regex.matches(in: self, range: range)
-        var lastRange = self.startIndex ..< self.startIndex
-        for match in matches {
+        
+        let nsString = NSString(string: self)
+        let fullRange = NSMakeRange(0, self.utf16.count)
+        var previousRange = NSMakeRange(0, 0)
+        
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        for match in regex.matches(in: self, range: fullRange) {
             // Extract the piece before the match
-            let matchRange = Range<String.Index>(match.range, in: self)!
-            let range = lastRange.upperBound ..< matchRange.lowerBound
-            result.append(String(self[range]))
-            lastRange = matchRange
+            let precedingRange = NSMakeRange(previousRange.upperBound, match.range.lowerBound - previousRange.upperBound)
+            result.append(nsString.substring(with: precedingRange))
             // Extract the groups
             for i in 1 ..< match.numberOfRanges {
                 let range = match.range(at: i)
                 if range.location != NSNotFound {
-                    let stringRange = Range<String.Index>(range, in: self)!
-                    result.append(String(self[stringRange]))
+                    result.append(nsString.substring(with: range))
                 }
             }
+            previousRange = match.range
         }
-        // Extract the final piece after the match
-        let rest = String(self[lastRange.upperBound...])
-        result.append(rest)
+        // Extract the final piece
+        let endingRange = NSMakeRange(previousRange.upperBound, fullRange.upperBound - previousRange.upperBound)
+        result.append(nsString.substring(with: endingRange))
         return result
     }
     
