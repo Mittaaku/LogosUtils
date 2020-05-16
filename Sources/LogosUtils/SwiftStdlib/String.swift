@@ -19,6 +19,7 @@ public extension String {
         case letterUppercase = "Lu"
         case number = "N"
         case numberDecimalDigit = "Nd"
+        case whitespace = "Whitespace"
     }
 }
 
@@ -80,6 +81,11 @@ public extension String {
     func consists(ofCategory category: RegexUnicodeCategory ...) -> Bool {
         let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
         return self.range(of: "[^\(pattern)]", options: .regularExpression) == nil
+    }
+    
+    
+    var isBlank: Bool {
+        return consists(ofCategory: .whitespace)
     }
     
     
