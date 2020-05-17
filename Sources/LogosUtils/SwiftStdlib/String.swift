@@ -43,6 +43,24 @@ public extension String {
     }
     
     
+    func cutting(intoPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
+        var result = Array<String>()
+        let nsString = NSString(string: self)
+        let fullRange = NSMakeRange(0, self.utf16.count)
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        guard let firstMatch = regex.firstMatch(in: self, range: fullRange) else {
+            return result
+        }
+        for i in 1 ..< firstMatch.numberOfRanges {
+            let range = firstMatch.range(at: i)
+            if range.location != NSNotFound {
+                result.append(nsString.substring(with: range))
+            }
+        }
+        return result
+    }
+    
+    
     /// LogosUtils: Check whether the String contains one or more of the characters in the input unicode category(s).
     ///
     ///        "123abc".contains(category: .latin) -> true
@@ -84,11 +102,6 @@ public extension String {
     }
     
     
-    var isBlank: Bool {
-        return consists(ofCategory: .whitespace)
-    }
-    
-    
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
     ///
     ///        "123abc".consists(ofSet: .letters) -> false
@@ -99,6 +112,16 @@ public extension String {
     /// - Returns: true if the String only contains characters in the input set.
     func consists(ofSet set: CharacterSet) -> Bool {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
+    }
+    
+    
+    var isBlank: Bool {
+        return consists(ofCategory: .whitespace)
+    }
+    
+    
+    var nonBlank: Self? {
+        return isBlank ? nil : self
     }
     
     
