@@ -43,21 +43,17 @@ public extension String {
     }
     
     
-    func cutting(intoPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
-        var result = Array<String>()
+    func cutting(intoPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String]? {
         let nsString = NSString(string: self)
         let fullRange = NSMakeRange(0, self.utf16.count)
         let regex = try NSRegularExpression(pattern: pattern, options: [])
         guard let firstMatch = regex.firstMatch(in: self, range: fullRange) else {
-            return result
+            return nil
         }
-        for i in 1 ..< firstMatch.numberOfRanges {
-            let range = firstMatch.range(at: i)
-            if range.location != NSNotFound {
-                result.append(nsString.substring(with: range))
-            }
+        return (1 ..< firstMatch.numberOfRanges).compactMap {
+            let range = firstMatch.range(at: $0)
+            return range.location != NSNotFound ? nsString.substring(with: range) : nil
         }
-        return result
     }
     
     
