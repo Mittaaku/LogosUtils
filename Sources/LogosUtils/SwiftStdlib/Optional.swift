@@ -1,18 +1,40 @@
 //
-//  File.swift
-//  
+//  Optional.swift
+//  LogosUtils
 //
 //  Created by Tom-Roger Mittag on 5/16/20.
+//  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
 import Foundation
 
-extension Optional {
-    func unwrap(orThrow error: @autoclosure () -> Swift.Error) throws -> Wrapped {
+infix operator ??= : AssignmentPrecedence
+
+public extension Optional {
+    
+    func unwrap(or error: @autoclosure () -> Swift.Error) throws -> Wrapped {
         guard let value = self else {
             throw error()
         }
         return value
+    }
+    
+    func unwrap(or defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
+        return self ?? defaultValue()
+    }
+    
+    static func ??= (lhs: inout Optional, rhs: Optional) {
+        guard let rhs = rhs else {
+            return
+        }
+        lhs = rhs
+    }
+    
+    static func ??= (lhs: inout Wrapped, rhs: Optional) {
+        guard let rhs = rhs else {
+            return
+        }
+        lhs = rhs
     }
 }
 

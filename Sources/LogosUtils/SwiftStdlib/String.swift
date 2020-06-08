@@ -9,6 +9,7 @@
 import Foundation
 
 public extension String {
+    
     enum RegexUnicodeCategory: String {
         case han = "Han" // Chinese Hanzi, Japanese Kanji, and Korean Hanja.
         case hiragana = "Hiragana"
@@ -182,5 +183,25 @@ public extension String {
     func whitelisting(set: CharacterSet) -> String {
         let filtered = self.unicodeScalars.filter { set.contains($0) }
         return String(filtered)
+    }
+    
+    var characterStrings: [String] {
+        return characters.map(by: \.string)
+    }
+    
+    var characters: [Character] {
+        return Array(self)
+    }
+    
+    mutating func extractFirst(_ k: Int) -> String {
+        let result = String(prefix(k))
+        removeFirst(k)
+        return result
+    }
+    
+    mutating func extractLast(_ k: Int) -> String {
+        let result = String(suffix(k))
+        removeLast(k)
+        return result
     }
 }

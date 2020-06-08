@@ -19,11 +19,13 @@ final class LogosUtilsTests: XCTestCase {
         XCTAssertEqual(latinString.consists(ofCategory: .latin), true)
         XCTAssertEqual(japaneseString.consists(ofCategory: .hiragana, .katakana, .han), true)
         XCTAssertEqual(alphanumericString.consists(ofCategory: .latin), false)
+        XCTAssertEqual("     \t\n".consists(ofCategory: .whitespace), true)
         
         // Contains
         XCTAssertEqual(latinString.contains(category: .latin), true)
         XCTAssertEqual(numericString.contains(category: .latin), false)
         XCTAssertEqual(alphanumericString.contains(category: .latin), true)
+        XCTAssertEqual("I love\nYou".contains(category: .whitespace), true)
         
         // Whitelisting
         XCTAssertEqual(hiraganaLatinString.whitelisting(category: .hiragana), "おはよう")
@@ -49,6 +51,19 @@ final class LogosUtilsTests: XCTestCase {
         XCTAssertEqual(try dashedString.splitting(byPattern: "(-)"), ["Hello", "-", "World"])
         XCTAssertEqual(try dashedString.splitting(byPattern: "_"), ["Hello-World"])
         
+        // Sorting
+        let arrayNumbers = [9, 4, 1, 5]
+        XCTAssertEqual(arrayNumbers.sorted(ascendingBy: \.abs), [1, 4, 5, 9])
+        XCTAssertEqual(arrayNumbers.sorted(descendingBy: \.abs), [9, 5, 4, 1])
+        
+        // Blanks
+        let nilString: String? = nil
+        let optionalBlankString: String? = "     "
+        let optionalPopulatedString: String? = "   d"
+        XCTAssertEqual(nilString.isNilOrBlank, true)
+        XCTAssertEqual(optionalBlankString.isNilOrBlank, true)
+        XCTAssertEqual(optionalPopulatedString.isNilOrBlank, false)
+        
         // Encode/Decode
         
         if #available(OSX 10.15, *) {
@@ -63,6 +78,13 @@ final class LogosUtilsTests: XCTestCase {
                 XCTFail()
             }
         }
+        
+        // Map
+        let strings = ["Wow", "Hello", "Meow"]
+        XCTAssertEqual(strings.map(by: \.count), [3, 5, 4])
+        
+        // Cutting
+        XCTAssertEqual(try "Hello-World......A-Magic".cutting(intoPattern: #"(\w+)-(\w+)[.]+\w+-(\w+)"#), ["Hello", "World", "Magic"])
     }
 
     static var allTests = [
