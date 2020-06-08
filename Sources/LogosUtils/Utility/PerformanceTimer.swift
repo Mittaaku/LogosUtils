@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PerformanceTimer {
+public class PerformanceTimer {
 
     let taskName: String
     let startTime: CFAbsoluteTime
