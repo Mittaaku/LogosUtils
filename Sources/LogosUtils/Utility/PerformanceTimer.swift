@@ -9,22 +9,21 @@
 import Foundation
 
 public class PerformanceTimer {
-
-    let taskName: String
-    let startTime: CFAbsoluteTime
-    var endTime: CFAbsoluteTime?
+    public let taskName: String?
+    public let startTime: CFAbsoluteTime
+    public var endTime: CFAbsoluteTime?
     
-    init(taskName: String) {
+    public init(taskName: String? = nil) {
         self.taskName = taskName
         self.startTime = CFAbsoluteTimeGetCurrent()
     }
 
-    func stop() -> CFAbsoluteTime {
+    public func stop() -> CFAbsoluteTime {
         endTime = CFAbsoluteTimeGetCurrent()
         return duration!
     }
 
-    var duration: CFAbsoluteTime? {
+    public var duration: CFAbsoluteTime? {
         if let endTime = endTime {
             return endTime - startTime
         } else {
