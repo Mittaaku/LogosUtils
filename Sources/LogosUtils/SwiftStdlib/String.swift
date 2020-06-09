@@ -8,145 +8,98 @@
 
 import Foundation
 
+// MARK: - Properties
 public extension String {
-    
-    enum RegexUnicodeCategory: String {
-        case han = "Han" // Chinese Hanzi, Japanese Kanji, and Korean Hanja.
-        case hiragana = "Hiragana"
-        case katakana = "Katakana"
-        case latin = "Latin"
-        case letter = "L"
-        case letterLowercase = "Li"
-        case letterUppercase = "Lu"
-        case number = "N"
-        case numberDecimalDigit = "Nd"
-        case whitespace = "Whitespace"
+
+    var characters: [Character] {
+        return Array(self)
+    }
+
+    var isBlank: Bool {
+        return consists(ofSet: .whitespaces)
+    }
+
+    var nonBlank: Self? {
+        return isBlank ? nil : self
     }
 }
 
 // MARK: - Methods
 public extension String {
-    
-    func blacklisting(charactersFromString string: String) -> String {
-        return blacklisting(set: CharacterSet(charactersIn: string))
-    }
-    
-    
-    func blacklisting(category: RegexUnicodeCategory ...) -> String {
-        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
-        return try! self.removing(pattern: "[\(pattern)]+")
-    }
-    
-    
-    func blacklisting(set: CharacterSet) -> String {
-        let filtered = self.unicodeScalars.filter { !set.contains($0) }
-        return String(filtered)
-    }
-    
-    
-    func cutting(intoPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String]? {
-        let nsString = NSString(string: self)
-        let fullRange = NSMakeRange(0, self.utf16.count)
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        guard let firstMatch = regex.firstMatch(in: self, range: fullRange) else {
-            return nil
-        }
-        return (1 ..< firstMatch.numberOfRanges).compactMap {
-            let range = firstMatch.range(at: $0)
-            return range.location != NSNotFound ? nsString.substring(with: range) : nil
-        }
-    }
-    
-    
-    /// LogosUtils: Check whether the String contains one or more of the characters in the input unicode category(s).
-    ///
-    ///        "123abc".contains(category: .latin) -> true
-    ///        "123".contains(category: .latin) -> false
-    ///
-    /// - Parameters:
-    ///   - category: the unicode category(s) to check against (Variadic).
-    /// - Returns: true if the String contains contains one or more of the characters in the input category(s).
-    func contains(category: RegexUnicodeCategory ...) -> Bool {
-        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
-        return self.range(of: "[\(pattern)]", options: .regularExpression) != nil
-    }
-    
-    
-    /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet.
-    ///
-    ///        "123abc".contains(set: .letters) -> true
-    ///        "123".contains(set: .letters) -> false
-    ///
-    /// - Parameters:
-    ///   - set: the set to check against.
-    /// - Returns: true if the String contains contains one or more of the characters in the input set.
+
+    /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet
     func contains(set: CharacterSet) -> Bool {
-        return !self.whitelisting(set: set).isEmpty
+        return self.rangeOfCharacter(from: set, options: .literal, range: nil) != nil
     }
-    
-    
-    /// LogosUtils: Check whether the String consists of (only contains) the characters in the input unicode category(s).
-    ///
-    ///        "123abc".consists(category: .latin) -> false
-    ///        "abc".consists(category: .latin) -> true
-    ///
-    /// - Parameters:
-    ///   - category: the unicode category(s) to check against (Variadic).
-    /// - Returns: true if the String only contains characters in the input category(s).
-    func consists(ofCategory category: RegexUnicodeCategory ...) -> Bool {
-        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
-        return self.range(of: "[^\(pattern)]", options: .regularExpression) == nil
-    }
-    
-    
+
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
-    ///
-    ///        "123abc".consists(ofSet: .letters) -> false
-    ///        "abc".consists(ofSet: .letters) -> true
-    ///
-    /// - Parameters:
-    ///   - category: the set to check againt.
-    /// - Returns: true if the String only contains characters in the input set.
     func consists(ofSet set: CharacterSet) -> Bool {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
     }
-    
-    
-    var isBlank: Bool {
-        return consists(ofCategory: .whitespace)
+
+    mutating func extractFirst(_ k: Int) -> String {
+        let result = String(prefix(k))
+        removeFirst(k)
+        return result
+    }
+
+    mutating func extractLast(_ k: Int) -> String {
+        let result = String(suffix(k))
+        removeLast(k)
+        return result
+    }
+
+    func filtering(pattern: String, options: NSRegularExpression.Options = []) throws -> String {
+        let nsString = NSString(string: self)
+        let fullRange = NSRange(location: 0, length: self.utf16.count)
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        var result = ""
+        for match in regex.matches(in: self, range: fullRange) {
+            for groupIndex in (1 ..< match.numberOfRanges) {
+                let range = match.range(at: groupIndex)
+                if range.location != NSNotFound {
+                    result += nsString.substring(with: range)
+                }
+            }
+        }
+        return result
+    }
+
+    func filtering(set: CharacterSet) -> String {
+        let filtered = self.unicodeScalars.filter { set.contains($0) }
+        return String(filtered)
+    }
+
+    func matches(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
+        let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
+        return range(of: pattern, options: options, range: nil, locale: nil) != nil
     }
     
-    
-    var nonBlank: Self? {
-        return isBlank ? nil : self
+    func matchesFully(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
+        let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
+        guard let range = self.range(of: pattern, options: options) else {
+            return false
+        }
+        return self.startIndex ..< self.endIndex == range
     }
-    
-    
-    func removing(pattern: String, options: NSRegularExpression.Options = []) throws -> String {
-        let regex = try NSRegularExpression(pattern: pattern, options: options)
-        let range = NSMakeRange(0, self.count)
-        return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "")
-    }
-    
-    
+
     func replacing(pattern: String, withTemplate: String, options: NSRegularExpression.Options = []) throws -> String {
         let regex = try NSRegularExpression(pattern: pattern, options: options)
-        let range = NSMakeRange(0, self.count)
+        let range = NSRange(location: 0, length: self.count)
         return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: withTemplate)
     }
-    
-    
+
     func splitting(byPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
-        var result = Array<String>()
-        
+        var result = [String]()
+
         let nsString = NSString(string: self)
-        let fullRange = NSMakeRange(0, self.utf16.count)
-        var previousRange = NSMakeRange(0, 0)
-        
+        let fullRange = NSRange(location: 0, length: self.utf16.count)
+        var previousRange = NSRange(location: 0, length: 0)
+
         let regex = try NSRegularExpression(pattern: pattern, options: [])
         for match in regex.matches(in: self, range: fullRange) {
             // Extract the piece before the match
-            let precedingRange = NSMakeRange(previousRange.upperBound, match.range.lowerBound - previousRange.upperBound)
+            let precedingRange = NSRange(location: previousRange.upperBound, length: match.range.lowerBound - previousRange.upperBound)
             result.append(nsString.substring(with: precedingRange))
             // Extract the groups
             for i in 1 ..< match.numberOfRanges {
@@ -158,50 +111,12 @@ public extension String {
             previousRange = match.range
         }
         // Extract the final piece
-        let endingRange = NSMakeRange(previousRange.upperBound, fullRange.upperBound - previousRange.upperBound)
+        let endingRange = NSRange(location: previousRange.upperBound, length: fullRange.upperBound - previousRange.upperBound)
         result.append(nsString.substring(with: endingRange))
-        return result
+        return result.reject(\.isBlank)
     }
-    
-    
+
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
-    }
-    
-    
-    func whitelisting(charactersFromString string: String) -> String {
-        return whitelisting(set: CharacterSet(charactersIn: string))
-    }
-    
-    
-    func whitelisting(category: RegexUnicodeCategory ...) -> String {
-        let pattern = category.reduce(into: "") { $0 += "\\p{\($1.rawValue)}" }
-        return try! self.removing(pattern: "[^\(pattern)]+")
-    }
-    
-    
-    func whitelisting(set: CharacterSet) -> String {
-        let filtered = self.unicodeScalars.filter { set.contains($0) }
-        return String(filtered)
-    }
-    
-    var characterStrings: [String] {
-        return characters.map(by: \.string)
-    }
-    
-    var characters: [Character] {
-        return Array(self)
-    }
-    
-    mutating func extractFirst(_ k: Int) -> String {
-        let result = String(prefix(k))
-        removeFirst(k)
-        return result
-    }
-    
-    mutating func extractLast(_ k: Int) -> String {
-        let result = String(suffix(k))
-        removeLast(k)
-        return result
     }
 }

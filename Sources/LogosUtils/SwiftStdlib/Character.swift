@@ -9,7 +9,7 @@
 import Foundation
 
 public extension Character {
-    
+
     var string: String {
         return String(self)
     }

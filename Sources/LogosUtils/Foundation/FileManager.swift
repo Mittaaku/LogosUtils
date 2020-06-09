@@ -10,19 +10,18 @@
 import Foundation
 
 public extension FileManager {
-    
+
     enum SystemFolder {
         case bundle(Bundle)
         case documents
         case mainBundle
     }
-    
-    
+
     @available(OSX 10.15, *)
     @discardableResult func encode<T: Encodable>(value: T, intoJsonFile file: String, inFolder folder: SystemFolder, inSubfolder subfolder: String = "", outputFormatting: JSONEncoder.OutputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]) throws  -> URL {
         var url = try getUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: true)!
         url.appendPathComponent(file)
-        
+
         let encoder = JSONEncoder()
         encoder.outputFormatting = outputFormatting
         let jsonData = try encoder.encode(value)
@@ -30,7 +29,6 @@ public extension FileManager {
         return url
     }
 
-    
     func decode<T: Decodable>(jsonFile: String, intoType type: T.Type, inFolder folder: SystemFolder, inSubfolder subfolder: String = "") throws -> T? {
         guard var url = try getUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: false) else {
             return nil
@@ -40,13 +38,11 @@ public extension FileManager {
         let result = try JSONDecoder().decode(T.self, from: data)
         return result
     }
-    
-    
+
     func getUrl(toFolder folder: SystemFolder) throws -> URL {
         return try getUrl(toFolder: folder, toSubfolder: "", creatingSubfolders: false)!
     }
-    
-    
+
     func getUrl(toFolder folder: SystemFolder, toSubfolder subfolder: String, creatingSubfolders: Bool) throws -> URL? {
         var url: URL
         switch folder {

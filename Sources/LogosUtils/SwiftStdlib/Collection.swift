@@ -7,11 +7,11 @@
 //
 
 public extension Collection {
-    
+
     var nonEmpty: Self? {
         return isEmpty ? nil : self
     }
-    
+
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }

@@ -11,11 +11,11 @@ public extension SignedInteger {
     var abs: Self {
         return Swift.abs(self)
     }
-    
+
     var isPositive: Bool {
         return self > 0
     }
-    
+
     var isNegative: Bool {
         return self < 0
     }

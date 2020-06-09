@@ -8,33 +8,25 @@
 
 import Foundation
 
-infix operator ??= : AssignmentPrecedence
+infix operator ?= : AssignmentPrecedence
 
 public extension Optional {
-    
+
     func unwrap(or error: @autoclosure () -> Swift.Error) throws -> Wrapped {
         guard let value = self else {
             throw error()
         }
         return value
     }
-    
+
     func unwrap(or defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
         return self ?? defaultValue()
     }
-    
-    static func ??= (lhs: inout Optional, rhs: Optional) {
-        guard let rhs = rhs else {
-            return
+
+    static func ?= (lhs: inout Optional, rhs: @autoclosure () -> Optional) {
+        if lhs == nil {
+            lhs = rhs()
         }
-        lhs = rhs
-    }
-    
-    static func ??= (lhs: inout Wrapped, rhs: Optional) {
-        guard let rhs = rhs else {
-            return
-        }
-        lhs = rhs
     }
 }
 

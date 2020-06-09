@@ -12,7 +12,7 @@ public class PerformanceTimer {
     public let taskName: String?
     public let startTime: CFAbsoluteTime
     public var endTime: CFAbsoluteTime?
-    
+
     public init(taskName: String? = nil) {
         self.taskName = taskName
         self.startTime = CFAbsoluteTimeGetCurrent()
