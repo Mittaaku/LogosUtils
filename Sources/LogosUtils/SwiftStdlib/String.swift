@@ -70,12 +70,12 @@ public extension String {
         return String(filtered)
     }
 
-    func matches(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
+    func matches(pattern: String, caseSensitive: Bool = true) -> Bool {
         let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
         return range(of: pattern, options: options, range: nil, locale: nil) != nil
     }
     
-    func matchesFully(pattern: String, options: NSRegularExpression.Options = []) -> Bool {
+    func matchesFully(pattern: String, caseSensitive: Bool = true) -> Bool {
         let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
         guard let range = self.range(of: pattern, options: options) else {
             return false
