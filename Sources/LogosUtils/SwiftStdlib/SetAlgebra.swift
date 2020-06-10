@@ -6,7 +6,9 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 extension SetAlgebra {
 }

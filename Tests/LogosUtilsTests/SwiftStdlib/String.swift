@@ -30,15 +30,16 @@ final class StringTests: XCTestCase {
         XCTAssertEqual(extract, "lo")
     }
 
-    func testFullyMatches() {
-        XCTAssertEqual(letters.fullyMatches(pattern: #"[\w]+"#), true)
-        XCTAssertEqual(letters.fullyMatches(pattern: #"[\d]+"#), false)
-        XCTAssertEqual(letters.fullyMatches(pattern: #"\w"#), false)
-    }
-
     func testMatches() {
         XCTAssertEqual(letters.matches(pattern: #"\w"#), true)
         XCTAssertEqual(letters.matches(pattern: #"\d"#), false)
+    }
+
+    func testNonBlanked() {
+        let nonBlank = "World"
+        let blank = ""
+        XCTAssertEqual(nonBlank.nonBlanked(or: "Home"), "World")
+        XCTAssertEqual(blank.nonBlanked(or: "Home"), "Home")
     }
 
     func testFiltering() {

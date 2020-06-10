@@ -6,21 +6,24 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 infix operator ?= : AssignmentPrecedence
 
+// MARK: - Methods
 public extension Optional {
 
-    func unwrap(or error: @autoclosure () -> Swift.Error) throws -> Wrapped {
+    func unwrapped(or defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
+        return self ?? defaultValue()
+    }
+
+    func unwrapped(or error: @autoclosure () -> Swift.Error) throws -> Wrapped {
         guard let value = self else {
             throw error()
         }
         return value
-    }
-
-    func unwrap(or defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
-        return self ?? defaultValue()
     }
 
     static func ?= (lhs: inout Optional, rhs: @autoclosure () -> Optional) {

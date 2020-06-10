@@ -6,7 +6,9 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 // MARK: - Properties
 public extension String {
@@ -74,13 +76,16 @@ public extension String {
         let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
         return range(of: pattern, options: options, range: nil, locale: nil) != nil
     }
-    
-    func matchesFully(pattern: String, caseSensitive: Bool = true) -> Bool {
-        let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
-        guard let range = self.range(of: pattern, options: options) else {
-            return false
+
+    func nonBlanked(or error: @autoclosure () -> Swift.Error) throws -> Self {
+        guard let value = nonBlank else {
+            throw error()
         }
-        return self.startIndex ..< self.endIndex == range
+        return value
+    }
+
+    func nonBlanked(or defaultValue: @autoclosure () -> Self) -> Self {
+        return nonBlank ?? defaultValue()
     }
 
     func replacing(pattern: String, withTemplate: String, options: NSRegularExpression.Options = []) throws -> String {

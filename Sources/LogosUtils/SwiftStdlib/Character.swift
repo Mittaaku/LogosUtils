@@ -6,8 +6,11 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
+// MARK: - Properties
 public extension Character {
 
     var string: String {

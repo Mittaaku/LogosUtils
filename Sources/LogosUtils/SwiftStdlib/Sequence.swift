@@ -6,8 +6,11 @@
 //  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
+// MARK: - Methods
 public extension Sequence {
 
     func anySatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
