@@ -5,46 +5,50 @@ final class StringTests: XCTestCase {
 
     let letters = "Hello"
     let alphanumerics = "4ever"
-
-    func testConsists() {
-        XCTAssertEqual(letters.contains(set: .letters), true)
-        XCTAssertEqual(letters.contains(set: .whitespaces), false)
-    }
+    let blank = ""
 
     func testContains() {
-        XCTAssertEqual(letters.consists(ofSet: .alphanumerics), true)
-        XCTAssertEqual(letters.consists(ofSet: .whitespaces), false)
+        XCTAssertTrue(letters.contains(set: .letters))
+        XCTAssertFalse(letters.contains(set: .whitespaces))
+    }
+
+    func testConsists() {
+        XCTAssertTrue(letters.consists(ofSet: .letters))
+        XCTAssertFalse(letters.consists(ofSet: .whitespaces))
     }
 
     func testExtractFirst() {
         var mutable = letters
-        let extract = mutable.extractFirst(2)
-        XCTAssertEqual(mutable, "llo")
-        XCTAssertEqual(extract, "He")
+        let extractCount = 3
+        let remainCount = mutable.count - extractCount
+        let extract = mutable.extractFirst(extractCount)
+        XCTAssertEqual(mutable, String(letters.suffix(remainCount)))
+        XCTAssertEqual(extract, String(letters.prefix(extractCount)))
     }
 
     func testExtractLast() {
         var mutable = letters
-        let extract = mutable.extractLast(2)
-        XCTAssertEqual(mutable, "Hel")
-        XCTAssertEqual(extract, "lo")
+        let extractCount = 3
+        let remainCount = mutable.count - extractCount
+        let extract = mutable.extractLast(extractCount)
+        XCTAssertEqual(mutable, String(letters.prefix(remainCount)))
+        XCTAssertEqual(extract, String(letters.suffix(extractCount)))
+    }
+    
+    func testFiltrated() {
+        let filtrated = try! alphanumerics.filtrate(byRegex: NSRegularExpression(pattern: #"[0-9]"#))
+        XCTAssertEqual(filtrated.matching, "4")
+        XCTAssertEqual(filtrated.notMatching, "ever")
     }
 
     func testMatches() {
-        XCTAssertEqual(letters.matches(pattern: #"\w"#), true)
-        XCTAssertEqual(letters.matches(pattern: #"\d"#), false)
+        XCTAssertTrue(letters.matches(pattern: #"\w"#))
+        XCTAssertFalse(letters.matches(pattern: #"\d"#))
     }
 
     func testNonBlanked() {
-        let nonBlank = "World"
-        let blank = ""
-        XCTAssertEqual(nonBlank.nonBlanked(or: "Home"), "World")
-        XCTAssertEqual(blank.nonBlanked(or: "Home"), "Home")
-    }
-
-    func testFiltering() {
-        XCTAssertEqual(try alphanumerics.filtering(pattern: #"([a-z])"#), "ever")
-        XCTAssertEqual(alphanumerics.filtering(set: .letters), "ever")
+        XCTAssertEqual(letters.nonBlanked(or: "Was Blank"), "Hello")
+        XCTAssertEqual(blank.nonBlanked(or: "Was Blank"), "Was Blank")
     }
 
     func testReplacing() {
@@ -53,9 +57,9 @@ final class StringTests: XCTestCase {
     }
 
     func testSplitting() {
-        XCTAssertEqual(try alphanumerics.splitting(byPattern: "4"), ["ever"])
-        XCTAssertEqual(try alphanumerics.splitting(byPattern: "(4)"), ["4", "ever"])
-        XCTAssertEqual(try alphanumerics.splitting(byPattern: "e"), ["4", "v", "r"])
+        XCTAssertEqual(try alphanumerics.splitting(byRegex: NSRegularExpression(pattern: "4")), ["ever"])
+        XCTAssertEqual(try alphanumerics.splitting(byRegex: NSRegularExpression(pattern: "(4)")), ["4", "ever"])
+        XCTAssertEqual(try alphanumerics.splitting(byRegex: NSRegularExpression(pattern: "e")), ["4", "v", "r"])
     }
 
     func testStrippingDiacritics() {

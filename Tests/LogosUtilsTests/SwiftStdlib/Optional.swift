@@ -2,31 +2,23 @@ import XCTest
 @testable import LogosUtils
 
 final class OptionalTests: XCTestCase {
-    let setOptinal: Bool? = true
-    let unsetOptional: Bool? = nil
+    let setOptinal: Int? = 1
+    let unsetOptional: Int? = nil
 
     struct MockError: Error {}
 
     func testNilCoalescingAssignmentOperator() {
-        var i: Int?
-        let j: Int? = nil
-        i ??= 1
-        XCTAssertEqual(i, 1)
-        XCTAssertEqual(j, nil)
+        let i: Int? = nil
+        var j: Int? = nil
+        j ??= 1
+        XCTAssertNil(i)
+        XCTAssertNotNil(j)
     }
 
     func testUnwrapped() {
-        XCTAssertEqual(setOptinal.unwrapped(or: false), true)
-        XCTAssertEqual(unsetOptional.unwrapped(or: false), false)
-        do {
-            try setOptinal.unwrapped(or: MockError())
-        } catch {
-            XCTFail()
-        }
-        do {
-            try unsetOptional.unwrapped(or: MockError())
-            XCTFail()
-        } catch {
-        }
+        XCTAssertEqual(setOptinal.unwrapped(or: 1), 1)
+        XCTAssertEqual(unsetOptional.unwrapped(or: 0), 0)
+        XCTAssertNoThrow(try setOptinal.unwrapped(or: MockError()))
+        XCTAssertThrowsError(try unsetOptional.unwrapped(or: MockError()))
     }
 }

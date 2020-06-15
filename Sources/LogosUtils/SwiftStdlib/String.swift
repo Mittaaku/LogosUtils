@@ -10,6 +10,8 @@
 import Foundation
 #endif
 
+public typealias StringFiltratingResult = (matching: String, notMatching: String)
+
 // MARK: - Properties
 public extension String {
 
@@ -50,26 +52,28 @@ public extension String {
         removeLast(k)
         return result
     }
-
-    func filtering(pattern: String, options: NSRegularExpression.Options = []) throws -> String {
+    
+    func filtrate(byRegex regex: NSRegularExpression) throws -> StringFiltratingResult {
         let nsString = NSString(string: self)
         let fullRange = NSRange(location: 0, length: self.utf16.count)
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        var result = ""
+        var previousMatchRange = NSRange(location: 0, length: 0)
+        
+        var result: StringFiltratingResult = ("", "")
         for match in regex.matches(in: self, range: fullRange) {
-            for groupIndex in (1 ..< match.numberOfRanges) {
-                let range = match.range(at: groupIndex)
-                if range.location != NSNotFound {
-                    result += nsString.substring(with: range)
-                }
+            // Extract the piece before the match
+            let precedingRange = NSRange(location: previousMatchRange.upperBound, length: match.range.lowerBound - previousMatchRange.upperBound)
+            result.notMatching.append(nsString.substring(with: precedingRange))
+            // Extract the match
+            let range = match.range(at: 0)
+            if range.location != NSNotFound {
+                result.matching += nsString.substring(with: range)
             }
+            previousMatchRange = match.range
         }
+        // Extract the final piece
+        let endingRange = NSRange(location: previousMatchRange.upperBound, length: fullRange.upperBound - previousMatchRange.upperBound)
+        result.notMatching.append(nsString.substring(with: endingRange))
         return result
-    }
-
-    func filtering(set: CharacterSet) -> String {
-        let filtered = self.unicodeScalars.filter { set.contains($0) }
-        return String(filtered)
     }
 
     func matches(pattern: String, caseSensitive: Bool = true) -> Bool {
@@ -94,14 +98,12 @@ public extension String {
         return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: withTemplate)
     }
 
-    func splitting(byPattern pattern: String, options: NSRegularExpression.Options = []) throws -> [String] {
+    func splitting(byRegex regex: NSRegularExpression) throws -> [String] {
         var result = [String]()
-
         let nsString = NSString(string: self)
         let fullRange = NSRange(location: 0, length: self.utf16.count)
         var previousRange = NSRange(location: 0, length: 0)
 
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
         for match in regex.matches(in: self, range: fullRange) {
             // Extract the piece before the match
             let precedingRange = NSRange(location: previousRange.upperBound, length: match.range.lowerBound - previousRange.upperBound)

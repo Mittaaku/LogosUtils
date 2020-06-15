@@ -11,33 +11,30 @@ import Foundation
 #endif
 
 public extension SetAlgebra {
-}
-
-public extension Sequence where Element: SetAlgebra {
-    func intersectionOfElements() -> Element {
-        var iterator = self.makeIterator()
+    init(intersectionOf sets: [Self]) {
+        var iterator = sets.makeIterator()
         var result = iterator.next()!
         while let next = iterator.next() {
             result.formIntersection(next)
         }
-        return result
+        self = result
     }
-
-    func symmetricDifferenceOfElements() -> Element {
-        var iterator = self.makeIterator()
+    
+    init(symmetricDifferenceOf sets: [Self]) {
+        var iterator = sets.makeIterator()
         var result = iterator.next()!
         while let next = iterator.next() {
             result.formSymmetricDifference(next)
         }
-        return result
+        self = result
     }
-
-    func unionOfElements() -> Element {
-        var iterator = self.makeIterator()
+    
+    init(unionOf sets: [Self]) {
+        var iterator = sets.makeIterator()
         var result = iterator.next()!
         while let next = iterator.next() {
             result.formUnion(next)
         }
-        return result
+        self = result
     }
 }
