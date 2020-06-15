@@ -10,10 +10,10 @@
 import Foundation
 #endif
 
-extension SetAlgebra {
+public extension SetAlgebra {
 }
 
-extension Sequence where Element: SetAlgebra {
+public extension Sequence where Element: SetAlgebra {
     func intersectionOfElements() -> Element {
         var iterator = self.makeIterator()
         var result = iterator.next()!
