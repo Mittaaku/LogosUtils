@@ -16,6 +16,12 @@ final class StringTests: XCTestCase {
         XCTAssertTrue(letters.consists(ofSet: .letters))
         XCTAssertFalse(letters.consists(ofSet: .whitespaces))
     }
+    
+    func testDivided() {
+        let divided = try! alphanumerics.divided(byRegex: NSRegularExpression(pattern: #"[0-9]"#))
+        XCTAssertEqual(divided.matching, "4")
+        XCTAssertEqual(divided.notMatching, "ever")
+    }
 
     func testExtractFirst() {
         var mutable = letters
@@ -38,16 +44,13 @@ final class StringTests: XCTestCase {
     func testFilter() {
         XCTAssertEqual(try! alphanumerics.filter(byRegex: NSRegularExpression(pattern: #"[0-9]"#)), "4")
     }
-    
-    func testFiltrate() {
-        let filtrated = try! alphanumerics.filtrate(byRegex: NSRegularExpression(pattern: #"[0-9]"#))
-        XCTAssertEqual(filtrated.matching, "4")
-        XCTAssertEqual(filtrated.notMatching, "ever")
-    }
 
     func testMatches() {
         XCTAssertTrue(letters.matches(pattern: #"\w"#))
         XCTAssertFalse(letters.matches(pattern: #"\d"#))
+        let numericRegex = try! NSRegularExpression(pattern: #"[0-9]"#)
+        XCTAssertTrue(alphanumerics.matches(regex: numericRegex))
+        XCTAssertFalse(letters.matches(regex: numericRegex))
     }
 
     func testNonBlanked() {

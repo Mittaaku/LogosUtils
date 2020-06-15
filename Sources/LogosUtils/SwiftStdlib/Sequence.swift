@@ -13,30 +13,26 @@ import Foundation
 // MARK: - Methods
 public extension Sequence {
 
-    typealias FiltratingResult = (matching: [Element], notMatching: [Element])
+    typealias DividedResults = (matching: [Element], notMatching: [Element])
     
     func anySatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try contains { try predicate($0) }
     }
     
-    mutating func filtrate(_ predicate: (Element) throws -> Bool) rethrows -> FiltratingResult {
-        var result: ([Element], [Element]) = ([],[])
+    func divided(by condition: (Element) throws -> Bool) rethrows -> DividedResults {
+        var divided: DividedResults = ([], [])
         for element in self {
-            if try predicate(element) {
-                result.0.append(element)
-            } else {
-                result.1.append(element)
-            }
+            try condition(element) ? divided.matching.append(element) : divided.notMatching.append(element)
         }
-        return result
+        return divided
     }
 
     func noneSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try !contains { try predicate($0) }
     }
 
-    func reject(_ predicate: (Element) throws -> Bool) rethrows -> [Element] {
-        return try filter { return try !predicate($0) }
+    func reject(_ isExcluded: (Element) throws -> Bool) rethrows -> [Element] {
+        return try filter { return try !isExcluded($0) }
     }
     
     func sorted<T: Comparable>(ascendingBy keyPath: KeyPath<Element, T>) -> [Element] {

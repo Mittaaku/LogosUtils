@@ -10,8 +10,6 @@
 import Foundation
 #endif
 
-public typealias StringFiltratingResult = (matching: String, notMatching: String)
-
 // MARK: - Properties
 public extension String {
 
@@ -30,6 +28,8 @@ public extension String {
 
 // MARK: - Methods
 public extension String {
+    
+    typealias StringDividedResults = (matching: String, notMatching: String)
 
     /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet
     func contains(set: CharacterSet) -> Bool {
@@ -39,6 +39,29 @@ public extension String {
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
     func consists(ofSet set: CharacterSet) -> Bool {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
+    }
+    
+    func divided(byRegex regex: NSRegularExpression) -> StringDividedResults {
+        let nsString = NSString(string: self)
+        let fullRange = NSRange(location: 0, length: self.utf16.count)
+        var previousMatchRange = NSRange(location: 0, length: 0)
+        
+        var divided: StringDividedResults = ("", "")
+        for match in regex.matches(in: self, range: fullRange) {
+            // Extract the piece before the match
+            let precedingRange = NSRange(location: previousMatchRange.upperBound, length: match.range.lowerBound - previousMatchRange.upperBound)
+            divided.notMatching.append(nsString.substring(with: precedingRange))
+            // Extract the match
+            let range = match.range(at: 0)
+            if range.location != NSNotFound {
+                divided.matching += nsString.substring(with: range)
+            }
+            previousMatchRange = match.range
+        }
+        // Extract the final piece
+        let endingRange = NSRange(location: previousMatchRange.upperBound, length: fullRange.upperBound - previousMatchRange.upperBound)
+        divided.notMatching.append(nsString.substring(with: endingRange))
+        return divided
     }
 
     mutating func extractFirst(_ k: Int) -> String {
@@ -56,7 +79,6 @@ public extension String {
     func filter(byRegex regex: NSRegularExpression) -> String {
         let nsString = NSString(string: self)
         let fullRange = NSRange(location: 0, length: self.utf16.count)
-
         var result = ""
         for match in regex.matches(in: self, range: fullRange) {
             let range = match.range(at: 0)
@@ -66,33 +88,15 @@ public extension String {
         }
         return result
     }
-    
-    func filtrate(byRegex regex: NSRegularExpression) -> StringFiltratingResult {
-        let nsString = NSString(string: self)
-        let fullRange = NSRange(location: 0, length: self.utf16.count)
-        var previousMatchRange = NSRange(location: 0, length: 0)
-        
-        var result: StringFiltratingResult = ("", "")
-        for match in regex.matches(in: self, range: fullRange) {
-            // Extract the piece before the match
-            let precedingRange = NSRange(location: previousMatchRange.upperBound, length: match.range.lowerBound - previousMatchRange.upperBound)
-            result.notMatching.append(nsString.substring(with: precedingRange))
-            // Extract the match
-            let range = match.range(at: 0)
-            if range.location != NSNotFound {
-                result.matching += nsString.substring(with: range)
-            }
-            previousMatchRange = match.range
-        }
-        // Extract the final piece
-        let endingRange = NSRange(location: previousMatchRange.upperBound, length: fullRange.upperBound - previousMatchRange.upperBound)
-        result.notMatching.append(nsString.substring(with: endingRange))
-        return result
-    }
 
     func matches(pattern: String, caseSensitive: Bool = true) -> Bool {
         let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
         return range(of: pattern, options: options, range: nil, locale: nil) != nil
+    }
+    
+    func matches(regex: NSRegularExpression) -> Bool {
+        let fullRange = NSRange(location: 0, length: self.utf16.count)
+        return regex.firstMatch(in: self, range: fullRange) != nil
     }
 
     func nonBlanked(or error: @autoclosure () -> Swift.Error) throws -> Self {
