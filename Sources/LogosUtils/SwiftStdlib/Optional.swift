@@ -10,7 +10,7 @@
 import Foundation
 #endif
 
-infix operator ?= : AssignmentPrecedence
+infix operator ??= : AssignmentPrecedence
 
 // MARK: - Methods
 public extension Optional {
@@ -26,10 +26,12 @@ public extension Optional {
         return value
     }
 
-    static func ?= (lhs: inout Optional, rhs: @autoclosure () -> Optional) {
-        if lhs == nil {
-            lhs = rhs()
+    /// Null-coalescing assignment operator
+    static func ??= (lhs: inout Optional, rhs: @autoclosure () -> Optional) {
+        guard lhs == nil else {
+            return
         }
+        lhs = rhs()
     }
 }
 
