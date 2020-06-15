@@ -35,7 +35,11 @@ final class StringTests: XCTestCase {
         XCTAssertEqual(extract, String(letters.suffix(extractCount)))
     }
     
-    func testFiltrated() {
+    func testFilter() {
+        XCTAssertEqual(try! alphanumerics.filter(byRegex: NSRegularExpression(pattern: #"[0-9]"#)), "4")
+    }
+    
+    func testFiltrate() {
         let filtrated = try! alphanumerics.filtrate(byRegex: NSRegularExpression(pattern: #"[0-9]"#))
         XCTAssertEqual(filtrated.matching, "4")
         XCTAssertEqual(filtrated.notMatching, "ever")

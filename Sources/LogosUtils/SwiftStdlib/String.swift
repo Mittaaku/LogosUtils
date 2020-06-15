@@ -53,7 +53,21 @@ public extension String {
         return result
     }
     
-    func filtrate(byRegex regex: NSRegularExpression) throws -> StringFiltratingResult {
+    func filter(byRegex regex: NSRegularExpression) -> String {
+        let nsString = NSString(string: self)
+        let fullRange = NSRange(location: 0, length: self.utf16.count)
+
+        var result = ""
+        for match in regex.matches(in: self, range: fullRange) {
+            let range = match.range(at: 0)
+            if range.location != NSNotFound {
+                result += nsString.substring(with: range)
+            }
+        }
+        return result
+    }
+    
+    func filtrate(byRegex regex: NSRegularExpression) -> StringFiltratingResult {
         let nsString = NSString(string: self)
         let fullRange = NSRange(location: 0, length: self.utf16.count)
         var previousMatchRange = NSRange(location: 0, length: 0)
