@@ -10,6 +10,7 @@
 import Foundation
 #endif
 
+// MARK: - Initializers
 public extension SetAlgebra {
     init(intersectionOf sets: [Self]) {
         var iterator = sets.makeIterator()
@@ -19,7 +20,7 @@ public extension SetAlgebra {
         }
         self = result
     }
-    
+
     init(symmetricDifferenceOf sets: [Self]) {
         var iterator = sets.makeIterator()
         var result = iterator.next()!
@@ -28,7 +29,7 @@ public extension SetAlgebra {
         }
         self = result
     }
-    
+
     init(unionOf sets: [Self]) {
         var iterator = sets.makeIterator()
         var result = iterator.next()!

@@ -10,8 +10,6 @@
 import Foundation
 #endif
 
-infix operator ??= : AssignmentPrecedence
-
 // MARK: - Methods
 public extension Optional {
 
@@ -46,3 +44,5 @@ public extension Optional where Wrapped == String {
         return self?.isBlank ?? true
     }
 }
+
+infix operator ??= : AssignmentPrecedence

@@ -10,6 +10,7 @@
 import Foundation
 #endif
 
+// MARK: - Properties
 public extension SignedInteger {
     var abs: Self {
         return Swift.abs(self)

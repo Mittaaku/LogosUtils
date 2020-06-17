@@ -8,11 +8,11 @@ final class SetAlgebraTests: XCTestCase {
     func testInitUnionOf() {
         XCTAssertEqual(Set(unionOf: [set0, set1]), Set([3, 6, 1, 0]))
     }
-    
+
     func testInitSymmetricDifferenceOf() {
         XCTAssertEqual(Set(symmetricDifferenceOf: [set0, set1]), Set([6, 1, 0]))
     }
-    
+
     func testInitIntersectionOf() {
         XCTAssertEqual(Set(intersectionOf: [set0, set1]), Set([3]))
     }

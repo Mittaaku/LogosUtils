@@ -1,21 +1,25 @@
 //
-//  File.swift
-//  
+//  MutableCollection.swift
+//  LogosUtils
 //
 //  Created by Tom-Roger Mittag on 6/15/20.
+//  Copyright © 2020 TheCrossReference. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
+// MARK: - Methods
 public extension MutableCollection {
-    
+
     mutating func mapInPlace(_ transform: (Element) throws -> Element) rethrows {
         for i in indices {
             self[i] = try transform(self[i])
         }
     }
-    
-    mutating func mutateMap(_ transform: (inout Element) throws -> ()) rethrows {
+
+    mutating func mutateMap(_ transform: (inout Element) throws -> Void) rethrows {
         for i in indices {
             try transform(&self[i])
         }
@@ -23,7 +27,7 @@ public extension MutableCollection {
 }
 
 public extension MutableCollection where Self: RangeReplaceableCollection {
-    
+
     mutating func compactMapInPlace(_ transform: (Element) throws -> Element?) rethrows {
         var availableIndexIterator = indices.makeIterator()
         var nextAvailableIndex = availableIndexIterator.next()!
@@ -36,7 +40,7 @@ public extension MutableCollection where Self: RangeReplaceableCollection {
         }
         removeSubrange(nextAvailableIndex ..< endIndex)
     }
-    
+
     mutating func keepAll(where condition: (Element) throws -> Bool) rethrows {
         var availableIndexIterator = indices.makeIterator()
         var nextAvailableIndex = availableIndexIterator.next()!
@@ -51,7 +55,7 @@ public extension MutableCollection where Self: RangeReplaceableCollection {
         removeSubrange(nextAvailableIndex ..< endIndex)
         return
     }
-    
+
     mutating func partitionOff(by condition: (Element) throws -> Bool) rethrows -> [Element] {
         var availableIndexIterator = indices.makeIterator()
         var nextAvailableIndex = availableIndexIterator.next()!

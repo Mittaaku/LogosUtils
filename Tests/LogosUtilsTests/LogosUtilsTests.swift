@@ -6,7 +6,6 @@ final class LogosUtilsTests: XCTestCase {
     func otherTests() {
 
         // Sorting
-        
 
         // Blanks
         let nilString: String? = nil

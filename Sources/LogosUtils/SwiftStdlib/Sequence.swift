@@ -14,11 +14,11 @@ import Foundation
 public extension Sequence {
 
     typealias DividedResults = (matching: [Element], notMatching: [Element])
-    
+
     func anySatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try contains { try predicate($0) }
     }
-    
+
     func divided(by condition: (Element) throws -> Bool) rethrows -> DividedResults {
         var divided: DividedResults = ([], [])
         for element in self {
@@ -26,7 +26,7 @@ public extension Sequence {
         }
         return divided
     }
-    
+
     func noneSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try !contains { try predicate($0) }
     }
@@ -34,7 +34,7 @@ public extension Sequence {
     func reject(_ isExcluded: (Element) throws -> Bool) rethrows -> [Element] {
         return try filter { return try !isExcluded($0) }
     }
-    
+
     func sorted<T: Comparable>(byKeyPaths keyPaths: KeyPath<Element, T>..., ascending: Bool) -> [Element] {
         assert(keyPaths.count != 0, "Expected to receive at least one KeyPath.")
         let operation: (T, T) -> Bool = ascending ? { $0 < $1 } : { $0 > $1 }
@@ -57,7 +57,7 @@ public extension Sequence {
             }
         }
     }
-    
+
     func withoutDuplicates<T: Hashable>(transform: (Element) throws -> T) rethrows -> [Element] {
         var set = Set<T>()
         return try filter { set.insert(try transform($0)).inserted }

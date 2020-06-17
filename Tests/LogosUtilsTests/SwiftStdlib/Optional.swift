@@ -9,7 +9,7 @@ final class OptionalTests: XCTestCase {
 
     func testNilCoalescingAssignmentOperator() {
         let i: Int? = nil
-        var j: Int? = nil
+        var j: Int?
         j ??= 1
         XCTAssertNil(i)
         XCTAssertNotNil(j)

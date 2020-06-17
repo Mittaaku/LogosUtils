@@ -10,14 +10,6 @@
 import Foundation
 #endif
 
-// MARK: - Properties
-public extension Collection {
-
-    var nonEmpty: Self? {
-        return isEmpty ? nil : self
-    }
-}
-
 // MARK: - Methods
 public extension Collection {
 
@@ -34,5 +26,13 @@ public extension Collection {
 
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
+    }
+}
+
+// MARK: - Properties
+public extension Collection {
+
+    var nonEmpty: Self? {
+        return isEmpty ? nil : self
     }
 }

@@ -28,7 +28,7 @@ public extension String {
 
 // MARK: - Methods
 public extension String {
-    
+
     typealias StringDividedResults = (matching: String, notMatching: String)
 
     /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet
@@ -40,12 +40,12 @@ public extension String {
     func consists(ofSet set: CharacterSet) -> Bool {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
     }
-    
+
     func divided(byRegex regex: NSRegularExpression) -> StringDividedResults {
         let nsString = NSString(string: self)
         let fullRange = NSRange(location: 0, length: self.utf16.count)
         var previousMatchRange = NSRange(location: 0, length: 0)
-        
+
         var divided: StringDividedResults = ("", "")
         for match in regex.matches(in: self, range: fullRange) {
             // Extract the piece before the match
@@ -75,7 +75,7 @@ public extension String {
         removeLast(k)
         return result
     }
-    
+
     func filter(byRegex regex: NSRegularExpression) -> String {
         let nsString = NSString(string: self)
         let fullRange = NSRange(location: 0, length: self.utf16.count)
@@ -93,7 +93,7 @@ public extension String {
         let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
         return range(of: pattern, options: options, range: nil, locale: nil) != nil
     }
-    
+
     func matches(regex: NSRegularExpression) -> Bool {
         let fullRange = NSRange(location: 0, length: self.utf16.count)
         return regex.firstMatch(in: self, range: fullRange) != nil

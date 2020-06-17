@@ -16,7 +16,7 @@ final class StringTests: XCTestCase {
         XCTAssertTrue(letters.consists(ofSet: .letters))
         XCTAssertFalse(letters.consists(ofSet: .whitespaces))
     }
-    
+
     func testDivided() {
         let divided = try! alphanumerics.divided(byRegex: NSRegularExpression(pattern: #"[0-9]"#))
         XCTAssertEqual(divided.matching, "4")
@@ -40,7 +40,7 @@ final class StringTests: XCTestCase {
         XCTAssertEqual(mutable, String(letters.prefix(remainCount)))
         XCTAssertEqual(extract, String(letters.suffix(extractCount)))
     }
-    
+
     func testFilter() {
         XCTAssertEqual(try! alphanumerics.filter(byRegex: NSRegularExpression(pattern: #"[0-9]"#)), "4")
     }
