@@ -12,4 +12,15 @@ final class SequenceTests: XCTestCase {
         XCTAssertEqual(divided.matching, Self.evenIntArray)
         XCTAssertEqual(divided.notMatching, Self.oddIntArray)
     }
+    
+    func testSorted() {
+        XCTAssertEqual(Self.intArray.sorted(byKeyPaths: \.abs, ascending: true), [1, 2, 3, 4, 6])
+        XCTAssertEqual(Self.intArray.sorted(byKeyPaths: \.isEvenInt, \.abs, ascending: true), [1, 3, 2, 4, 6])
+    }
+}
+
+fileprivate extension Int {
+    var isEvenInt: Int {
+        return isEven ? 1 : 0
+    }
 }

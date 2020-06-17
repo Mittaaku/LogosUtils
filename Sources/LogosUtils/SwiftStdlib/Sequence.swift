@@ -26,7 +26,7 @@ public extension Sequence {
         }
         return divided
     }
-
+    
     func noneSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try !contains { try predicate($0) }
     }
@@ -35,15 +35,31 @@ public extension Sequence {
         return try filter { return try !isExcluded($0) }
     }
     
-    func sorted<T: Comparable>(ascendingBy keyPath: KeyPath<Element, T>) -> [Element] {
-        return sorted {
-            return $0[keyPath: keyPath] < $1[keyPath: keyPath]
+    func sorted<T: Comparable>(byKeyPaths keyPaths: KeyPath<Element, T>..., ascending: Bool) -> [Element] {
+        assert(keyPaths.count != 0, "Expected to receive at least one KeyPath.")
+        let operation: (T, T) -> Bool = ascending ? { $0 < $1 } : { $0 > $1 }
+        if keyPaths.count == 1 {
+            let keyPath = keyPaths[0]
+            return sorted {
+                return operation($0[keyPath: keyPath], $1[keyPath: keyPath])
+            }
+        } else {
+            var initialKeyPaths = keyPaths
+            let finalKeyPath = initialKeyPaths.removeLast()
+            return sorted {
+                for keyPath in initialKeyPaths {
+                    let lhs = $0[keyPath: keyPath], rhs = $1[keyPath: keyPath]
+                    if lhs != rhs {
+                        return operation(lhs, rhs)
+                    }
+                }
+                return operation($0[keyPath: finalKeyPath], $1[keyPath: finalKeyPath])
+            }
         }
     }
-
-    func sorted<T: Comparable>(descendingBy keyPath: KeyPath<Element, T>) -> [Element] {
-        return sorted {
-            return $0[keyPath: keyPath] > $1[keyPath: keyPath]
-        }
+    
+    func withoutDuplicates<T: Hashable>(transform: (Element) throws -> T) rethrows -> [Element] {
+        var set = Set<T>()
+        return try filter { set.insert(try transform($0)).inserted }
     }
 }

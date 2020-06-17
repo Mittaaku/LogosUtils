@@ -6,9 +6,7 @@ final class LogosUtilsTests: XCTestCase {
     func otherTests() {
 
         // Sorting
-        let arrayNumbers = [9, 4, 1, 5]
-        XCTAssertEqual(arrayNumbers.sorted(ascendingBy: \.abs), [1, 4, 5, 9])
-        XCTAssertEqual(arrayNumbers.sorted(descendingBy: \.abs), [9, 5, 4, 1])
+        
 
         // Blanks
         let nilString: String? = nil

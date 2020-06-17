@@ -13,6 +13,12 @@ final class MutatableCollectionTests: XCTestCase {
         XCTAssertEqual(mutatingArray, Self.incrementedIntArray)
     }
     
+    func testMutateMap() {
+        var mutatingArray = Self.intArray
+        mutatingArray.mutateMap { $0 += 1 }
+        XCTAssertEqual(mutatingArray, Self.incrementedIntArray)
+    }
+    
     func testCompactMapInPlace() {
         var mutatingArray = Self.intArray
         mutatingArray.compactMapInPlace { $0.isEven ? $0 : nil }

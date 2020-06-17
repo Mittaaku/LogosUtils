@@ -14,6 +14,12 @@ public extension MutableCollection {
             self[i] = try transform(self[i])
         }
     }
+    
+    mutating func mutateMap(_ transform: (inout Element) throws -> ()) rethrows {
+        for i in indices {
+            try transform(&self[i])
+        }
+    }
 }
 
 public extension MutableCollection where Self: RangeReplaceableCollection {
