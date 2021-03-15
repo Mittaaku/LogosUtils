@@ -48,7 +48,6 @@ final class LogosUtilsTests: XCTestCase {
     }
 
     func testNew() {
-
         measure {
             let wow = "This is a .magics test"
             for _ in 0 ..< 1000 {

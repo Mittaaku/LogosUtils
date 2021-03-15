@@ -3,7 +3,7 @@
 //  LogosUtils
 //
 //  Created by Tom-Roger Mittag on 6/17/20.
-//  Copyright © 2020 TheCrossReference. All rights reserved.
+//  Copyright © Tom-Roger Mittag. All rights reserved.
 //
 
 #if canImport(Foundation)

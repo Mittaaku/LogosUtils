@@ -1,8 +1,9 @@
 //
 //  File.swift
-//  
+//  LogosUtils
 //
 //  Created by Tom-Roger Mittag on 6/9/20.
+//  Copyright © Tom-Roger Mittag. All rights reserved.
 //
 
 import Foundation
@@ -21,7 +22,4 @@ public extension NSRegularExpression {
         case numberDecimalDigit = "Nd"
         case whitespace = "Whitespace"
     }
-}
-
-public extension NSRegularExpression {
 }

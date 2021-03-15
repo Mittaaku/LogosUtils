@@ -3,7 +3,7 @@
 //  LogosUtils
 //
 //  Created by Tom-Roger Mittag on 5/16/20.
-//  Copyright © 2020 TheCrossReference. All rights reserved.
+//  Copyright © Tom-Roger Mittag. All rights reserved.
 //
 
 #if canImport(Foundation)
@@ -34,12 +34,14 @@ public extension Optional {
 }
 
 public extension Optional where Wrapped: Collection {
+    
     var isNilOrEmpty: Bool {
         return self?.isEmpty ?? true
     }
 }
 
 public extension Optional where Wrapped == String {
+    
     var isNilOrBlank: Bool {
         return self?.isBlank ?? true
     }

@@ -3,7 +3,7 @@
 //  LogosUtils
 //
 //  Created by Tom-Roger Mittag on 5/13/20.
-//  Copyright © 2020 TheCrossReference. All rights reserved.
+//  Copyright © Tom-Roger Mittag. All rights reserved.
 //
 
 #if canImport(Foundation)
@@ -87,11 +87,6 @@ public extension String {
             }
         }
         return result
-    }
-
-    func matches(pattern: String, caseSensitive: Bool = true) -> Bool {
-        let options: CompareOptions = caseSensitive ? [.regularExpression] : [.regularExpression, .caseInsensitive]
-        return range(of: pattern, options: options, range: nil, locale: nil) != nil
     }
 
     func matches(regex: NSRegularExpression) -> Bool {
