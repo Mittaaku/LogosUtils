@@ -68,5 +68,5 @@ public extension String {
 }
 
 func ~= (lhs: String, rhs: NSRegularExpression) -> Bool {
-    return rhs.matches(lhs)
+    return rhs.matches(string: lhs)
 }
