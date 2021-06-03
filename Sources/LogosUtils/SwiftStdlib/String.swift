@@ -17,9 +17,37 @@ public extension String {
         return Array(self)
     }
 
+    #if canImport(Foundation)
+    /// Check whether the string only is empty **or** only contains whitespace.
+    ///
+    ///     ".".isBlank -> false
+    ///     " ".isBlank -> true
+    ///     "".isBlank -> true
     var isBlank: Bool {
-        return consists(ofSet: .whitespaces)
+        return NSRegularExpression.allWhitespaceOrEmpty.matches(string: self)
     }
+    #endif
+    
+    #if canImport(Foundation)
+    /// Check whether the string only contains digits.
+    ///
+    ///     "123".isDigits -> true
+    ///     "abc".isDigits -> false
+    var isDigits: Bool {
+        return NSRegularExpression.allDigits.matches(string: self)
+    }
+    #endif
+    
+    #if canImport(Foundation)
+    /// Check whether the string only contains whitespace.
+    ///
+    ///     ".".isBlank -> false
+    ///     " ".isBlank -> true
+    ///     "".isBlank -> false
+    var isWhitespace: Bool {
+        return NSRegularExpression.allWhitespace.matches(string: self)
+    }
+    #endif
 
     var nonBlank: Self? {
         return isBlank ? nil : self

@@ -13,9 +13,9 @@ final class MutatableCollectionTests: XCTestCase {
         XCTAssertEqual(mutatingArray, Self.incrementedIntArray)
     }
 
-    func testMutateMap() {
+    func testUpdateEach() {
         var mutatingArray = Self.intArray
-        mutatingArray.mutateMap { $0 += 1 }
+        mutatingArray.updateEach { $0 += 1 }
         XCTAssertEqual(mutatingArray, Self.incrementedIntArray)
     }
 
@@ -27,7 +27,7 @@ final class MutatableCollectionTests: XCTestCase {
 
     func testKeepAll() {
         var mutatingArray = Self.intArray
-        mutatingArray.keepAll(where: \.isEven)
+        mutatingArray.filterInPlace(where: \.isEven)
         XCTAssertEqual(mutatingArray, Self.evenIntArray)
     }
 

@@ -26,13 +26,34 @@ public extension Sequence {
         }
         return divided
     }
+    
+    /// Returns an array containing, in order, the elements of the sequence
+    /// that **do not** satisfy the given predicate.
+    ///
+    /// - Parameter isExcluded: A closure that takes an element of the
+    ///   sequence as its argument and returns a Boolean value indicating
+    ///   whether the element should be excluded from the returned array.
+    /// - Returns: An array of the elements that `isExcluded` blocked.
+    func filterOut(_ isExcluded: (Element) throws -> Bool) rethrows -> [Element] {
+        return try filter { return try !isExcluded($0) }
+    }
+    
+    func first<T: Equatable>(where keyPath: KeyPath<Element, T>, equals value: T) -> Element? {
+        return first { $0[keyPath: keyPath] == value }
+    }
+    
+    func firstNonNil<T>(keyPath: KeyPath<Element, T?>) -> T? {
+        var iterator = makeIterator()
+        while let element = iterator.next() {
+            if let set = element[keyPath: keyPath] {
+                return set
+            }
+        }
+        return nil
+    }
 
     func noneSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try !contains { try predicate($0) }
-    }
-
-    func reject(_ isExcluded: (Element) throws -> Bool) rethrows -> [Element] {
-        return try filter { return try !isExcluded($0) }
     }
 
     func sorted<T: Comparable>(byKeyPaths keyPaths: KeyPath<Element, T>..., ascending: Bool) -> [Element] {

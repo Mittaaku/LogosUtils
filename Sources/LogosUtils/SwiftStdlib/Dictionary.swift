@@ -6,7 +6,9 @@
 //  Copyright © Tom-Roger Mittag. All rights reserved.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 extension Dictionary {
 }

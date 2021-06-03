@@ -19,7 +19,7 @@ public extension MutableCollection {
         }
     }
 
-    mutating func mutateMap(_ transform: (inout Element) throws -> Void) rethrows {
+    mutating func updateEach(_ transform: (inout Element) throws -> Void) rethrows {
         for i in indices {
             try transform(&self[i])
         }
@@ -41,7 +41,7 @@ public extension MutableCollection where Self: RangeReplaceableCollection {
         removeSubrange(nextAvailableIndex ..< endIndex)
     }
 
-    mutating func keepAll(where condition: (Element) throws -> Bool) rethrows {
+    mutating func filterInPlace(where condition: (Element) throws -> Bool) rethrows {
         var availableIndexIterator = indices.makeIterator()
         var nextAvailableIndex = availableIndexIterator.next()!
         for currentSlot in indices {

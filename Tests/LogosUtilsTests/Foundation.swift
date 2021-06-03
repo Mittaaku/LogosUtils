@@ -34,10 +34,26 @@ final class NSRegularExpressionTests: XCTestCase {
         XCTAssertEqual(NSRegularExpression(#"e"#).replace(string: alphanumerics, withTemplate: "a"), "4avar")
         XCTAssertEqual(NSRegularExpression(#"[a-z]"#).replace(string: alphanumerics, withTemplate: "R"), "4RRRR")
     }
+    
+    func testFirstMatch() {
+        let test = NSRegularExpression(#"e"#).firstMatch(in: alphanumerics)
+        XCTAssertNotNil(test)
+    }
 
     func testSplit() {
         XCTAssertEqual(NSRegularExpression(#"4"#).split(string: alphanumerics), ["ever"])
         XCTAssertEqual(NSRegularExpression(#"(4)"#).split(string: alphanumerics), ["4", "ever"])
         XCTAssertEqual(NSRegularExpression(#"e"#).split(string: alphanumerics), ["4", "v", "r"])
+    }
+    
+    func testStringStates() {
+        XCTAssertTrue("".isBlank)
+        XCTAssertTrue(" ".isBlank)
+        XCTAssertFalse(".".isBlank)
+        XCTAssertTrue("9".isDigits)
+        XCTAssertFalse("".isDigits)
+        XCTAssertFalse("".isWhitespace)
+        XCTAssertTrue(" ".isWhitespace)
+        XCTAssertFalse(".".isWhitespace)
     }
 }

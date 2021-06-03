@@ -10,18 +10,9 @@ import Foundation
 
 public extension NSRegularExpression {
     
-    enum UnicodeCategory: String {
-        case han = "Han" // Chinese Hanzi, Japanese Kanji, and Korean Hanja.
-        case hiragana = "Hiragana"
-        case katakana = "Katakana"
-        case latin = "Latin"
-        case letter = "L"
-        case letterLowercase = "Li"
-        case letterUppercase = "Lu"
-        case number = "N"
-        case numberDecimalDigit = "Nd"
-        case whitespace = "Whitespace"
-    }
+    static var allDigits = NSRegularExpression(#"^\d+$"#)
+    static var allWhitespace = NSRegularExpression(#"^\s+$"#)
+    static var allWhitespaceOrEmpty = NSRegularExpression(#"^\s*$"#)
     
     typealias DividedResults = (matching: String, notMatching: String)
     
@@ -85,6 +76,15 @@ public extension NSRegularExpression {
         }
         return result
     }
+
+    func firstMatch(in string: String,
+                    options: MatchingOptions = [],
+                    range: Range<String.Index>? = nil) -> NSTextCheckingResult? {
+        let nsRange = NSRange(range ?? string.startIndex ..< string.endIndex, in: string)
+        return firstMatch(in: string,
+                          options: options,
+                          range: nsRange)
+    }
     
     func replace(string: String, withTemplate: String) -> String {
         let range = NSRange(location: 0, length: string.count)
@@ -113,6 +113,6 @@ public extension NSRegularExpression {
         // Extract the final piece
         let endingRange = NSRange(location: previousRange.upperBound, length: fullRange.upperBound - previousRange.upperBound)
         result.append(nsString.substring(with: endingRange))
-        return result.reject(\.isBlank)
+        return result.filterOut(\.isBlank)
     }
 }
