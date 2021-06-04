@@ -41,12 +41,27 @@ public extension MutableCollection where Self: RangeReplaceableCollection {
         removeSubrange(nextAvailableIndex ..< endIndex)
     }
 
-    mutating func filterInPlace(where condition: (Element) throws -> Bool) rethrows {
+    mutating func filterInPlace(by predicate: (Element) throws -> Bool) rethrows {
         var availableIndexIterator = indices.makeIterator()
         var nextAvailableIndex = availableIndexIterator.next()!
         for currentSlot in indices {
             let element = self[currentSlot]
-            guard try condition(element) else {
+            guard try predicate(element) else {
+                continue
+            }
+            self[nextAvailableIndex] = element
+            nextAvailableIndex = availableIndexIterator.next()!
+        }
+        removeSubrange(nextAvailableIndex ..< endIndex)
+        return
+    }
+    
+    mutating func filterOutInPlace(by predicate: (Element) throws -> Bool) rethrows {
+        var availableIndexIterator = indices.makeIterator()
+        var nextAvailableIndex = availableIndexIterator.next()!
+        for currentSlot in indices {
+            let element = self[currentSlot]
+            guard try !predicate(element) else {
                 continue
             }
             self[nextAvailableIndex] = element
@@ -56,13 +71,13 @@ public extension MutableCollection where Self: RangeReplaceableCollection {
         return
     }
 
-    mutating func partitionOff(by condition: (Element) throws -> Bool) rethrows -> [Element] {
+    mutating func partitionOff(by predicate: (Element) throws -> Bool) rethrows -> [Element] {
         var availableIndexIterator = indices.makeIterator()
         var nextAvailableIndex = availableIndexIterator.next()!
         var partitionedOff = [Element]()
         for currentSlot in indices {
             let element = self[currentSlot]
-            guard try !condition(element) else {
+            guard try !predicate(element) else {
                 partitionedOff.append(element)
                 continue
             }

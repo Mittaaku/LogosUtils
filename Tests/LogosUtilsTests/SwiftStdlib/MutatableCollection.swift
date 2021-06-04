@@ -27,7 +27,7 @@ final class MutatableCollectionTests: XCTestCase {
 
     func testKeepAll() {
         var mutatingArray = Self.intArray
-        mutatingArray.filterInPlace(where: \.isEven)
+        mutatingArray.filterInPlace(by: \.isEven)
         XCTAssertEqual(mutatingArray, Self.evenIntArray)
     }
 
