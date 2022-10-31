@@ -13,6 +13,7 @@ public extension NSRegularExpression {
     static var allDigits = NSRegularExpression(#"^\d+$"#)
     static var allWhitespace = NSRegularExpression(#"^\s+$"#)
     static var allWhitespaceOrEmpty = NSRegularExpression(#"^\s*$"#)
+	static var allGreek = NSRegularExpression(#"\u0370-\u03ff\u1f00-\u1fff"#)
     
     typealias DividedResults = (matching: String, notMatching: String)
     

@@ -17,41 +17,62 @@ public extension String {
         return Array(self)
     }
 
-    #if canImport(Foundation)
-    /// Check whether the string only is empty **or** only contains whitespace.
-    ///
-    ///     ".".isBlank -> false
-    ///     " ".isBlank -> true
-    ///     "".isBlank -> true
-    var isBlank: Bool {
-        return NSRegularExpression.allWhitespaceOrEmpty.matches(string: self)
-    }
-    #endif
-    
-    #if canImport(Foundation)
-    /// Check whether the string only contains digits.
-    ///
-    ///     "123".isDigits -> true
-    ///     "abc".isDigits -> false
-    var isDigits: Bool {
-        return NSRegularExpression.allDigits.matches(string: self)
-    }
-    #endif
-    
-    #if canImport(Foundation)
-    /// Check whether the string only contains whitespace.
-    ///
-    ///     ".".isBlank -> false
-    ///     " ".isBlank -> true
-    ///     "".isBlank -> false
-    var isWhitespace: Bool {
-        return NSRegularExpression.allWhitespace.matches(string: self)
-    }
-    #endif
-
     var nonBlank: Self? {
         return isBlank ? nil : self
     }
+}
+
+// MARK: - Evaluating Properties
+public extension String {
+#if canImport(Foundation)
+	/// LogosUtils: Checks that the string is not empty and does not contain only whitespace.
+	///
+	///     ".".isBlank -> false
+	///     " ".isBlank -> true
+	///     "".isBlank -> true
+	var isBlank: Bool {
+		return NSRegularExpression.allWhitespaceOrEmpty.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Inverse of .isBlank.
+	///
+	///     ".".isNotBlank -> true
+	///     " ".isNotBlank -> false
+	///     "".isNotBlank -> false
+	var isNotBlank: Bool {
+		return !isBlank
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Check whether the string consists of Greek only.
+	///
+	///     "123".isDigits -> true
+	///     "abc".isDigits -> false
+	var isDigits: Bool {
+		return NSRegularExpression.allDigits.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Check whether the string consists of Greek only.
+	///
+	///     ".".isBlank -> false
+	///     " ".isBlank -> true
+	///     "".isBlank -> false
+	var isWhitespace: Bool {
+		return NSRegularExpression.allWhitespace.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Check whether the string consists of Greek only.
+	var isGreek: Bool {
+		return NSRegularExpression.allGreek.matches(string: self)
+	}
+#endif
 }
 
 // MARK: - Methods

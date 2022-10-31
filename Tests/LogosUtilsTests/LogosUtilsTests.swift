@@ -17,7 +17,7 @@ final class LogosUtilsTests: XCTestCase {
 
         // Encode/Decode
 
-        if #available(OSX 10.15, *) {
+        if #available(OSX 10.15, iOS 13, *) {
             do {
                 let unencoded = ["Hello", "World"]
                 let fileManager = FileManager.default
@@ -42,7 +42,7 @@ final class LogosUtilsTests: XCTestCase {
             let regex = try! NSRegularExpression(pattern: ".magic[fs]")
             let range = NSRange(location: 0, length: wow.utf16.count)
             for _ in 0 ..< 1000 {
-                let new = regex.firstMatch(in: wow, options: [], range: range)
+				_ = regex.firstMatch(in: wow, options: [], range: range)
             }
         }
     }
@@ -51,7 +51,7 @@ final class LogosUtilsTests: XCTestCase {
         measure {
             let wow = "This is a .magics test"
             for _ in 0 ..< 1000 {
-                let new = wow.range(of: ".magic[fs]", options: .regularExpression, range: nil, locale: nil)
+				_ = wow.range(of: ".magic[fs]", options: .regularExpression, range: nil, locale: nil)
             }
         }
     }

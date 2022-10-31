@@ -35,4 +35,8 @@ public extension Collection {
     var nonEmpty: Self? {
         return isEmpty ? nil : self
     }
+	
+	var isNotEmpty: Bool {
+		return !isEmpty
+	}
 }

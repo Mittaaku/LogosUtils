@@ -17,7 +17,7 @@ public extension FileManager {
         case mainBundle
     }
 
-    @available(OSX 10.15, *)
+    @available(OSX 10.15, iOS 13, *)
     @discardableResult func encode<T: Encodable>(value: T, intoJsonFile file: String, inFolder folder: SystemFolder, inSubfolder subfolder: String = "", outputFormatting: JSONEncoder.OutputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]) throws  -> URL {
         var url = try getUrl(toFolder: folder, toSubfolder: subfolder, creatingSubfolders: true)!
         url.appendPathComponent(file)
