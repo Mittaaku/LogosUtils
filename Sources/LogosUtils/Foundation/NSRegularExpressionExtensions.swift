@@ -13,7 +13,8 @@ public extension NSRegularExpression {
     static var allDigits = NSRegularExpression(#"^\d+$"#)
     static var allWhitespace = NSRegularExpression(#"^\s+$"#)
     static var allWhitespaceOrEmpty = NSRegularExpression(#"^\s*$"#)
-	static var allGreek = NSRegularExpression(#"\u0370-\u03ff\u1f00-\u1fff"#)
+	static var allGreek = NSRegularExpression(#"^\p{script=Greek}+$"#)
+	static var allHebrew = NSRegularExpression(#"^\p{script=Hebrew}+$"#)
     
     typealias DividedResults = (matching: String, notMatching: String)
     
@@ -50,7 +51,8 @@ public extension NSRegularExpression {
     
     func matches(string: String) -> Bool {
         let range = NSRange(location: 0, length: string.utf16.count)
-        return firstMatch(in: string, options: [], range: range) != nil
+		let firstMatch = firstMatch(in: string, options: [], range: range)
+        return firstMatch != nil
     }
     
     func matchesToArray(string: String) -> [[String]] {

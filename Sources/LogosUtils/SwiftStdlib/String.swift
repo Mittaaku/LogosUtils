@@ -66,11 +66,21 @@ public extension String {
 		return NSRegularExpression.allWhitespace.matches(string: self)
 	}
 #endif
-	
+}
+
+// MARK: - Language Evaluating Properties
+public extension String {
 #if canImport(Foundation)
-	/// LogosUtils: Check whether the string consists of Greek only.
+	/// LogosUtils: Check whether the string consists of Greek characters.
 	var isGreek: Bool {
 		return NSRegularExpression.allGreek.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Check whether the string consists of Hebrew characters.
+	var isHebrew: Bool {
+		return NSRegularExpression.allHebrew.matches(string: self)
 	}
 #endif
 }

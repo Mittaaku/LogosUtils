@@ -43,4 +43,25 @@ final class StringTests: XCTestCase {
     func testStrippingDiacritics() {
         XCTAssertEqual("áa".strippingDiacritics(), "aa")
     }
+	
+	func testIsDigits() {
+		XCTAssertEqual("511".isDigits, true)
+		XCTAssertEqual("".isDigits, false)
+	}
+	
+	func testIsGreek() {
+		XCTAssertEqual("φύἐάὶηη".isGreek, true)
+		XCTAssertEqual("φηη".isGreek, true)
+		XCTAssertEqual("φγfηη".isGreek, false)
+		XCTAssertEqual("".isGreek, false)
+		XCTAssertEqual("f".isGreek, false)
+	}
+	
+	func testIsHebrew() {
+		XCTAssertEqual("וְרוּו".isHebrew, true)
+		XCTAssertEqual("כככיקיחק".isHebrew, true)
+		XCTAssertEqual("כככיddקיחק".isHebrew, false)
+		XCTAssertEqual("".isHebrew, false)
+		XCTAssertEqual("f".isGreek, false)
+	}
 }
