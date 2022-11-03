@@ -31,7 +31,7 @@ public extension String {
 	///     " ".isBlank -> true
 	///     "".isBlank -> true
 	var isBlank: Bool {
-		return NSRegularExpression.allWhitespaceOrEmpty.matches(string: self)
+		return NSRegularExpression.whitespaceOrEmptyStringPattern.matches(string: self)
 	}
 #endif
 	
@@ -52,7 +52,7 @@ public extension String {
 	///     "123".isDigits -> true
 	///     "abc".isDigits -> false
 	var isDigits: Bool {
-		return NSRegularExpression.allDigits.matches(string: self)
+		return NSRegularExpression.digitStringPattern.matches(string: self)
 	}
 #endif
 	
@@ -63,7 +63,7 @@ public extension String {
 	///     " ".isBlank -> true
 	///     "".isBlank -> false
 	var isWhitespace: Bool {
-		return NSRegularExpression.allWhitespace.matches(string: self)
+		return NSRegularExpression.whitespaceStringPattern.matches(string: self)
 	}
 #endif
 }
@@ -73,14 +73,14 @@ public extension String {
 #if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek characters.
 	var isGreek: Bool {
-		return NSRegularExpression.allGreek.matches(string: self)
+		return NSRegularExpression.greekStringPattern.matches(string: self)
 	}
 #endif
 	
 #if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Hebrew characters.
 	var isHebrew: Bool {
-		return NSRegularExpression.allHebrew.matches(string: self)
+		return NSRegularExpression.hebrewStringPattern.matches(string: self)
 	}
 #endif
 }

@@ -61,6 +61,7 @@ final class StringTests: XCTestCase {
 		XCTAssertEqual("וְרוּו".isHebrew, true)
 		XCTAssertEqual("כככיקיחק".isHebrew, true)
 		XCTAssertEqual("כככיddקיחק".isHebrew, false)
+		XCTAssertEqual(" ".isHebrew, true)
 		XCTAssertEqual("".isHebrew, false)
 		XCTAssertEqual("f".isGreek, false)
 	}

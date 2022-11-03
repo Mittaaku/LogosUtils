@@ -10,11 +10,11 @@ import Foundation
 
 public extension NSRegularExpression {
     
-    static var allDigits = NSRegularExpression(#"^\d+$"#)
-    static var allWhitespace = NSRegularExpression(#"^\s+$"#)
-    static var allWhitespaceOrEmpty = NSRegularExpression(#"^\s*$"#)
-	static var allGreek = NSRegularExpression(#"^\p{script=Greek}+$"#)
-	static var allHebrew = NSRegularExpression(#"^\p{script=Hebrew}+$"#)
+    static var digitStringPattern = NSRegularExpression(#"^\d+$"#)
+    static var whitespaceStringPattern = NSRegularExpression(#"^\s+$"#)
+    static var whitespaceOrEmptyStringPattern = NSRegularExpression(#"^\s*$"#)
+	static var greekStringPattern = NSRegularExpression(#"^[\p{script=Greek}\s]+$"#)
+	static var hebrewStringPattern = NSRegularExpression(#"^[\p{script=Hebrew}\s]+$"#)
     
     typealias DividedResults = (matching: String, notMatching: String)
     
