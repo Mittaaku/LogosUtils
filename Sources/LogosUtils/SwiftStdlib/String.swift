@@ -72,15 +72,29 @@ public extension String {
 public extension String {
 #if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek characters.
+	var isSpacedGreek: Bool {
+		return NSRegularExpression.spacedGreekPattern.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Check whether the string consists of Greek characters.
 	var isGreek: Bool {
-		return NSRegularExpression.greekStringPattern.matches(string: self)
+		return NSRegularExpression.greekPattern.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Check whether the string consists of Hebrew characters.
+	var isSpacedHebrew: Bool {
+		return NSRegularExpression.spacedHebrewPattern.matches(string: self)
 	}
 #endif
 	
 #if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Hebrew characters.
 	var isHebrew: Bool {
-		return NSRegularExpression.hebrewStringPattern.matches(string: self)
+		return NSRegularExpression.hebrewPattern.matches(string: self)
 	}
 #endif
 }

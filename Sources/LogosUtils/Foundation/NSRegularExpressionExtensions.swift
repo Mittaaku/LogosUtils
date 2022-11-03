@@ -13,8 +13,12 @@ public extension NSRegularExpression {
     static var digitStringPattern = NSRegularExpression(#"^\d+$"#)
     static var whitespaceStringPattern = NSRegularExpression(#"^\s+$"#)
     static var whitespaceOrEmptyStringPattern = NSRegularExpression(#"^\s*$"#)
-	static var greekStringPattern = NSRegularExpression(#"^[\p{script=Greek}\s]+$"#)
-	static var hebrewStringPattern = NSRegularExpression(#"^[\p{script=Hebrew}\s]+$"#)
+	
+	static var spacedGreekPattern = NSRegularExpression(#"^[\p{script=Greek}\s]+$"#)
+	static var greekPattern = NSRegularExpression(#"^[\p{script=Greek}]+$"#)
+	
+	static var spacedHebrewPattern = NSRegularExpression(#"^[\p{script=Hebrew}\s]+$"#)
+	static var hebrewPattern = NSRegularExpression(#"^[\p{script=Hebrew}]+$"#)
     
     typealias DividedResults = (matching: String, notMatching: String)
     
