@@ -124,6 +124,14 @@ public extension String {
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
     }
+	
+	func uppercased(range: Range<String.Index>) -> String {
+		return replacingCharacters(in: range.lowerBound ..< range.upperBound, with: self[range].uppercased())
+	}
+	
+	func lowercased(range: Range<String.Index>) -> String {
+		return replacingCharacters(in: range.lowerBound ..< range.upperBound, with: self[range].lowercased())
+	}
 }
 
 func ~= (lhs: String, rhs: NSRegularExpression) -> Bool {

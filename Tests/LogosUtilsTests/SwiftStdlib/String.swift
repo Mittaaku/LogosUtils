@@ -64,4 +64,10 @@ final class StringTests: XCTestCase {
 		XCTAssertEqual("".isHebrew, false)
 		XCTAssertEqual("f".isGreek, false)
 	}
+	
+	func testUppercaseRange() {
+		let string = "testing"
+		let range = string.index(string.endIndex, offsetBy: -2) ..< string.endIndex
+		XCTAssertEqual(string.uppercased(range: range), "testiNG")
+	}
 }
