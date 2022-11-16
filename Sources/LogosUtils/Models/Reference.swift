@@ -122,6 +122,25 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	public func sharesWord(with reference: Reference) -> Bool {
 		return wordId == reference.wordId
 	}
+	
+	public func offset(from reference: Reference) -> Offset {
+		let difference = id ^ reference.id
+		
+		switch difference {
+		case Reference.bookRadix ..< Int.max:
+			return .differentBook
+		case Reference.chapterRadix ..< Reference.bookRadix:
+			return .differentChapter
+		case Reference.verseRadix ..< Reference.chapterRadix:
+			return .differentVerse
+		case Reference.wordRadix ..< Reference.verseRadix:
+			return .differentWord
+		case Reference.morphemeRadix ..< Reference.wordRadix:
+			return .differentMorpheme
+		default:
+			return .identical
+		}
+	}
 }
 
 public extension Reference {
@@ -131,4 +150,13 @@ public extension Reference {
 	static let verseRadix   	= 0000001000000
 	static let wordRadix    	= 0000000000100
 	static let morphemeRadix    = 0000000000001
+	
+	enum Offset {
+		case differentBook
+		case differentChapter
+		case differentVerse
+		case differentWord
+		case differentMorpheme
+		case identical
+	}
 }
