@@ -6,11 +6,11 @@
 import Foundation
 
 public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertible {
-	var book: Int
-	var chapter: Int
-	var verse: Int
-	var word: Int
-	var morpheme: Int
+	public var book: Int
+	public var chapter: Int
+	public var verse: Int
+	public var word: Int
+	public var morpheme: Int
 	
 	// MARK: General initilizers
 	
