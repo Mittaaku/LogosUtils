@@ -33,18 +33,4 @@ public extension Optional {
     }
 }
 
-public extension Optional where Wrapped: Collection {
-    
-    var isNilOrEmpty: Bool {
-        return self?.isEmpty ?? true
-    }
-}
-
-public extension Optional where Wrapped == String {
-    
-    var isNilOrBlank: Bool {
-        return self?.isBlank ?? true
-    }
-}
-
 infix operator ??= : AssignmentPrecedence

@@ -7,14 +7,6 @@ final class LogosUtilsTests: XCTestCase {
 
         // Sorting
 
-        // Blanks
-        let nilString: String? = nil
-        let optionalBlankString: String? = "     "
-        let optionalPopulatedString: String? = "   d"
-        XCTAssertEqual(nilString.isNilOrBlank, true)
-        XCTAssertEqual(optionalBlankString.isNilOrBlank, true)
-        XCTAssertEqual(optionalPopulatedString.isNilOrBlank, false)
-
         // Encode/Decode
 
         if #available(OSX 10.15, iOS 13, *) {

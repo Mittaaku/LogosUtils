@@ -68,7 +68,7 @@ public extension String {
 #endif
 }
 
-// MARK: - Language Evaluating Properties
+// MARK: - Language Properties
 public extension String {
 #if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek characters.
@@ -95,6 +95,20 @@ public extension String {
 	/// LogosUtils: Check whether the string consists of Hebrew characters.
 	var isHebrew: Bool {
 		return NSRegularExpression.hebrewPattern.matches(string: self)
+	}
+#endif
+	
+#if canImport(Foundation)
+	/// LogosUtils: Returns the latin transliteration of a greek string.
+	var greekTransliteration: String? {
+		return applyingTransform(.latinToGreek, reverse: true)?.lowercased()
+	}
+#endif
+
+#if canImport(Foundation)
+	/// LogosUtils: Returns the latin transliteration of a hebrew string.
+	var hebrewTransliteration: String? {
+		return applyingTransform(.latinToHebrew, reverse: true)?.lowercased()
 	}
 #endif
 }
