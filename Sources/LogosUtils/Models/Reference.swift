@@ -81,6 +81,24 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 		+ (word * Reference.wordRadix)
 	}
 	
+	// MARK: Conversion
+	
+	public var bookReference: Reference {
+		return Reference(id: bookId)
+	}
+	
+	public var chapterReference: Reference {
+		return Reference(id: chapterId)
+	}
+	
+	public var verseReference: Reference {
+		return Reference(id: verseId)
+	}
+	
+	public var wordReference: Reference {
+		return Reference(id: wordId)
+	}
+	
 	// MARK: CustomStringConvertable
 	
 	public var description: String {
