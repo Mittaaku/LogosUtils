@@ -5,23 +5,16 @@
 
 import Foundation
 
-extension Reference {
-	static let invalid      	= Reference(id: 0)
-	static let bookRadix    	= 1000000000000
-	static let chapterRadix 	= 0001000000000
-	static let verseRadix   	= 0000001000000
-	static let wordRadix    	= 0000000000100
-	static let morphemeRadix    = 0000000000001
-}
-
-struct Reference: Identifiable, CustomStringConvertible {
+public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertible {
 	var book: Int
 	var chapter: Int
 	var verse: Int
 	var word: Int
 	var morpheme: Int
 	
-	init(book: Int, chapter: Int, verse: Int, word: Int = 0, morpheme: Int = 0) {
+	// MARK: General initilizers
+	
+	public init(book: Int, chapter: Int, verse: Int, word: Int = 0, morpheme: Int = 0) {
 		self.book = book
 		self.chapter = chapter
 		self.verse = verse
@@ -29,7 +22,7 @@ struct Reference: Identifiable, CustomStringConvertible {
 		self.morpheme = morpheme
 	}
 	
-	init(id: Int) {
+	public init(id: Int) {
 		book = id / Self.bookRadix
 		chapter = (id % Self.bookRadix) / Self.chapterRadix
 		verse = (id % Self.chapterRadix) / Self.verseRadix
@@ -37,34 +30,27 @@ struct Reference: Identifiable, CustomStringConvertible {
 		morpheme = id % Self.wordRadix
 	}
 	
-	var description: String {
-		return String(id)
+	// MARK: Codable
+	
+	public init(from decoder: Decoder) throws {
+		let container = try decoder.singleValueContainer()
+		self.init(id: try container.decode(Int.self))
 	}
 	
-	var bookId: Int {
-		return (book * Reference.bookRadix)
-		+ (chapter * Reference.chapterRadix)
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.singleValueContainer()
+		try container.encode(id)
 	}
 	
-	var chapterId: Int {
-		return (book * Reference.bookRadix)
-		+ (chapter * Reference.chapterRadix)
+	// MARK: Hashable
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
 	}
 	
-	var verseId: Int {
-		return (book * Reference.bookRadix)
-		+ (chapter * Reference.chapterRadix)
-		+ (verse * Reference.verseRadix)
-	}
+	// MARK: Identifiable and other IDs
 	
-	var wordId: Int {
-		return (book * Reference.bookRadix)
-		+ (chapter * Reference.chapterRadix)
-		+ (verse * Reference.verseRadix)
-		+ (word * Reference.wordRadix)
-	}
-	
-	var id: Int {
+	public var id: Int {
 		return (book * Reference.bookRadix)
 		+ (chapter * Reference.chapterRadix)
 		+ (verse * Reference.verseRadix)
@@ -72,39 +58,59 @@ struct Reference: Identifiable, CustomStringConvertible {
 		+ morpheme
 	}
 	
-	func sharesBook(with reference: Reference) -> Bool {
+	public var bookId: Int {
+		return (book * Reference.bookRadix)
+		+ (chapter * Reference.chapterRadix)
+	}
+	
+	public var chapterId: Int {
+		return (book * Reference.bookRadix)
+		+ (chapter * Reference.chapterRadix)
+	}
+	
+	public var verseId: Int {
+		return (book * Reference.bookRadix)
+		+ (chapter * Reference.chapterRadix)
+		+ (verse * Reference.verseRadix)
+	}
+	
+	public var wordId: Int {
+		return (book * Reference.bookRadix)
+		+ (chapter * Reference.chapterRadix)
+		+ (verse * Reference.verseRadix)
+		+ (word * Reference.wordRadix)
+	}
+	
+	// MARK: CustomStringConvertable
+	
+	public var description: String {
+		return String(id)
+	}
+	
+	// MARK: Equating methods
+	
+	public func sharesBook(with reference: Reference) -> Bool {
 		return bookId == reference.bookId
 	}
 	
-	func sharesChapter(with reference: Reference) -> Bool {
+	public func sharesChapter(with reference: Reference) -> Bool {
 		return chapterId == reference.chapterId
 	}
 	
-	func sharesVerse(with reference: Reference) -> Bool {
+	public func sharesVerse(with reference: Reference) -> Bool {
 		return verseId == reference.verseId
 	}
 	
-	func sharesWord(with reference: Reference) -> Bool {
+	public func sharesWord(with reference: Reference) -> Bool {
 		return wordId == reference.wordId
 	}
 }
 
-extension Reference: Codable {
-	
-	init(from decoder: Decoder) throws {
-		let container = try decoder.singleValueContainer()
-		self.init(id: try container.decode(Int.self))
-	}
-	
-	func encode(to encoder: Encoder) throws {
-		var container = encoder.singleValueContainer()
-		try container.encode(id)
-	}
-}
-
-extension Reference: Hashable {
-	
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(id)
-	}
+public extension Reference {
+	static let invalid      	= Reference(id: 0)
+	static let bookRadix    	= 1000000000000
+	static let chapterRadix 	= 0001000000000
+	static let verseRadix   	= 0000001000000
+	static let wordRadix    	= 0000000000100
+	static let morphemeRadix    = 0000000000001
 }
