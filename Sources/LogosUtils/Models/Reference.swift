@@ -61,23 +61,48 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	// MARK: Numbers
 	
 	public var bookNumber: Int {
-		return id / Reference.bookRadix
+		get {
+			return id / Reference.bookRadix
+		}
+		set {
+			id = (id & Reference.reverseBookIdBits) + (newValue * Reference.bookRadix)
+		}
 	}
 	
 	public var chapterNumber: Int {
-		return (id & Reference.chapterBits) / Reference.chapterRadix
+		get {
+			return (id & Reference.chapterBits) / Reference.chapterRadix
+		}
+		set {
+			id = (id & Reference.reverseChapterIdBits) + (newValue * Reference.chapterRadix)
+		}
 	}
 	
 	public var verseNumber: Int {
-		return (id & Reference.verseBits) / Reference.verseRadix
+		get {
+			return (id & Reference.verseBits) / Reference.verseRadix
+		}
+		set {
+			id = (id & Reference.reverseVerseIdBits) + (newValue * Reference.verseRadix)
+		}
 	}
 	
 	public var wordNumber: Int {
-		return (id & Reference.wordBits) / Reference.wordRadix
+		get {
+			return (id & Reference.wordBits) / Reference.wordRadix
+		}
+		set {
+			id = (id & Reference.reverseWordIdBits) + (newValue * Reference.wordRadix)
+		}
 	}
 	
 	public var morphemeNumber: Int {
-		return id & Reference.morphemeIdBits
+		get {
+			return (id & Reference.morphemeBits) / Reference.morphemeRadix
+		}
+		set {
+			id = (id & Reference.reverseMorphemeIdBits) + newValue
+		}
 	}
 	
 	// MARK: Conversion
@@ -133,17 +158,23 @@ public extension Reference {
 	static let wordRadix				= 0x0000000100
 	static let morphemeRadix			= 0x0000000001
 	
-	static let bookBits					= 0xFF00000000
-	static let chapterBits				= 0x00FF000000
-	static let verseBits				= 0x0000FF0000
-	static let wordBits					= 0x000000FF00
-	static let morphemeBits				= 0x00000000FF
+	static let bookBits					= bookRadix * 0xFF
+	static let chapterBits				= chapterRadix * 0xFF
+	static let verseBits				= verseRadix * 0xFF
+	static let wordBits					= wordRadix * 0xFF
+	static let morphemeBits				= morphemeRadix * 0xFF
 	
-	static let bookIdBits				= 0xFF00000000
-	static let chapterIdBits			= 0xFFFF000000
-	static let verseIdBits				= 0xFFFFFF0000
-	static let wordIdBits				= 0xFFFFFFFF00
-	static let morphemeIdBits			= 0xFFFFFFFFFF
+	static let bookIdBits				= bookBits
+	static let chapterIdBits			= bookBits + chapterBits
+	static let verseIdBits				= bookBits + chapterBits + verseBits
+	static let wordIdBits				= bookBits + chapterBits + verseBits + wordBits
+	static let morphemeIdBits			= bookBits + chapterBits + verseBits + wordBits + morphemeBits
+	
+	static let reverseBookIdBits		= bookBits ^ morphemeIdBits
+	static let reverseChapterIdBits		= chapterBits ^ morphemeIdBits
+	static let reverseVerseIdBits		= verseBits ^ morphemeIdBits
+	static let reverseWordIdBits		= wordBits ^ morphemeIdBits
+	static let reverseMorphemeIdBits	= morphemeBits ^ morphemeIdBits
 	
 	enum Offset {
 		case differentBook
