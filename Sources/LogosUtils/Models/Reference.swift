@@ -51,7 +51,7 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	}
 	
 	public var verseId: Int {
-		return id & Reference.wordIdBits
+		return id & Reference.verseIdBits
 	}
 	
 	public var wordId: Int {
