@@ -10,7 +10,7 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	
 	// MARK: General initilizers
 	
-	public init(book: Int, chapter: Int, verse: Int, word: Int = 0, morpheme: Int = 0) {
+	public init(book: Int, chapter: Int = 0, verse: Int = 0, word: Int = 0, morpheme: Int = 0) {
 		self.id = (book * Reference.bookRadix)
 		+ (chapter * Reference.chapterRadix)
 		+ (verse * Reference.verseRadix)
@@ -129,6 +129,12 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 		return String(id)
 	}
 	
+	// MARK: Other
+	
+	public var bookName: BookName? {
+		return BookName(rawValue: bookNumber)
+	}
+	
 	public func offset(from reference: Reference) -> Offset {
 		let difference = id ^ reference.id
 		
@@ -183,5 +189,74 @@ public extension Reference {
 		case differentWord
 		case differentMorpheme
 		case identical
+	}
+	
+	enum BookName: Int {
+		case genesis = 1
+		case exodus
+		case leviticus
+		case numbers
+		case deuteronomy
+		case joshua
+		case judges
+		case ruth
+		case firstSamuel
+		case secondSamuel
+		case firstKings
+		case secondKings
+		case firstChronicles
+		case secondChronicles
+		case ezra
+		case nehemiah
+		case esther
+		case job
+		case psalms
+		case proverbs
+		case ecclesiastes
+		case songOfSongs
+		case isaiah
+		case jeremiah
+		case lamentations
+		case ezekiel
+		case daniel
+		case hosea
+		case joel
+		case amos
+		case obadiah
+		case jonah
+		case micah
+		case nahum
+		case habakkuk
+		case zephaniah
+		case haggai
+		case zechariah
+		case malachi
+		case matthew
+		case mark
+		case luke
+		case john
+		case actsOfTheApostles
+		case romans
+		case firstCorinthians
+		case secondCorinthians
+		case galatians
+		case ephesians
+		case philippians
+		case colossians
+		case firstThessalonians
+		case secondThessalonians
+		case firstTimothy
+		case secondTimothy
+		case titus
+		case philemon
+		case hebrews
+		case james
+		case firstPeter
+		case secondPeter
+		case firstJohn
+		case secondJohn
+		case thirdJohn
+		case jude
+		case revelation
 	}
 }

@@ -15,6 +15,8 @@ final class ReferenceTests: XCTestCase {
 	let reference3 = Reference(book: 3, chapter: 2, verse: 1)
 	let reference4 = Reference(book: 1, chapter: 2, verse: 1)
 	var reference5 = Reference(book: 1, chapter: 2, verse: 3, word: 1, morpheme: 2)
+	var reference6 = Reference(book: 1)
+	var reference7 = Reference(book: 66)
 	
 	func testReferenceOffset() {
 		XCTAssertEqual(reference1.offset(from: reference2), .differentVerse)
@@ -47,5 +49,8 @@ final class ReferenceTests: XCTestCase {
 		
 		reference5.bookNumber += 1
 		XCTAssertEqual(reference5.bookNumber, 3)
+		
+		XCTAssertEqual(reference6.bookName, .genesis)
+		XCTAssertEqual(reference7.bookName, .revelation)
 	}
 }
