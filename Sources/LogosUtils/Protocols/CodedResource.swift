@@ -5,10 +5,10 @@
 
 import Foundation
 
-protocol CodedResource: Decodable {
+public protocol CodedResource: Decodable {
 }
 
-extension CodedResource {
+public extension CodedResource {
 	static func decodeArray(fromJson json: String, inBundle bundle: Bundle? = nil) -> Array<Self> {
 		return decode(fromJson: json)
 	}
@@ -20,7 +20,7 @@ extension CodedResource {
 	private static func decode<T: Decodable>(fromJson json: String, inBundle bundle: Bundle? = nil) -> T {
 		do {
 			let bundle = bundle ?? Bundle.main
-			guard let url = Bundle.main.url(forResource: json, withExtension: "json") else {
+			guard let url = bundle.url(forResource: json, withExtension: "json") else {
 				fatalError("Json resource '\(json)' not found")
 			}
 			let data = try Data(contentsOf: url)
