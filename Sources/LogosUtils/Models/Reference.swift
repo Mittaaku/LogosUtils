@@ -116,7 +116,7 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	}
 	
 	public var verseReference: Reference {
-		return Reference(id: id & Reference.wordIdBits)
+		return Reference(id: id & Reference.verseIdBits)
 	}
 	
 	public var wordReference: Reference {
