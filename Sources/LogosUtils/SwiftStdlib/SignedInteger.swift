@@ -12,6 +12,7 @@ import Foundation
 
 // MARK: - Properties
 public extension SignedInteger {
+	
     var abs: Self {
         return Swift.abs(self)
     }
@@ -31,4 +32,12 @@ public extension SignedInteger {
     var isOdd: Bool {
         return (self % 2) != 0
     }
+	
+	/// LogosUtils: Get String from Int.
+	///
+	///		10.string -> "10"
+	///
+	var string: Int? {
+		return Int(self)
+	}
 }

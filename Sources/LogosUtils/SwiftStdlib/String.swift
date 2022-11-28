@@ -16,6 +16,14 @@ public extension String {
     var characters: [Character] {
         return Array(self)
     }
+	
+	/// LogosUtils: Get Int from String (if initializable).
+	///
+	///		"10".int -> 10
+	///
+	var int: Int? {
+		return Int(self)
+	}
 
     var nonBlank: Self? {
         return isBlank ? nil : self

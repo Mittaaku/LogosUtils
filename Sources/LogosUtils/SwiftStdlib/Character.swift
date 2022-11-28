@@ -13,6 +13,10 @@ import Foundation
 // MARK: - Properties
 public extension Character {
 
+	/// LogosUtils: Get String from Character.
+	///
+	///		"C".string -> "C"
+	///
     var string: String {
         return String(self)
     }
