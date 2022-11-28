@@ -52,5 +52,6 @@ final class ReferenceTests: XCTestCase {
 		
 		XCTAssertEqual(reference6.bookName, .genesis)
 		XCTAssertEqual(reference7.bookName, .revelation)
+		XCTAssertEqual(reference1.description, "[3, 1, 3, 0, 0]")
 	}
 }

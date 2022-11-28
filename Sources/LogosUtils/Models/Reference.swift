@@ -126,10 +126,14 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	// MARK: CustomStringConvertable
 	
 	public var description: String {
-		return String(id)
+		return uintArray.description
 	}
 	
 	// MARK: Other
+	
+	public var uintArray: [UInt8] {
+		return Array(id.bytes.prefix(5)).reversed()
+	}
 	
 	public var bookName: BookName? {
 		return BookName(rawValue: bookNumber)
