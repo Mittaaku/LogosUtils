@@ -56,4 +56,8 @@ final class NSRegularExpressionTests: XCTestCase {
         XCTAssertTrue(" ".isWhitespace)
         XCTAssertFalse(".".isWhitespace)
     }
+	
+	func testBytes() {
+		XCTAssertEqual(0xFF12.bytes, [0x12, 0xFF, 0, 0, 0, 0, 0, 0])
+	}
 }
