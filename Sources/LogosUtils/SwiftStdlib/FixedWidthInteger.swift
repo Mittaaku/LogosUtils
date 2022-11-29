@@ -10,7 +10,6 @@ import Foundation
 
 extension FixedWidthInteger {
 	
-	
 	// Credit: https://stackoverflow.com/questions/29970204/split-uint32-into-uint8-in-swift
 	var bytes: [UInt8] {
 		var _endian = littleEndian

@@ -17,27 +17,7 @@ public extension SignedInteger {
         return Swift.abs(self)
     }
 
-    var isPositive: Bool {
-        return self > 0
-    }
-
     var isNegative: Bool {
         return self < 0
     }
-
-    var isEven: Bool {
-        return (self % 2) == 0
-    }
-
-    var isOdd: Bool {
-        return (self % 2) != 0
-    }
-	
-	/// LogosUtils: Get String from Int.
-	///
-	///		10.string -> "10"
-	///
-	var string: Int? {
-		return Int(self)
-	}
 }

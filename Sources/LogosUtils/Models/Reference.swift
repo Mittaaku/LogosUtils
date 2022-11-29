@@ -105,6 +105,28 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 		}
 	}
 	
+	// MARK: Checks
+	
+	public var isBookReference: Bool {
+		return uintArray.map(\.isPositive) == [true, false, false, false, false]
+	}
+	
+	public var isChapterReference: Bool {
+		return uintArray.map(\.isPositive) == [true, true, false, false, false]
+	}
+	
+	public var isVerseReference: Bool {
+		return uintArray.map(\.isPositive) == [true, true, true, false, false]
+	}
+	
+	public var isWordReference: Bool {
+		return uintArray.map(\.isPositive) == [true, true, true, true, false]
+	}
+	
+	public var isMorphemeReference: Bool {
+		return uintArray.map(\.isPositive) == [true, true, true, true, true]
+	}
+	
 	// MARK: Conversion
 	
 	public var bookReference: Reference {
