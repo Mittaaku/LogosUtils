@@ -8,34 +8,6 @@ import Foundation
 
 public extension Reference {
 	
-	struct Indices: Equatable {
-		public var indices: [Int]
-		
-		public var book: Int {
-			return indices[0]
-		}
-		
-		public var chapter: Int {
-			return indices[1]
-		}
-		
-		public var verse: Int {
-			return indices[2]
-		}
-		
-		public var word: Int {
-			return indices[3]
-		}
-		
-		public var morpheme: Int {
-			return indices[4]
-		}
-		
-		public static func ==(lhs: Indices, rhs: Indices) -> Bool {
-			return lhs.indices == rhs.indices
-		}
-	}
-	
 	enum Offset {
 		case differentBook
 		case differentChapter
@@ -246,23 +218,23 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	// MARK: Checks
 	
 	public var isBookReference: Bool {
-		return uintArray.map(\.isPositive) == [true, false, false, false, false]
+		return uintIndices.map(\.isPositive) == [true, false, false, false, false]
 	}
 	
 	public var isChapterReference: Bool {
-		return uintArray.map(\.isPositive) == [true, true, false, false, false]
+		return uintIndices.map(\.isPositive) == [true, true, false, false, false]
 	}
 	
 	public var isVerseReference: Bool {
-		return uintArray.map(\.isPositive) == [true, true, true, false, false]
+		return uintIndices.map(\.isPositive) == [true, true, true, false, false]
 	}
 	
 	public var isWordReference: Bool {
-		return uintArray.map(\.isPositive) == [true, true, true, true, false]
+		return uintIndices.map(\.isPositive) == [true, true, true, true, false]
 	}
 	
 	public var isMorphemeReference: Bool {
-		return uintArray.map(\.isPositive) == [true, true, true, true, true]
+		return uintIndices.map(\.isPositive) == [true, true, true, true, true]
 	}
 	
 	// MARK: Conversion
@@ -285,18 +257,18 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 	
 	// MARK: Arrays
 	
-	public var uintArray: [UInt8] {
+	public var uintIndices: [UInt8] {
 		return Array(id.bytes.prefix(5)).reversed()
 	}
 	
-	public var indices: Indices {
-		return Indices(indices: uintArray.map( { Int($0) - 1 } ))
+	public var indices: [Int] {
+		return uintIndices.map{ return Int($0) }
 	}
 	
 	// MARK: Other
 	
 	public var description: String {
-		return uintArray.description
+		return uintIndices.description
 	}
 	
 	public var bookName: BookName? {
