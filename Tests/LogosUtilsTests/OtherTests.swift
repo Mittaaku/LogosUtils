@@ -53,5 +53,11 @@ final class ReferenceTests: XCTestCase {
 		XCTAssertEqual(reference6.bookName, .genesis)
 		XCTAssertEqual(reference7.bookName, .revelation)
 		XCTAssertEqual(reference1.description, "[3, 1, 3, 0, 0]")
+		
+		XCTAssertEqual(reference1.isBookReference, false)
+		XCTAssertEqual(reference1.isChapterReference, false)
+		XCTAssertEqual(reference1.isVerseReference, true)
+		XCTAssertEqual(reference1.isWordReference, false)
+		XCTAssertEqual(reference1.isMorphemeReference, false)
 	}
 }
