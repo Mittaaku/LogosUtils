@@ -5,7 +5,145 @@
 
 import Foundation
 
+
+public extension Reference {
+	
+	struct Indices: Equatable {
+		public var indices: [Int]
+		
+		public var book: Int {
+			return indices[0]
+		}
+		
+		public var chapter: Int {
+			return indices[1]
+		}
+		
+		public var verse: Int {
+			return indices[2]
+		}
+		
+		public var word: Int {
+			return indices[3]
+		}
+		
+		public var morpheme: Int {
+			return indices[4]
+		}
+		
+		public static func ==(lhs: Indices, rhs: Indices) -> Bool {
+			return lhs.indices == rhs.indices
+		}
+	}
+	
+	enum Offset {
+		case differentBook
+		case differentChapter
+		case differentVerse
+		case differentWord
+		case differentMorpheme
+		case identical
+	}
+	
+	enum BookName: Int {
+		case genesis = 1
+		case exodus
+		case leviticus
+		case numbers
+		case deuteronomy
+		case joshua
+		case judges
+		case ruth
+		case firstSamuel
+		case secondSamuel
+		case firstKings
+		case secondKings
+		case firstChronicles
+		case secondChronicles
+		case ezra
+		case nehemiah
+		case esther
+		case job
+		case psalms
+		case proverbs
+		case ecclesiastes
+		case songOfSongs
+		case isaiah
+		case jeremiah
+		case lamentations
+		case ezekiel
+		case daniel
+		case hosea
+		case joel
+		case amos
+		case obadiah
+		case jonah
+		case micah
+		case nahum
+		case habakkuk
+		case zephaniah
+		case haggai
+		case zechariah
+		case malachi
+		case matthew
+		case mark
+		case luke
+		case john
+		case actsOfTheApostles
+		case romans
+		case firstCorinthians
+		case secondCorinthians
+		case galatians
+		case ephesians
+		case philippians
+		case colossians
+		case firstThessalonians
+		case secondThessalonians
+		case firstTimothy
+		case secondTimothy
+		case titus
+		case philemon
+		case hebrews
+		case james
+		case firstPeter
+		case secondPeter
+		case firstJohn
+		case secondJohn
+		case thirdJohn
+		case jude
+		case revelation
+	}
+	
+	static let invalid	= Reference(id: 0)
+	
+	static let bookRadix				= 0x0100000000
+	static let chapterRadix				= 0x0001000000
+	static let verseRadix				= 0x0000010000
+	static let wordRadix				= 0x0000000100
+	static let morphemeRadix			= 0x0000000001
+	
+	static let bookBits					= bookRadix * 0xFF
+	static let chapterBits				= chapterRadix * 0xFF
+	static let verseBits				= verseRadix * 0xFF
+	static let wordBits					= wordRadix * 0xFF
+	static let morphemeBits				= morphemeRadix * 0xFF
+	
+	static let bookIdBits				= bookBits
+	static let chapterIdBits			= bookBits + chapterBits
+	static let verseIdBits				= bookBits + chapterBits + verseBits
+	static let wordIdBits				= bookBits + chapterBits + verseBits + wordBits
+	static let morphemeIdBits			= bookBits + chapterBits + verseBits + wordBits + morphemeBits
+	
+	static let reverseBookIdBits		= bookBits ^ morphemeIdBits
+	static let reverseChapterIdBits		= chapterBits ^ morphemeIdBits
+	static let reverseVerseIdBits		= verseBits ^ morphemeIdBits
+	static let reverseWordIdBits		= wordBits ^ morphemeIdBits
+	static let reverseMorphemeIdBits	= morphemeBits ^ morphemeIdBits
+}
+
+
 public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertible {
+	
 	public var id: Int
 	
 	// MARK: General initilizers
@@ -145,16 +283,20 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 		return Reference(id: id & Reference.wordIdBits)
 	}
 	
-	// MARK: CustomStringConvertable
+	// MARK: Arrays
 	
-	public var description: String {
-		return uintArray.description
+	public var uintArray: [UInt8] {
+		return Array(id.bytes.prefix(5)).reversed()
+	}
+	
+	public var indices: Indices {
+		return Indices(indices: uintArray.map( { Int($0) - 1 } ))
 	}
 	
 	// MARK: Other
 	
-	public var uintArray: [UInt8] {
-		return Array(id.bytes.prefix(5)).reversed()
+	public var description: String {
+		return uintArray.description
 	}
 	
 	public var bookName: BookName? {
@@ -178,111 +320,5 @@ public struct Reference: Codable, Hashable, Identifiable, CustomStringConvertibl
 		default:
 			return .identical
 		}
-	}
-}
-
-public extension Reference {
-	static let invalid	= Reference(id: 0)
-	
-	static let bookRadix				= 0x0100000000
-	static let chapterRadix				= 0x0001000000
-	static let verseRadix				= 0x0000010000
-	static let wordRadix				= 0x0000000100
-	static let morphemeRadix			= 0x0000000001
-	
-	static let bookBits					= bookRadix * 0xFF
-	static let chapterBits				= chapterRadix * 0xFF
-	static let verseBits				= verseRadix * 0xFF
-	static let wordBits					= wordRadix * 0xFF
-	static let morphemeBits				= morphemeRadix * 0xFF
-	
-	static let bookIdBits				= bookBits
-	static let chapterIdBits			= bookBits + chapterBits
-	static let verseIdBits				= bookBits + chapterBits + verseBits
-	static let wordIdBits				= bookBits + chapterBits + verseBits + wordBits
-	static let morphemeIdBits			= bookBits + chapterBits + verseBits + wordBits + morphemeBits
-	
-	static let reverseBookIdBits		= bookBits ^ morphemeIdBits
-	static let reverseChapterIdBits		= chapterBits ^ morphemeIdBits
-	static let reverseVerseIdBits		= verseBits ^ morphemeIdBits
-	static let reverseWordIdBits		= wordBits ^ morphemeIdBits
-	static let reverseMorphemeIdBits	= morphemeBits ^ morphemeIdBits
-	
-	enum Offset {
-		case differentBook
-		case differentChapter
-		case differentVerse
-		case differentWord
-		case differentMorpheme
-		case identical
-	}
-	
-	enum BookName: Int {
-		case genesis = 1
-		case exodus
-		case leviticus
-		case numbers
-		case deuteronomy
-		case joshua
-		case judges
-		case ruth
-		case firstSamuel
-		case secondSamuel
-		case firstKings
-		case secondKings
-		case firstChronicles
-		case secondChronicles
-		case ezra
-		case nehemiah
-		case esther
-		case job
-		case psalms
-		case proverbs
-		case ecclesiastes
-		case songOfSongs
-		case isaiah
-		case jeremiah
-		case lamentations
-		case ezekiel
-		case daniel
-		case hosea
-		case joel
-		case amos
-		case obadiah
-		case jonah
-		case micah
-		case nahum
-		case habakkuk
-		case zephaniah
-		case haggai
-		case zechariah
-		case malachi
-		case matthew
-		case mark
-		case luke
-		case john
-		case actsOfTheApostles
-		case romans
-		case firstCorinthians
-		case secondCorinthians
-		case galatians
-		case ephesians
-		case philippians
-		case colossians
-		case firstThessalonians
-		case secondThessalonians
-		case firstTimothy
-		case secondTimothy
-		case titus
-		case philemon
-		case hebrews
-		case james
-		case firstPeter
-		case secondPeter
-		case firstJohn
-		case secondJohn
-		case thirdJohn
-		case jude
-		case revelation
 	}
 }

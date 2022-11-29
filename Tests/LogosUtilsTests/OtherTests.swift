@@ -59,5 +59,7 @@ final class ReferenceTests: XCTestCase {
 		XCTAssertEqual(reference1.isVerseReference, true)
 		XCTAssertEqual(reference1.isWordReference, false)
 		XCTAssertEqual(reference1.isMorphemeReference, false)
+		
+		XCTAssertEqual(reference1.indices, Reference.Indices(indices: [2, 0, 2, -1, -1]))
 	}
 }
