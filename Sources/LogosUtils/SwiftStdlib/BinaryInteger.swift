@@ -28,4 +28,8 @@ extension BinaryInteger {
 	var string: Int? {
 		return Int(self)
 	}
+	
+	func checkBit(at position: Int) -> Bool {
+		return (self & (1 << position)) != 0
+	}
 }
