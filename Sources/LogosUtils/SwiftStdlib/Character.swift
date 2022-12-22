@@ -30,7 +30,7 @@ public extension Character {
 		String(self).decomposedStringWithCanonicalMapping.contains(characterFromSet: characterSet)
 	}
 	
-	func decompositionConsists(ofCharacterFromSet characterSet: CharacterSet) -> Bool {
+	func decompositionConsists(ofCharactersFromSet characterSet: CharacterSet) -> Bool {
 		String(self).decomposedStringWithCanonicalMapping.consists(ofCharactersFromSet: characterSet)
 	}
 }
