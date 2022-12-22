@@ -25,4 +25,12 @@ public extension Character {
 	func contains(diacritic: Diacritic) -> Bool {
 		String(self).contains(diacritic: diacritic)
 	}
+	
+	func decompositionContains(characterFromSet characterSet: CharacterSet) -> Bool {
+		String(self).decomposedStringWithCanonicalMapping.contains(characterFromSet: characterSet)
+	}
+	
+	func decompositionConsists(ofCharacterFromSet characterSet: CharacterSet) -> Bool {
+		String(self).decomposedStringWithCanonicalMapping.consists(ofCharactersFromSet: characterSet)
+	}
 }

@@ -7,6 +7,14 @@
 
 import Foundation
 
+// MARK: Static variables
+public extension CharacterSet {
+	
+	static var greekVowels = CharacterSet(charactersIn: "ΑαΕεΗηΙιΟοΥυΩω")
+	
+	static var greekConsonants = CharacterSet(charactersIn: "ΒβΓγΔδΖζΘθΚκΛλΜμΝνΞξΠπΡρΣσςΤτΦφΧχΨψ")
+}
+
 // MARK: Methods
 public extension CharacterSet {
 	

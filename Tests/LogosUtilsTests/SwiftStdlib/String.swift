@@ -8,13 +8,13 @@ final class StringTests: XCTestCase {
     let blank = ""
 
     func testContains() {
-        XCTAssertTrue(letters.contains(set: .letters))
-        XCTAssertFalse(letters.contains(set: .whitespaces))
+		XCTAssertTrue(letters.contains(characterFromSet: .letters))
+		XCTAssertFalse(letters.contains(characterFromSet: .whitespaces))
     }
 
     func testConsists() {
-        XCTAssertTrue(letters.consists(ofSet: .letters))
-        XCTAssertFalse(letters.consists(ofSet: .whitespaces))
+		XCTAssertTrue(letters.consists(ofCharactersFromSet: .letters))
+		XCTAssertFalse(letters.consists(ofCharactersFromSet: .whitespaces))
     }
 
     func testExtractFirst() {

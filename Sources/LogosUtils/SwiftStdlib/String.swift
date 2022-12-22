@@ -112,21 +112,16 @@ public extension String {
 	
 	/// LogosUtils: Check whether the String contains the Unicode Scalar value
 	func contains(unicodeScalarValue: UInt32) -> Bool {
-		for scalar in unicodeScalars {
-			if scalar.value == unicodeScalarValue {
-				return true
-			}
-		}
-		return false
+		return unicodeScalars.first { $0.value == unicodeScalarValue } != nil
 	}
 	
     /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet
-    func contains(set: CharacterSet) -> Bool {
+    func contains(characterFromSet set: CharacterSet) -> Bool {
         return self.rangeOfCharacter(from: set, options: .literal, range: nil) != nil
     }
 
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
-    func consists(ofSet set: CharacterSet) -> Bool {
+    func consists(ofCharactersFromSet set: CharacterSet) -> Bool {
         return set.isSuperset(of: CharacterSet(charactersIn: self))
     }
 
