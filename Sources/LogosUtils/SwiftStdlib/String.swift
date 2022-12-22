@@ -1,9 +1,6 @@
 //
-//  String.swift
 //  LogosUtils
-//
-//  Created by Tom-Roger Mittag on 5/13/20.
-//  Copyright © Tom-Roger Mittag. All rights reserved.
+//  Copyright Tom-Roger Mittag 2022.
 //
 
 #if canImport(Foundation)
@@ -105,24 +102,27 @@ public extension String {
 // MARK: - Methods
 public extension String {
 
-	/// LogosUtils: Check whether the decomposed String contains the Unicode Scalar value
+	/// LogosUtils: Check whether the String contains the Diacritic.
 	func contains(diacritic: Diacritic) -> Bool {
-		decomposedStringWithCanonicalMapping.contains(unicodeScalarValue: diacritic.rawValue)
+		return contains(unicodeScalarValue: diacritic.rawValue)
 	}
 	
-	/// LogosUtils: Check whether the String contains the Unicode Scalar value
-	func contains(unicodeScalarValue: UInt32) -> Bool {
-		return unicodeScalars.first { $0.value == unicodeScalarValue } != nil
+	/// LogosUtils: Check whether the String contains the Unicode Scalar value.
+	func contains(unicodeScalarValue: UInt32, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		let converted = form.convert(string: self)
+		return converted.unicodeScalars.first { $0.value == unicodeScalarValue } != nil
 	}
 	
-    /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet
-    func contains(characterFromSet set: CharacterSet) -> Bool {
-        return self.rangeOfCharacter(from: set, options: .literal, range: nil) != nil
+    /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet.
+    func contains(characterFromSet set: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		let converted = form.convert(string: self)
+        return converted.rangeOfCharacter(from: set, options: .literal, range: nil) != nil
     }
 
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
-    func consists(ofCharactersFromSet set: CharacterSet) -> Bool {
-        return set.isSuperset(of: CharacterSet(charactersIn: self))
+    func consists(ofCharactersFromSet set: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		let converted = form.convert(string: self)
+        return set.isSuperset(of: CharacterSet(charactersIn: converted))
     }
 
     mutating func extractFirst(_ k: Int) -> String {

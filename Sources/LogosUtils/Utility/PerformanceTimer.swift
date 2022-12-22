@@ -1,9 +1,6 @@
 //
-//  PerformanceTimer.swift
 //  LogosUtils
-//
-//  Created by Tom-Roger Mittag on 5/2/20.
-//  Copyright © Tom-Roger Mittag. All rights reserved.
+//  Copyright Tom-Roger Mittag 2022.
 //
 
 import Foundation

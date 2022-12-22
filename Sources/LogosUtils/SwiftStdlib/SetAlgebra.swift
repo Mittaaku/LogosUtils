@@ -1,9 +1,6 @@
 //
-//  SetAlgebra.swift
 //  LogosUtils
-//
-//  Created by Tom-Roger Mittag on 5/14/20.
-//  Copyright © Tom-Roger Mittag. All rights reserved.
+//  Copyright Tom-Roger Mittag 2022.
 //
 
 #if canImport(Foundation)

@@ -1,9 +1,6 @@
 //
-//  SignedInteger.swift
 //  LogosUtils
-//
-//  Created by Tom-Roger Mittag on 6/8/20.
-//  Copyright © Tom-Roger Mittag. All rights reserved.
+//  Copyright Tom-Roger Mittag 2022.
 //
 
 #if canImport(Foundation)

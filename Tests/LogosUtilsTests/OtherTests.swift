@@ -102,11 +102,11 @@ final class CharacterTests: XCTestCase {
 	}
 	
 	func testDecompositionContains() {
-		XCTAssertTrue(Character("\u{1FB3}").decompositionContains(characterFromSet: .greekVowels)) // ᾳ
-		XCTAssertFalse(Character("\u{1FB3}").decompositionContains(characterFromSet: .greekConsonants)) // ᾳ
+		XCTAssertTrue(Character("\u{1FB3}").contains(characterFromSet: .greekVowels)) // ᾳ
+		XCTAssertFalse(Character("\u{1FB3}").contains(characterFromSet: .greekConsonants)) // ᾳ
 		
-		XCTAssertFalse(Character("\u{39E}").decompositionContains(characterFromSet: .greekVowels)) // Ξ
-		XCTAssertTrue(Character("\u{39E}").decompositionContains(characterFromSet: .greekConsonants)) // Ξ
+		XCTAssertFalse(Character("\u{39E}").contains(characterFromSet: .greekVowels)) // Ξ
+		XCTAssertTrue(Character("\u{39E}").contains(characterFromSet: .greekConsonants)) // Ξ
 	}
 }
 
@@ -134,10 +134,10 @@ final class UnicodeScalarTests: XCTestCase {
 	}
 	
 	func testDecompositionContains() {
-		XCTAssertTrue(UnicodeScalar("\u{1FB3}").decompositionContains(characterFromSet: .greekVowels)) // ᾳ
-		XCTAssertFalse(UnicodeScalar("\u{1FB3}").decompositionContains(characterFromSet: .greekConsonants)) // ᾳ
+		XCTAssertTrue(UnicodeScalar("\u{1FB3}").contains(characterFromSet: .greekVowels)) // ᾳ
+		XCTAssertFalse(UnicodeScalar("\u{1FB3}").contains(characterFromSet: .greekConsonants)) // ᾳ
 		
-		XCTAssertFalse(UnicodeScalar("\u{39E}").decompositionContains(characterFromSet: .greekVowels)) // Ξ
-		XCTAssertTrue(UnicodeScalar("\u{39E}").decompositionContains(characterFromSet: .greekConsonants)) // Ξ
+		XCTAssertFalse(UnicodeScalar("\u{39E}").contains(characterFromSet: .greekVowels)) // Ξ
+		XCTAssertTrue(UnicodeScalar("\u{39E}").contains(characterFromSet: .greekConsonants)) // Ξ
 	}
 }

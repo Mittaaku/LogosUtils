@@ -1,9 +1,6 @@
 //
-//  RuntimeError.swift
 //  LogosUtils
-//
-//  Created by Tom-Roger Mittag on 15/03/2021.
-//  Copyright © Tom-Roger Mittag. All rights reserved.
+//  Copyright Tom-Roger Mittag 2022.
 //
 
 import Foundation

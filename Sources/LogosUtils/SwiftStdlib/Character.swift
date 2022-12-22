@@ -1,9 +1,6 @@
 //
-//  Character.swift
 //  LogosUtils
-//
-//  Created by Tom-Roger Mittag on 6/8/20.
-//  Copyright © Tom-Roger Mittag. All rights reserved.
+//  Copyright Tom-Roger Mittag 2022.
 //
 
 #if canImport(Foundation)
@@ -26,11 +23,11 @@ public extension Character {
 		String(self).contains(diacritic: diacritic)
 	}
 	
-	func decompositionContains(characterFromSet characterSet: CharacterSet) -> Bool {
-		String(self).decomposedStringWithCanonicalMapping.contains(characterFromSet: characterSet)
+	func contains(characterFromSet characterSet: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		String(self).contains(characterFromSet: characterSet, form: form)
 	}
 	
-	func decompositionConsists(ofCharactersFromSet characterSet: CharacterSet) -> Bool {
-		String(self).decomposedStringWithCanonicalMapping.consists(ofCharactersFromSet: characterSet)
+	func consists(ofCharactersFromSet characterSet: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		String(self).consists(ofCharactersFromSet: characterSet, form: form)
 	}
 }
