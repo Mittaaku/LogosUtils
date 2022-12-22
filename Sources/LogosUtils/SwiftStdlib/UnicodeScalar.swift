@@ -7,29 +7,15 @@
 
 import Foundation
 
+// MARK: Methods
 public extension UnicodeScalar {
 	
-	var hasAcute: Bool {
-		return CharacterSet.greekLettersWithAcute.containsPrecomposedUnicodeScalar(of: self)
+	/// LogosUtils: Initialize a String from the UnicodeScalar.
+	var string: String {
+		return String(self)
 	}
 	
-	var hasGrave: Bool {
-		return CharacterSet.greekLettersWithGrave.containsPrecomposedUnicodeScalar(of: self)
-	}
-	
-	var hasSmoothBreathing: Bool {
-		return CharacterSet.greekLettersWithSmoothBreathing.containsPrecomposedUnicodeScalar(of: self)
-	}
-	
-	var hasRoughBreathing: Bool {
-		return CharacterSet.greekLettersWithRoughBreathing.containsPrecomposedUnicodeScalar(of: self)
-	}
-	
-	var hasCircumflex: Bool {
-		return CharacterSet.greekLettersWithCircumflex.containsPrecomposedUnicodeScalar(of: self)
-	}
-	
-	var hasIotaSubscript: Bool {
-		return CharacterSet.greekLettersWithIotaSubscript.containsPrecomposedUnicodeScalar(of: self)
+	func contains(diacritic: Diacritic) -> Bool {
+		String(self).contains(diacritic: diacritic)
 	}
 }

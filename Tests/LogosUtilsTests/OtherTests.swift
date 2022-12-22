@@ -78,15 +78,50 @@ final class SetTests: XCTestCase {
 final class CharacterTests: XCTestCase {
 	
 	func testCharacters() {
-		XCTAssertTrue(Character("\u{1FB3}").hasIotaSubscript) // ᾳ
-		XCTAssertTrue(Character("\u{3B1}\u{345}").hasIotaSubscript) // ᾳ
-		XCTAssertTrue(Character("\u{1F81}").hasIotaSubscript) // ᾁ
-		XCTAssertTrue(Character("\u{3B1}\u{345}\u{314}").hasIotaSubscript) // ᾁ
-		XCTAssertFalse(Character("\u{1F01}").hasIotaSubscript) // ἁ
-		XCTAssertFalse(Character("\u{3B1}\u{314}").hasIotaSubscript) // ἁ
 		
-		XCTAssertFalse(Character("\u{314}").hasIotaSubscript) // ◌̔
-		XCTAssertFalse(Character("\u{345}").hasIotaSubscript) // ◌ͅ
-		XCTAssertFalse(Character("\u{3B1}").hasIotaSubscript) // α
+		// ᾳ
+		XCTAssertTrue(Character("\u{1FB3}").contains(diacritic: .iotaSubscript))
+		XCTAssertTrue(Character("\u{3B1}\u{345}").contains(diacritic: .iotaSubscript))
+		
+		// ᾁ
+		XCTAssertTrue(Character("\u{1F81}").contains(diacritic: .iotaSubscript))
+		XCTAssertTrue(Character("\u{3B1}\u{345}\u{314}").contains(diacritic: .iotaSubscript))
+		
+		// ἁ
+		XCTAssertFalse(Character("\u{1F01}").contains(diacritic: .iotaSubscript))
+		XCTAssertFalse(Character("\u{3B1}\u{314}").contains(diacritic: .iotaSubscript))
+		
+		// ◌̔
+		XCTAssertFalse(Character("\u{314}").contains(diacritic: .iotaSubscript))
+		
+		// ◌ͅ
+		XCTAssertTrue(Character("\u{345}").contains(diacritic: .iotaSubscript))
+		
+		// α
+		XCTAssertFalse(Character("\u{3B1}").contains(diacritic: .iotaSubscript))
+	}
+}
+
+final class UnicodeScalarTests: XCTestCase {
+	
+	func testUnicodeScalars() {
+		
+		// ᾳ
+		XCTAssertTrue(UnicodeScalar("\u{1FB3}").contains(diacritic: .iotaSubscript))
+		
+		// ᾁ
+		XCTAssertTrue(UnicodeScalar("\u{1F81}").contains(diacritic: .iotaSubscript))
+		
+		// ἁ
+		XCTAssertFalse(UnicodeScalar("\u{1F01}").contains(diacritic: .iotaSubscript))
+		
+		// ◌̔
+		XCTAssertFalse(UnicodeScalar("\u{314}").contains(diacritic: .iotaSubscript))
+		
+		// ◌ͅ
+		XCTAssertTrue(UnicodeScalar("\u{345}").contains(diacritic: .iotaSubscript))
+		
+		// α
+		XCTAssertFalse(UnicodeScalar("\u{3B1}").contains(diacritic: .iotaSubscript))
 	}
 }

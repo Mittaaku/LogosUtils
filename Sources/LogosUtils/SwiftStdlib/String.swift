@@ -17,7 +17,7 @@ public extension String {
         return Array(self)
     }
 	
-	/// LogosUtils: Get Int from String (if initializable).
+	/// LogosUtils: Initialize an Int from the String, if initializable.
 	///
 	///		"10".int -> 10
 	///
@@ -32,7 +32,7 @@ public extension String {
 
 // MARK: - Evaluating Properties
 public extension String {
-#if canImport(Foundation)
+	
 	/// LogosUtils: Checks that the string is not empty and does not contain only whitespace.
 	///
 	///     ".".isBlank -> false
@@ -41,9 +41,7 @@ public extension String {
 	var isBlank: Bool {
 		return NSRegularExpression.whitespaceOrEmptyStringPattern.matches(string: self)
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Inverse of .isBlank.
 	///
 	///     ".".isNotBlank -> true
@@ -52,9 +50,7 @@ public extension String {
 	var isNotBlank: Bool {
 		return !isBlank
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek only.
 	///
 	///     "123".isDigits -> true
@@ -62,9 +58,7 @@ public extension String {
 	var isDigits: Bool {
 		return NSRegularExpression.digitStringPattern.matches(string: self)
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek only.
 	///
 	///     ".".isBlank -> false
@@ -73,57 +67,59 @@ public extension String {
 	var isWhitespace: Bool {
 		return NSRegularExpression.whitespaceStringPattern.matches(string: self)
 	}
-#endif
 }
 
 // MARK: - Language Properties
 public extension String {
-#if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek characters.
 	var isSpacedGreek: Bool {
 		return NSRegularExpression.spacedGreekPattern.matches(string: self)
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Greek characters.
 	var isGreek: Bool {
 		return NSRegularExpression.greekPattern.matches(string: self)
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Hebrew characters.
 	var isSpacedHebrew: Bool {
 		return NSRegularExpression.spacedHebrewPattern.matches(string: self)
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Check whether the string consists of Hebrew characters.
 	var isHebrew: Bool {
 		return NSRegularExpression.hebrewPattern.matches(string: self)
 	}
-#endif
 	
-#if canImport(Foundation)
 	/// LogosUtils: Returns the latin transliteration of a greek string.
 	var greekTransliteration: String? {
 		return applyingTransform(.latinToGreek, reverse: true)?.lowercased()
 	}
-#endif
-
-#if canImport(Foundation)
+	
 	/// LogosUtils: Returns the latin transliteration of a hebrew string.
 	var hebrewTransliteration: String? {
 		return applyingTransform(.latinToHebrew, reverse: true)?.lowercased()
 	}
-#endif
 }
 
 // MARK: - Methods
 public extension String {
 
+	/// LogosUtils: Check whether the decomposed String contains the Unicode Scalar value
+	func contains(diacritic: Diacritic) -> Bool {
+		decomposedStringWithCanonicalMapping.contains(unicodeScalarValue: diacritic.rawValue)
+	}
+	
+	/// LogosUtils: Check whether the String contains the Unicode Scalar value
+	func contains(unicodeScalarValue: UInt32) -> Bool {
+		for scalar in unicodeScalars {
+			if scalar.value == unicodeScalarValue {
+				return true
+			}
+		}
+		return false
+	}
+	
     /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet
     func contains(set: CharacterSet) -> Bool {
         return self.rangeOfCharacter(from: set, options: .literal, range: nil) != nil
@@ -144,17 +140,6 @@ public extension String {
         let result = String(suffix(k))
         removeLast(k)
         return result
-    }
-
-    func nonBlanked(or error: @autoclosure () -> Swift.Error) throws -> Self {
-        guard let value = nonBlank else {
-            throw error()
-        }
-        return value
-    }
-
-    func nonBlanked(or defaultValue: @autoclosure () -> Self) -> Self {
-        return nonBlank ?? defaultValue()
     }
 
     func strippingDiacritics() -> String {

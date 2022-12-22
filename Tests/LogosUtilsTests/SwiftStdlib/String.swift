@@ -35,11 +35,6 @@ final class StringTests: XCTestCase {
         XCTAssertEqual(extract, String(letters.suffix(extractCount)))
     }
 
-    func testNonBlanked() {
-        XCTAssertEqual(letters.nonBlanked(or: "Was Blank"), "Hello")
-        XCTAssertEqual(blank.nonBlanked(or: "Was Blank"), "Was Blank")
-    }
-
     func testStrippingDiacritics() {
         XCTAssertEqual("áa".strippingDiacritics(), "aa")
     }

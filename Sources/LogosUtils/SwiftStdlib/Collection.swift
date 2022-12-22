@@ -13,17 +13,6 @@ import Foundation
 // MARK: - Methods
 public extension Collection {
 
-    func nonEmptied(or defaultValue: @autoclosure () -> Self) -> Self {
-        return nonEmpty ?? defaultValue()
-    }
-
-    func nonEmptied(or error: @autoclosure () -> Swift.Error) throws -> Self {
-        guard let value = nonEmpty else {
-            throw error()
-        }
-        return value
-    }
-	
 	func generateCombinations() -> [[Element]] {
 		let array = Array(self)
 		let fullCombinationBits = 2 ** array.count - 1
