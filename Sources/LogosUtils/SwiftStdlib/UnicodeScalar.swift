@@ -21,11 +21,11 @@ public extension UnicodeScalar {
 		String(self).contains(diacritic: diacritic)
 	}
 	
-	func contains(characterFromSet characterSet: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
-		String(self).contains(characterFromSet: characterSet, form: form)
+	func contains(characterFromSet characterSet: CharacterSet, inForm form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		String(self).contains(characterFromSet: characterSet, inForm: form)
 	}
 	
-	func consists(ofCharactersFromSet characterSet: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
-		String(self).consists(ofCharactersFromSet: characterSet, form: form)
+	func consists(ofCharactersFromSet characterSet: CharacterSet, inForm form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+		String(self).consists(ofCharactersFromSet: characterSet, inForm: form)
 	}
 }

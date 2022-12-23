@@ -108,19 +108,19 @@ public extension String {
 	}
 	
 	/// LogosUtils: Check whether the String contains the Unicode Scalar value.
-	func contains(unicodeScalarValue: UInt32, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+	func contains(unicodeScalarValue: UInt32, inForm form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
 		let converted = form.convert(string: self)
 		return converted.unicodeScalars.first { $0.value == unicodeScalarValue } != nil
 	}
 	
     /// LogosUtils: Check whether the String contains one or more of the characters in the input CharacterSet.
-    func contains(characterFromSet set: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+    func contains(characterFromSet set: CharacterSet, inForm form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
 		let converted = form.convert(string: self)
         return converted.rangeOfCharacter(from: set, options: .literal, range: nil) != nil
     }
 
     /// LogosUtils: Check whether the String consists of (only contains) the characters in the input CharacterSet.
-    func consists(ofCharactersFromSet set: CharacterSet, form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
+    func consists(ofCharactersFromSet set: CharacterSet, inForm form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping) -> Bool {
 		let converted = form.convert(string: self)
         return set.isSuperset(of: CharacterSet(charactersIn: converted))
     }
@@ -140,6 +140,13 @@ public extension String {
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
     }
+	
+	func strippingCharacters(in set: CharacterSet, inForm form: UnicodeNormalizationForm = .decomposedWithCanonicalMapping, resultingForm: UnicodeNormalizationForm = .precomposedWithCanonicalMapping) -> String {
+		let converted = form.convert(string: self)
+		let filtered = converted.unicodeScalars.filter { !set.contains($0) }
+		let new = String(String.UnicodeScalarView(filtered))
+		return form.convert(string: new)
+	}
 	
 	func uppercased(range: Range<String.Index>) -> String {
 		return replacingCharacters(in: range.lowerBound ..< range.upperBound, with: self[range].uppercased())
