@@ -10,13 +10,14 @@ import XCTest
 
 final class ReferenceTests: XCTestCase {
 	
-	let reference1 = Reference(book: 3, chapter: 1, verse: 3)
-	let reference2 = Reference(book: 3, chapter: 1, verse: 4)
-	let reference3 = Reference(book: 3, chapter: 2, verse: 1)
-	let reference4 = Reference(book: 1, chapter: 2, verse: 1)
-	var reference5 = Reference(book: 1, chapter: 2, verse: 3, word: 1, morpheme: 2)
-	var reference6 = Reference(book: 1)
-	var reference7 = Reference(book: 66)
+	let reference1 = VerseReference(book: 3, chapter: 1, verse: 2)
+	let reference2 = VerseReference(book: 3, chapter: 1, verse: 4)
+	let reference3 = VerseReference(book: 3, chapter: 2, verse: 1)
+	let reference4 = VerseReference(book: 1, chapter: 2, verse: 1)
+	var reference5 = TokenReference(book: 1, chapter: 2, verse: 3, token: 1)
+	var reference6 = BookReference(book: 1)
+	var reference7 = BookReference(book: 66)
+	var reference8 = BookReference(book: 51)
 	
 	func testReferenceOffset() {
 		XCTAssertEqual(reference1.offset(from: reference2), .differentVerse)
@@ -41,26 +42,18 @@ final class ReferenceTests: XCTestCase {
 		reference5.verseNumber += 1
 		XCTAssertEqual(reference5.verseNumber, 4)
 		
-		reference5.wordNumber += 1
-		XCTAssertEqual(reference5.wordNumber, 2)
-		
-		reference5.morphemeNumber += 1
-		XCTAssertEqual(reference5.morphemeNumber, 3)
+		reference5.tokenNumber += 1
+		XCTAssertEqual(reference5.tokenNumber, 2)
 		
 		reference5.bookNumber += 1
 		XCTAssertEqual(reference5.bookNumber, 3)
 		
 		XCTAssertEqual(reference6.bookName, .genesis)
 		XCTAssertEqual(reference7.bookName, .revelation)
-		XCTAssertEqual(reference1.description, "[3, 1, 3, 0, 0]")
 		
-		XCTAssertEqual(reference1.isBookReference, false)
-		XCTAssertEqual(reference1.isChapterReference, false)
-		XCTAssertEqual(reference1.isVerseReference, true)
-		XCTAssertEqual(reference1.isWordReference, false)
-		XCTAssertEqual(reference1.isMorphemeReference, false)
-		
-		XCTAssertEqual(reference1.indices, [3, 1, 3, 0, 0])
+		XCTAssertEqual(reference1.description, "[3, 1, 2]")
+		XCTAssertEqual(reference1.indices, [3, 1, 2])
+		XCTAssertEqual(reference8.indices, [51])
 	}
 }
 
