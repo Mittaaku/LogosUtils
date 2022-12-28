@@ -23,10 +23,10 @@ fileprivate let tokenIdBits				= bookBits + chapterBits + verseBits + tokenBits
 fileprivate let reverseBookIdBits		= bookBits ^ tokenIdBits
 fileprivate let reverseChapterIdBits	= chapterBits ^ tokenIdBits
 fileprivate let reverseVerseIdBits		= verseBits ^ tokenIdBits
-fileprivate let reverseWordIdBits		= tokenBits ^ tokenIdBits
+fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
 @available(macOS 10.15, *)
-public protocol ReferenceContainer: Codable, Hashable, Identifiable, CustomStringConvertible {
+public protocol ReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible {
 	var totalIndices: Int { get }
 	
 	var id: Int { get set }
@@ -69,7 +69,7 @@ public extension ReferenceContainer {
 		return Self(id: id & verseIdBits)
 	}
 	
-	var wordReference: Self {
+	var tokenReference: Self {
 		return Self(id: id & tokenIdBits)
 	}
 	
@@ -82,6 +82,16 @@ public extension ReferenceContainer {
 	
 	var indices: [Int] {
 		return uintIndices.map{ return Int($0) }
+	}
+	
+	// MARK: Equatable and Comparable
+	
+	static func < (lhs: Self, rhs: Self) -> Bool {
+		return lhs.id < rhs.id
+	}
+	
+	static func == (lhs: Self, rhs: Self) -> Bool {
+		return lhs.id == rhs.id
 	}
 	
 	// MARK: Other
@@ -191,13 +201,14 @@ public extension TokenReferenceContainer {
 			return (id & tokenBits) / tokenRadix
 		}
 		set {
-			id = (id & reverseWordIdBits) + (newValue * tokenRadix)
+			id = (id & reverseTokenIdBits) + (newValue * tokenRadix)
 		}
 	}
 }
 
 @available(macOS 10.15, *)
 public struct BookReference: BookReferenceContainer {
+	
 	public let totalIndices: Int = 1
 	
 	public var id: Int
