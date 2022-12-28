@@ -145,8 +145,8 @@ public extension ChapterReferenceContainer {
 		}
 	}
 	
-	var bookReference: Self {
-		return Self(id: id & bookIdBits)
+	var bookReference: BookReference {
+		return BookReference(id: id & bookIdBits)
 	}
 }
 
@@ -170,8 +170,8 @@ public extension VerseReferenceContainer {
 		}
 	}
 	
-	var chapterReference: Self {
-		return Self(id: id & chapterIdBits)
+	var chapterReference: ChapterReference {
+		return ChapterReference(id: id & chapterIdBits)
 	}
 }
 
@@ -195,8 +195,8 @@ public extension TokenReferenceContainer {
 		}
 	}
 	
-	var verseReference: Self {
-		return Self(id: id & verseIdBits)
+	var verseReference: VerseReference {
+		return VerseReference(id: id & verseIdBits)
 	}
 }
 
