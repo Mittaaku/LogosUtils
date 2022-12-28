@@ -55,24 +55,6 @@ public extension ReferenceContainer {
 		hasher.combine(id)
 	}
 	
-	// MARK: Conversion
-	
-	var bookReference: Self {
-		return Self(id: id & bookIdBits)
-	}
-	
-	var chapterReference: Self {
-		return Self(id: id & chapterIdBits)
-	}
-	
-	var verseReference: Self {
-		return Self(id: id & verseIdBits)
-	}
-	
-	var tokenReference: Self {
-		return Self(id: id & tokenIdBits)
-	}
-	
 	// MARK: Collections
 	
 	var uintIndices: [UInt8] {
@@ -162,6 +144,10 @@ public extension ChapterReferenceContainer {
 			id = (id & reverseChapterIdBits) + (newValue * chapterRadix)
 		}
 	}
+	
+	var bookReference: Self {
+		return Self(id: id & bookIdBits)
+	}
 }
 
 @available(macOS 10.15, *)
@@ -182,6 +168,10 @@ public extension VerseReferenceContainer {
 		set {
 			id = (id & reverseVerseIdBits) + (newValue * verseRadix)
 		}
+	}
+	
+	var chapterReference: Self {
+		return Self(id: id & chapterIdBits)
 	}
 }
 
@@ -204,6 +194,10 @@ public extension TokenReferenceContainer {
 			id = (id & reverseTokenIdBits) + (newValue * tokenRadix)
 		}
 	}
+	
+	var verseReference: Self {
+		return Self(id: id & verseIdBits)
+	}
 }
 
 @available(macOS 10.15, *)
@@ -217,8 +211,8 @@ public struct BookReference: BookReferenceContainer {
 		self.id = id
 	}
 	
-	public init(book: Int) {
-		self.id = (book * bookRadix)
+	public init(bookNumber: Int) {
+		self.id = (bookNumber * bookRadix)
 	}
 }
 
@@ -232,8 +226,13 @@ public struct ChapterReference: ChapterReferenceContainer {
 		self.id = id
 	}
 	
-	public init(book: Int, chapter: Int = 0) {
+	public init(bookNumber book: Int, chapter: Int) {
 		self.id = (book * bookRadix)
+		+ (chapter * chapterRadix)
+	}
+	
+	public init(bookReference: BookReference, chapterNumber chapter: Int) {
+		self.id = bookReference.id
 		+ (chapter * chapterRadix)
 	}
 }
@@ -248,10 +247,21 @@ public struct VerseReference: VerseReferenceContainer {
 		self.id = id
 	}
 	
-	public init(book: Int, chapter: Int = 0, verse: Int = 0) {
+	public init(bookNumber book: Int, chapter: Int, verse: Int) {
 		self.id = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
+	}
+	
+	public init(bookReference: BookReference, chapterNumber chapter: Int, verse: Int) {
+		self.id = bookReference.id
+		+ (chapter * chapterRadix)
+		+ (verse * verseRadix)
+	}
+	
+	public init(chapterReference: ChapterReference, verse: Int) {
+		self.id = chapterReference.id
+		+ (verse * chapterRadix)
 	}
 }
 
@@ -265,10 +275,28 @@ public struct TokenReference: TokenReferenceContainer {
 		self.id = id
 	}
 	
-	public init(book: Int, chapter: Int = 0, verse: Int = 0, token: Int = 0) {
+	public init(bookNumber book: Int, chapter: Int, verse: Int, token: Int) {
 		self.id = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
+		+ (token * tokenRadix)
+	}
+	
+	public init(bookReference: BookReference, chapterNumber chapter: Int, verse: Int, token: Int) {
+		self.id = bookReference.id
+		+ (chapter * chapterRadix)
+		+ (verse * verseRadix)
+		+ (token * tokenRadix)
+	}
+	
+	public init(chapterReference: ChapterReference, verse: Int, token: Int) {
+		self.id = chapterReference.id
+		+ (verse * verseRadix)
+		+ (token * tokenRadix)
+	}
+	
+	public init(verseReference: VerseReference, token: Int) {
+		self.id = verseReference.id
 		+ (token * tokenRadix)
 	}
 }
