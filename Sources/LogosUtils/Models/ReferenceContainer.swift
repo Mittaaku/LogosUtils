@@ -82,6 +82,10 @@ public extension ReferenceContainer {
 		return uintIndices.description
 	}
 	
+	var isValid: Bool {
+		return uintIndices.allSatisfy(\.isPositive)
+	}
+	
 	func offset(from reference: any ReferenceContainer) -> ReferenceOffset {
 		let difference = id ^ reference.id
 		

@@ -7,6 +7,14 @@ import Foundation
 
 extension BinaryInteger {
 	
+	var isZero: Bool {
+		return self == 0
+	}
+	
+	var isNotZero: Bool {
+		return self != 0
+	}
+	
 	var isPositive: Bool {
 		return self > 0
 	}
