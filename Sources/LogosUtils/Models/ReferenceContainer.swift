@@ -263,7 +263,7 @@ public struct VerseReference: VerseReferenceContainer {
 		+ (verse * verseRadix)
 	}
 	
-	public init(chapterReference: ChapterReference, verse: Int) {
+	public init(chapterReference: ChapterReference, verseNumber verse: Int) {
 		self.id = chapterReference.id
 		+ (verse * chapterRadix)
 	}
@@ -293,13 +293,13 @@ public struct TokenReference: TokenReferenceContainer {
 		+ (token * tokenRadix)
 	}
 	
-	public init(chapterReference: ChapterReference, verse: Int, token: Int) {
+	public init(chapterReference: ChapterReference, verseNumber verse: Int, token: Int) {
 		self.id = chapterReference.id
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(verseReference: VerseReference, token: Int) {
+	public init(verseReference: VerseReference, tokenNumber token: Int) {
 		self.id = verseReference.id
 		+ (token * tokenRadix)
 	}
