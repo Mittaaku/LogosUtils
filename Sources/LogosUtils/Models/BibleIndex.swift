@@ -121,11 +121,4 @@ public enum BookName: Int {
 	case thirdJohn
 	case jude
 	case revelation
-	
-	public init(number: Int) {
-		guard let newValue = Self.init(rawValue: number) else {
-			
-		}
-		self = newValue
-	}
 }
