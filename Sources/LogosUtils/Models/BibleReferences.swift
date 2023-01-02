@@ -26,7 +26,7 @@ fileprivate let reverseVerseIdBits		= verseBits ^ tokenIdBits
 fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
 @available(iOS 13.0, macOS 10.15, *)
-public protocol ReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable {
+public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable {
 	var totalIndices: Int { get }
 	
 	var rawValue: Int { get set }
@@ -35,7 +35,7 @@ public protocol ReferenceContainer: Equatable, Comparable, Codable, Hashable, Id
 }
 
 @available(iOS 13.0, macOS 10.15, *)
-public extension ReferenceContainer {
+public extension BibleReferenceContainer {
 	
 	// MARK: Coding
 	
@@ -88,7 +88,7 @@ public extension ReferenceContainer {
 		return uintIndices.allSatisfy(\.isPositive)
 	}
 	
-	func offset(from reference: any ReferenceContainer) -> ReferenceOffset {
+	func offset(from reference: any BibleReferenceContainer) -> ReferenceOffset {
 		let difference = rawValue ^ reference.rawValue
 		
 		switch difference {
@@ -106,7 +106,7 @@ public extension ReferenceContainer {
 	}
 }
 @available(iOS 13.0, macOS 10.15, *)
-public protocol BookReferenceContainer: ReferenceContainer {
+public protocol BookReferenceContainer: BibleReferenceContainer {
 }
 
 @available(iOS 13.0, macOS 10.15, *)
@@ -116,17 +116,13 @@ public extension BookReferenceContainer {
 		return rawValue & bookIdBits
 	}
 	
-	var bookNumber: Int {
+	var bookNumber: BookNumber {
 		get {
-			return rawValue / bookRadix
+			return BookNumber(rawValue: rawValue / bookRadix)
 		}
 		set {
-			rawValue = (rawValue & reverseBookIdBits) + (newValue * bookRadix)
+			rawValue = (rawValue & reverseBookIdBits) + (newValue.rawValue * bookRadix)
 		}
-	}
-	
-	var bookName: BookName? {
-		return BookName(rawValue: bookNumber)
 	}
 	
 	var bookReference: BookReference {
@@ -145,12 +141,12 @@ public extension ChapterReferenceContainer {
 		return rawValue & chapterIdBits
 	}
 	
-	var chapterNumber: Int {
+	var chapterNumber: ChapterNumber {
 		get {
-			return (rawValue & chapterBits) / chapterRadix
+			return ChapterNumber(rawValue: (rawValue & chapterBits) / chapterRadix)
 		}
 		set {
-			rawValue = (rawValue & reverseChapterIdBits) + (newValue * chapterRadix)
+			rawValue = (rawValue & reverseChapterIdBits) + (newValue.rawValue * chapterRadix)
 		}
 	}
 	
@@ -170,12 +166,12 @@ public extension VerseReferenceContainer {
 		return rawValue & verseIdBits
 	}
 	
-	var verseNumber: Int {
+	var verseNumber: VerseNumber {
 		get {
-			return (rawValue & verseBits) / verseRadix
+			return VerseNumber(rawValue: (rawValue & verseBits) / verseRadix)
 		}
 		set {
-			rawValue = (rawValue & reverseVerseIdBits) + (newValue * verseRadix)
+			rawValue = (rawValue & reverseVerseIdBits) + (newValue.rawValue * verseRadix)
 		}
 	}
 	
@@ -308,75 +304,6 @@ public struct TokenReference: TokenReferenceContainer {
 		self.rawValue = verseReference.rawValue
 		+ (token * tokenRadix)
 	}
-}
-
-public enum BookName: Int {
-	case genesis = 1
-	case exodus
-	case leviticus
-	case numbers
-	case deuteronomy
-	case joshua
-	case judges
-	case ruth
-	case firstSamuel
-	case secondSamuel
-	case firstKings
-	case secondKings
-	case firstChronicles
-	case secondChronicles
-	case ezra
-	case nehemiah
-	case esther
-	case job
-	case psalms
-	case proverbs
-	case ecclesiastes
-	case songOfSongs
-	case isaiah
-	case jeremiah
-	case lamentations
-	case ezekiel
-	case daniel
-	case hosea
-	case joel
-	case amos
-	case obadiah
-	case jonah
-	case micah
-	case nahum
-	case habakkuk
-	case zephaniah
-	case haggai
-	case zechariah
-	case malachi
-	case matthew
-	case mark
-	case luke
-	case john
-	case actsOfTheApostles
-	case romans
-	case firstCorinthians
-	case secondCorinthians
-	case galatians
-	case ephesians
-	case philippians
-	case colossians
-	case firstThessalonians
-	case secondThessalonians
-	case firstTimothy
-	case secondTimothy
-	case titus
-	case philemon
-	case hebrews
-	case james
-	case firstPeter
-	case secondPeter
-	case firstJohn
-	case secondJohn
-	case thirdJohn
-	case jude
-	case revelation
 }
 
 public enum ReferenceOffset {

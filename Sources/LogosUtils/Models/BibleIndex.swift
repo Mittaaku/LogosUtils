@@ -1,0 +1,131 @@
+//
+//  File.swift
+//  
+//
+//  Created by Tom-Roger Mittag on 02/01/2023.
+//
+
+import Foundation
+
+@available(iOS 13.0, macOS 10.15, *)
+public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible {
+	
+	var rawValue: Int { get set }
+	
+	init(rawValue: Int)
+}
+
+@available(iOS 13.0, macOS 10.15, *)
+extension BibleIndex {
+	
+	public var id: Int {
+		return rawValue
+	}
+	
+	public var description: String {
+		return String(rawValue)
+	}
+}
+
+@available(iOS 13.0, macOS 10.15, *)
+public struct BookNumber: BibleIndex {
+	public var rawValue: Int
+	
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+}
+
+@available(iOS 13.0, macOS 10.15, *)
+public struct ChapterNumber: BibleIndex {
+	public var rawValue: Int
+	
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+}
+
+@available(iOS 13.0, macOS 10.15, *)
+public struct VerseNumber: BibleIndex {
+	public var rawValue: Int
+	
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+}
+
+public enum BookName: Int {
+	case genesis = 1
+	case exodus
+	case leviticus
+	case numbers
+	case deuteronomy
+	case joshua
+	case judges
+	case ruth
+	case firstSamuel
+	case secondSamuel
+	case firstKings
+	case secondKings
+	case firstChronicles
+	case secondChronicles
+	case ezra
+	case nehemiah
+	case esther
+	case job
+	case psalms
+	case proverbs
+	case ecclesiastes
+	case songOfSongs
+	case isaiah
+	case jeremiah
+	case lamentations
+	case ezekiel
+	case daniel
+	case hosea
+	case joel
+	case amos
+	case obadiah
+	case jonah
+	case micah
+	case nahum
+	case habakkuk
+	case zephaniah
+	case haggai
+	case zechariah
+	case malachi
+	case matthew
+	case mark
+	case luke
+	case john
+	case actsOfTheApostles
+	case romans
+	case firstCorinthians
+	case secondCorinthians
+	case galatians
+	case ephesians
+	case philippians
+	case colossians
+	case firstThessalonians
+	case secondThessalonians
+	case firstTimothy
+	case secondTimothy
+	case titus
+	case philemon
+	case hebrews
+	case james
+	case firstPeter
+	case secondPeter
+	case firstJohn
+	case secondJohn
+	case thirdJohn
+	case jude
+	case revelation
+	
+	public init(number: Int) {
+		guard let newValue = Self.init(rawValue: number) else {
+			
+		}
+		self = newValue
+	}
+}
