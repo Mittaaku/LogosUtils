@@ -127,6 +127,10 @@ public extension BookReferenceContainer {
 	var bookName: BookName? {
 		return BookName(rawValue: bookNumber)
 	}
+	
+	var bookReference: BookReference {
+		return BookReference(id: id & bookIdBits)
+	}
 }
 
 @available(macOS 10.15, *)
@@ -149,8 +153,8 @@ public extension ChapterReferenceContainer {
 		}
 	}
 	
-	var bookReference: BookReference {
-		return BookReference(id: id & bookIdBits)
+	var chapterReference: ChapterReference {
+		return ChapterReference(id: id & chapterIdBits)
 	}
 }
 
@@ -174,8 +178,8 @@ public extension VerseReferenceContainer {
 		}
 	}
 	
-	var chapterReference: ChapterReference {
-		return ChapterReference(id: id & chapterIdBits)
+	var verseReference: VerseReference {
+		return VerseReference(id: id & verseIdBits)
 	}
 }
 
@@ -199,8 +203,8 @@ public extension TokenReferenceContainer {
 		}
 	}
 	
-	var verseReference: VerseReference {
-		return VerseReference(id: id & verseIdBits)
+	var tokenReference: TokenReference {
+		return TokenReference(id: id & verseIdBits)
 	}
 }
 
