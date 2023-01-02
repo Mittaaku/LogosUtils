@@ -190,7 +190,7 @@ public extension TokenReferenceContainer {
 		return id & tokenIdBits
 	}
 	
-	var tokenNumber: Int {
+	var tokenIndex: Int {
 		get {
 			return (id & tokenBits) / tokenRadix
 		}
@@ -230,7 +230,7 @@ public struct ChapterReference: ChapterReferenceContainer {
 		self.id = id
 	}
 	
-	public init(bookNumber book: Int, chapter: Int) {
+	public init(bookNumber book: Int, chapterNumber chapter: Int) {
 		self.id = (book * bookRadix)
 		+ (chapter * chapterRadix)
 	}
@@ -251,13 +251,13 @@ public struct VerseReference: VerseReferenceContainer {
 		self.id = id
 	}
 	
-	public init(bookNumber book: Int, chapter: Int, verse: Int) {
+	public init(bookNumber book: Int, chapterNumber chapter: Int, verseNumber verse: Int) {
 		self.id = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 	}
 	
-	public init(bookReference: BookReference, chapterNumber chapter: Int, verse: Int) {
+	public init(bookReference: BookReference, chapterNumber chapter: Int, verseNumber verse: Int) {
 		self.id = bookReference.id
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
@@ -279,27 +279,27 @@ public struct TokenReference: TokenReferenceContainer {
 		self.id = id
 	}
 	
-	public init(bookNumber book: Int, chapter: Int, verse: Int, token: Int) {
+	public init(bookNumber book: Int, chapterNumber chapter: Int, verseNumber verse: Int, tokenIndex token: Int) {
 		self.id = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(bookReference: BookReference, chapterNumber chapter: Int, verse: Int, token: Int) {
+	public init(bookReference: BookReference, chapterNumber chapter: Int, verseNumber verse: Int, tokenIndex token: Int) {
 		self.id = bookReference.id
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(chapterReference: ChapterReference, verseNumber verse: Int, token: Int) {
+	public init(chapterReference: ChapterReference, verseNumber verse: Int, tokenIndex token: Int) {
 		self.id = chapterReference.id
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(verseReference: VerseReference, tokenNumber token: Int) {
+	public init(verseReference: VerseReference, tokenIndex token: Int) {
 		self.id = verseReference.id
 		+ (token * tokenRadix)
 	}
