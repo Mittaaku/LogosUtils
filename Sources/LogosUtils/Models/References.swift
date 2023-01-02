@@ -26,12 +26,12 @@ fileprivate let reverseVerseIdBits		= verseBits ^ tokenIdBits
 fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
 @available(iOS 13.0, macOS 10.15, *)
-public protocol ReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible {
+public protocol ReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable {
 	var totalIndices: Int { get }
 	
-	var id: Int { get set }
+	var rawValue: Int { get set }
 	
-	init(id: Int)
+	init(rawValue: Int)
 }
 
 @available(iOS 13.0, macOS 10.15, *)
@@ -41,24 +41,18 @@ public extension ReferenceContainer {
 	
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
-		self.init(id: try container.decode(Int.self))
+		self.init(rawValue: try container.decode(Int.self))
 	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
-		try container.encode(id)
-	}
-	
-	// MARK: Hashable
-	
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(id)
+		try container.encode(rawValue)
 	}
 	
 	// MARK: Collections
 	
 	var uintIndices: [UInt8] {
-		let shifted = id >> (8 * abs(totalIndices - 4))
+		let shifted = rawValue >> (8 * abs(totalIndices - 4))
 		return Array(shifted.bytes.prefix(totalIndices)).reversed()
 	}
 	
@@ -69,17 +63,25 @@ public extension ReferenceContainer {
 	// MARK: Equatable and Comparable
 	
 	static func < (lhs: Self, rhs: Self) -> Bool {
-		return lhs.id < rhs.id
+		return lhs.rawValue < rhs.rawValue
 	}
 	
 	static func == (lhs: Self, rhs: Self) -> Bool {
-		return lhs.id == rhs.id
+		return lhs.rawValue == rhs.rawValue
 	}
 	
 	// MARK: Other
 	
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(rawValue)
+	}
+	
 	var description: String {
 		return uintIndices.description
+	}
+	
+	var id: Int {
+		return rawValue
 	}
 	
 	var isValid: Bool {
@@ -87,7 +89,7 @@ public extension ReferenceContainer {
 	}
 	
 	func offset(from reference: any ReferenceContainer) -> ReferenceOffset {
-		let difference = id ^ reference.id
+		let difference = rawValue ^ reference.rawValue
 		
 		switch difference {
 		case bookRadix ..< Int.max:
@@ -111,15 +113,15 @@ public protocol BookReferenceContainer: ReferenceContainer {
 public extension BookReferenceContainer {
 	
 	var bookId: Int {
-		return id & bookIdBits
+		return rawValue & bookIdBits
 	}
 	
 	var bookNumber: Int {
 		get {
-			return id / bookRadix
+			return rawValue / bookRadix
 		}
 		set {
-			id = (id & reverseBookIdBits) + (newValue * bookRadix)
+			rawValue = (rawValue & reverseBookIdBits) + (newValue * bookRadix)
 		}
 	}
 	
@@ -128,7 +130,7 @@ public extension BookReferenceContainer {
 	}
 	
 	var bookReference: BookReference {
-		return BookReference(id: id & bookIdBits)
+		return BookReference(rawValue: rawValue & bookIdBits)
 	}
 }
 
@@ -140,20 +142,20 @@ public protocol ChapterReferenceContainer: BookReferenceContainer {
 public extension ChapterReferenceContainer {
 	
 	var chapterId: Int {
-		return id & chapterIdBits
+		return rawValue & chapterIdBits
 	}
 	
 	var chapterNumber: Int {
 		get {
-			return (id & chapterBits) / chapterRadix
+			return (rawValue & chapterBits) / chapterRadix
 		}
 		set {
-			id = (id & reverseChapterIdBits) + (newValue * chapterRadix)
+			rawValue = (rawValue & reverseChapterIdBits) + (newValue * chapterRadix)
 		}
 	}
 	
 	var chapterReference: ChapterReference {
-		return ChapterReference(id: id & chapterIdBits)
+		return ChapterReference(rawValue: rawValue & chapterIdBits)
 	}
 }
 
@@ -165,20 +167,20 @@ public protocol VerseReferenceContainer: ChapterReferenceContainer {
 public extension VerseReferenceContainer {
 	
 	var verseId: Int {
-		return id & verseIdBits
+		return rawValue & verseIdBits
 	}
 	
 	var verseNumber: Int {
 		get {
-			return (id & verseBits) / verseRadix
+			return (rawValue & verseBits) / verseRadix
 		}
 		set {
-			id = (id & reverseVerseIdBits) + (newValue * verseRadix)
+			rawValue = (rawValue & reverseVerseIdBits) + (newValue * verseRadix)
 		}
 	}
 	
 	var verseReference: VerseReference {
-		return VerseReference(id: id & verseIdBits)
+		return VerseReference(rawValue: rawValue & verseIdBits)
 	}
 }
 
@@ -190,20 +192,20 @@ public protocol TokenReferenceContainer: VerseReferenceContainer {
 public extension TokenReferenceContainer {
 	
 	var tokenId: Int {
-		return id & tokenIdBits
+		return rawValue & tokenIdBits
 	}
 	
 	var tokenIndex: Int {
 		get {
-			return (id & tokenBits) / tokenRadix
+			return (rawValue & tokenBits) / tokenRadix
 		}
 		set {
-			id = (id & reverseTokenIdBits) + (newValue * tokenRadix)
+			rawValue = (rawValue & reverseTokenIdBits) + (newValue * tokenRadix)
 		}
 	}
 	
 	var tokenReference: TokenReference {
-		return TokenReference(id: id & verseIdBits)
+		return TokenReference(rawValue: rawValue & verseIdBits)
 	}
 }
 
@@ -212,14 +214,14 @@ public struct BookReference: BookReferenceContainer {
 	
 	public let totalIndices: Int = 1
 	
-	public var id: Int
+	public var rawValue: Int
 	
-	public init(id: Int) {
-		self.id = id
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
 	}
 	
 	public init(bookNumber: Int) {
-		self.id = (bookNumber * bookRadix)
+		self.rawValue = (bookNumber * bookRadix)
 	}
 }
 
@@ -227,19 +229,19 @@ public struct BookReference: BookReferenceContainer {
 public struct ChapterReference: ChapterReferenceContainer {
 	public let totalIndices: Int = 2
 	
-	public var id: Int
+	public var rawValue: Int
 	
-	public init(id: Int) {
-		self.id = id
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
 	}
 	
 	public init(bookNumber book: Int, chapterNumber chapter: Int) {
-		self.id = (book * bookRadix)
+		self.rawValue = (book * bookRadix)
 		+ (chapter * chapterRadix)
 	}
 	
 	public init(bookReference: BookReference, chapterNumber chapter: Int) {
-		self.id = bookReference.id
+		self.rawValue = bookReference.rawValue
 		+ (chapter * chapterRadix)
 	}
 }
@@ -248,26 +250,26 @@ public struct ChapterReference: ChapterReferenceContainer {
 public struct VerseReference: VerseReferenceContainer {
 	public let totalIndices: Int = 3
 	
-	public var id: Int
+	public var rawValue: Int
 	
-	public init(id: Int) {
-		self.id = id
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
 	}
 	
 	public init(bookNumber book: Int, chapterNumber chapter: Int, verseNumber verse: Int) {
-		self.id = (book * bookRadix)
+		self.rawValue = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 	}
 	
 	public init(bookReference: BookReference, chapterNumber chapter: Int, verseNumber verse: Int) {
-		self.id = bookReference.id
+		self.rawValue = bookReference.rawValue
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 	}
 	
 	public init(chapterReference: ChapterReference, verseNumber verse: Int) {
-		self.id = chapterReference.id
+		self.rawValue = chapterReference.rawValue
 		+ (verse * chapterRadix)
 	}
 }
@@ -276,34 +278,34 @@ public struct VerseReference: VerseReferenceContainer {
 public struct TokenReference: TokenReferenceContainer {
 	public let totalIndices: Int = 4
 	
-	public var id: Int
+	public var rawValue: Int
 	
-	public init(id: Int) {
-		self.id = id
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
 	}
 	
 	public init(bookNumber book: Int, chapterNumber chapter: Int, verseNumber verse: Int, tokenIndex token: Int) {
-		self.id = (book * bookRadix)
+		self.rawValue = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
 	public init(bookReference: BookReference, chapterNumber chapter: Int, verseNumber verse: Int, tokenIndex token: Int) {
-		self.id = bookReference.id
+		self.rawValue = bookReference.rawValue
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
 	public init(chapterReference: ChapterReference, verseNumber verse: Int, tokenIndex token: Int) {
-		self.id = chapterReference.id
+		self.rawValue = chapterReference.rawValue
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
 	public init(verseReference: VerseReference, tokenIndex token: Int) {
-		self.id = verseReference.id
+		self.rawValue = verseReference.rawValue
 		+ (token * tokenRadix)
 	}
 }
