@@ -135,3 +135,18 @@ final class UnicodeScalarTests: XCTestCase {
 		XCTAssertTrue(UnicodeScalar("\u{39E}").contains(characterFromSet: .greekConsonants)) // Ξ
 	}
 }
+
+final class MiscTests: XCTestCase {
+	
+	func testCollections() {
+		var arrayTesting = [1, 2, 4]
+		XCTAssertTrue(arrayTesting.appendIfNoneEquates(3).appended)
+		XCTAssertFalse(arrayTesting.appendIfNoneEquates(3).appended)
+		XCTAssertTrue(arrayTesting.appendIfNotNil(1))
+		XCTAssertFalse(arrayTesting.appendIfNotNil(nil))
+		
+		var setTesting = Set([1, 2, 6])
+		XCTAssertTrue(setTesting.insertIfNotNil(1))
+		XCTAssertFalse(setTesting.insertIfNotNil(nil))
+	}
+}
