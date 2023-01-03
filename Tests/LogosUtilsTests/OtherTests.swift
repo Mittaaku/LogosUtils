@@ -8,6 +8,7 @@
 import XCTest
 @testable import LogosUtils
 
+@available(iOS 13.0, macOS 12.3, *)
 final class ReferenceTests: XCTestCase {
 	
 	let reference1 = VerseReference(bookNumber: 3, chapterNumber: 1, verseNumber: 2)

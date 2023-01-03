@@ -7,15 +7,15 @@
 
 import Foundation
 
-@available(iOS 13.0, macOS 10.15, *)
-public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic {
+@available(iOS 13.0, macOS 12.3, *)
+public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic, CodingKeyRepresentable {
 	
 	var rawValue: Int { get set }
 	
 	init(rawValue: Int)
 }
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 12.3, *)
 public extension BibleIndex {
 	var id: Int {
 		return rawValue
@@ -27,13 +27,13 @@ public extension BibleIndex {
 	
 	init(from decoder: Decoder) throws {
 		var container = try decoder.singleValueContainer()
-		let rawValue = try container.decode(String.self)
-		self.init(rawValue: rawValue.int!)
+		let rawValue = try container.decode(Int.self)
+		self.init(rawValue: rawValue)
 	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
-		try container.encode(rawValue.description)
+		try container.encode(rawValue)
 	}
 	
 	static func + (lhs: Self, rhs: Self) -> Self {
@@ -45,7 +45,7 @@ public extension BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 12.3, *)
 public struct BookNumber: BibleIndex {
 	public var rawValue: Int
 	
@@ -65,7 +65,7 @@ public struct BookNumber: BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 12.3, *)
 public struct ChapterNumber: BibleIndex {
 	public var rawValue: Int
 	
@@ -78,7 +78,7 @@ public struct ChapterNumber: BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 12.3, *)
 public struct VerseNumber: BibleIndex {
 	public var rawValue: Int
 	
