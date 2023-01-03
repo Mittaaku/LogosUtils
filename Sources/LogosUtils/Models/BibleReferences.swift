@@ -5,10 +5,15 @@
 
 import Foundation
 
-fileprivate let bookRadix				= tokenRadix << 24
-fileprivate let chapterRadix			= tokenRadix << 16
-fileprivate let verseRadix				= tokenRadix << 8
-fileprivate let tokenRadix				= 0x01
+fileprivate let bookSlot				= 3
+fileprivate let chapterSlot				= 2
+fileprivate let verseSlot				= 1
+fileprivate let tokenSlot				= 0
+
+fileprivate let bookRadix				= 1 << (8 * bookSlot)
+fileprivate let chapterRadix			= 1 << (8 * chapterSlot)
+fileprivate let verseRadix				= 1 << (8 * verseSlot)
+fileprivate let tokenRadix				= 1 << (8 * tokenSlot)
 
 fileprivate let bookBits				= bookRadix * 0xFF
 fileprivate let chapterBits				= chapterRadix * 0xFF
@@ -27,7 +32,7 @@ fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
 @available(iOS 13.0, macOS 12.3, *)
 public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable, CodingKeyRepresentable {
-	var totalIndices: Int { get }
+	static var totalIndices: Int { get }
 	
 	var rawValue: Int { get set }
 	
@@ -39,21 +44,29 @@ public extension BibleReferenceContainer {
 	
 	// MARK: Coding
 	
+	init?(codingKey: Int) {
+		self.init(decimalValue: codingKey)
+	}
+
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
-		self.init(rawValue: try container.decode(Int.self))
+		self.init(decimalValue: try container.decode(Int.self))
+	}
+	
+	var codingKey: Int {
+		return decimalValue
 	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
-		try container.encode(rawValue)
+		try container.encode(decimalValue)
 	}
 	
 	// MARK: Collections
 	
 	var uintIndices: [UInt8] {
-		let shifted = rawValue >> (8 * abs(totalIndices - 4))
-		return Array(shifted.bytes.prefix(totalIndices)).reversed()
+		let shifted = rawValue >> (8 * abs(Self.totalIndices - 4))
+		return Array(shifted.bytes.prefix(Self.totalIndices)).reversed()
 	}
 	
 	var indices: [Int] {
@@ -72,6 +85,14 @@ public extension BibleReferenceContainer {
 	
 	// MARK: Other
 	
+	init(decimalValue: Int) {
+		var result = 0
+		for index in 0 ..< 4 {
+			result += ((decimalValue / 1000.pow(to: index)) % 1000) * (1 << (8 * index))
+		}
+		self.init(rawValue: result)
+	}
+	
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(rawValue)
 	}
@@ -82,6 +103,17 @@ public extension BibleReferenceContainer {
 	
 	var id: Int {
 		return rawValue
+	}
+	
+	var decimalValue: Int {
+		let bytes = Array(rawValue.bytes.prefix(4))
+		var result = 0
+		for index in bytes.indices {
+			let multiplicand = Int(bytes[index])
+			let multiplier = 1000.pow(to: Int(index))
+			result += multiplier * multiplicand
+		}
+		return result
 	}
 	
 	var isValid: Bool {
@@ -214,8 +246,7 @@ public extension TokenReferenceContainer {
 
 @available(iOS 13.0, macOS 12.3, *)
 public struct BookReference: BookReferenceContainer {
-	
-	public let totalIndices: Int = 1
+	public static let totalIndices: Int = 1
 	
 	public var rawValue: Int
 	
@@ -230,7 +261,7 @@ public struct BookReference: BookReferenceContainer {
 
 @available(iOS 13.0, macOS 12.3, *)
 public struct ChapterReference: ChapterReferenceContainer {
-	public let totalIndices: Int = 2
+	public static let totalIndices: Int = 2
 	
 	public var rawValue: Int
 	
@@ -251,7 +282,7 @@ public struct ChapterReference: ChapterReferenceContainer {
 
 @available(iOS 13.0, macOS 12.3, *)
 public struct VerseReference: VerseReferenceContainer {
-	public let totalIndices: Int = 3
+	public static let totalIndices: Int = 3
 	
 	public var rawValue: Int
 	
@@ -279,7 +310,7 @@ public struct VerseReference: VerseReferenceContainer {
 
 @available(iOS 13.0, macOS 12.3, *)
 public struct TokenReference: TokenReferenceContainer {
-	public let totalIndices: Int = 4
+	public static let totalIndices: Int = 4
 	
 	public var rawValue: Int
 	

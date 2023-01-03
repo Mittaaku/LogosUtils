@@ -34,6 +34,11 @@ final class ReferenceTests: XCTestCase {
 		XCTAssertEqual(reference4.chapterId == reference5.chapterId, true)
 		XCTAssertEqual(reference4.verseId == reference5.verseId, false)
 		
+		let decimalValue = reference5.decimalValue
+		XCTAssertEqual(decimalValue, 1002003001)
+		let referenceFromDecimal = TokenReference(decimalValue: decimalValue)
+		XCTAssertEqual(reference5, referenceFromDecimal)
+		
 		reference5.bookNumber += 1
 		XCTAssertEqual(reference5.bookNumber, 2)
 		
@@ -55,6 +60,7 @@ final class ReferenceTests: XCTestCase {
 		XCTAssertEqual(reference1.description, "[3, 1, 2]")
 		XCTAssertEqual(reference1.indices, [3, 1, 2])
 		XCTAssertEqual(reference8.indices, [51])
+		
 	}
 }
 
