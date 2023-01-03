@@ -21,7 +21,7 @@ public extension RangeReplaceableCollection {
 	
 }
 
-extension RangeReplaceableCollection where Element: Equatable {
+public extension RangeReplaceableCollection where Element: Equatable {
 	
 	@discardableResult mutating func appendIfNoneEquates(_ element: Element) -> (appended: Bool, memberAfterAppend: Element) {
 		if let index = firstIndex(of: element) {
