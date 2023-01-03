@@ -30,7 +30,7 @@ fileprivate let reverseChapterIdBits	= chapterBits ^ tokenIdBits
 fileprivate let reverseVerseIdBits		= verseBits ^ tokenIdBits
 fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable, CodingKeyRepresentable {
 	static var totalIndices: Int { get }
 	
@@ -39,7 +39,7 @@ public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashabl
 	init(rawValue: Int)
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public extension BibleReferenceContainer {
 	
 	// MARK: Coding
@@ -64,13 +64,12 @@ public extension BibleReferenceContainer {
 	
 	// MARK: Collections
 	
-	var uintIndices: [UInt8] {
-		let shifted = rawValue >> (8 * abs(Self.totalIndices - 4))
-		return Array(shifted.bytes.prefix(Self.totalIndices)).reversed()
+	var rawIndices: [UInt8] {
+		return Array(rawValue.bytes.prefix(4).reversed().prefix(Self.totalIndices))
 	}
 	
 	var indices: [Int] {
-		return uintIndices.map{ return Int($0) }
+		return rawIndices.map { return Int($0) }
 	}
 	
 	// MARK: Equatable and Comparable
@@ -98,7 +97,7 @@ public extension BibleReferenceContainer {
 	}
 	
 	var description: String {
-		return uintIndices.description
+		return rawIndices.description
 	}
 	
 	var id: Int {
@@ -117,7 +116,7 @@ public extension BibleReferenceContainer {
 	}
 	
 	var isValid: Bool {
-		return uintIndices.allSatisfy(\.isPositive)
+		return rawIndices.allSatisfy(\.isPositive)
 	}
 	
 	func offset(from reference: any BibleReferenceContainer) -> ReferenceOffset {
@@ -137,11 +136,11 @@ public extension BibleReferenceContainer {
 		}
 	}
 }
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public protocol BookReferenceContainer: BibleReferenceContainer {
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public extension BookReferenceContainer {
 	
 	var bookId: Int {
@@ -169,11 +168,11 @@ public extension BookReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public protocol ChapterReferenceContainer: BookReferenceContainer {
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public extension ChapterReferenceContainer {
 	
 	var chapterId: Int {
@@ -194,11 +193,11 @@ public extension ChapterReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public protocol VerseReferenceContainer: ChapterReferenceContainer {
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public extension VerseReferenceContainer {
 	
 	var verseId: Int {
@@ -219,11 +218,11 @@ public extension VerseReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public protocol TokenReferenceContainer: VerseReferenceContainer {
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public extension TokenReferenceContainer {
 	
 	var tokenId: Int {
@@ -244,7 +243,7 @@ public extension TokenReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct BookReference: BookReferenceContainer {
 	public static let totalIndices: Int = 1
 	
@@ -259,7 +258,7 @@ public struct BookReference: BookReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct ChapterReference: ChapterReferenceContainer {
 	public static let totalIndices: Int = 2
 	
@@ -280,7 +279,7 @@ public struct ChapterReference: ChapterReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct VerseReference: VerseReferenceContainer {
 	public static let totalIndices: Int = 3
 	
@@ -308,7 +307,7 @@ public struct VerseReference: VerseReferenceContainer {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct TokenReference: TokenReferenceContainer {
 	public static let totalIndices: Int = 4
 	
