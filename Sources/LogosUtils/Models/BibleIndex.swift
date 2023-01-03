@@ -26,13 +26,13 @@ public extension BibleIndex {
 	}
 	
 	init(from decoder: Decoder) throws {
-		var container = try decoder.unkeyedContainer()
+		var container = try decoder.singleValueContainer()
 		let rawValue = try container.decode(Int.self)
 		self.init(rawValue: rawValue)
 	}
 	
 	func encode(to encoder: Encoder) throws {
-		var container = encoder.unkeyedContainer()
+		var container = encoder.singleValueContainer()
 		try container.encode(rawValue)
 	}
 	
