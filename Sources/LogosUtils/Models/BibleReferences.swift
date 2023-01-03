@@ -44,8 +44,12 @@ public extension BibleReferenceContainer {
 	
 	// MARK: Coding
 	
-	init?(codingKey: Int) {
-		self.init(decimalValue: codingKey)
+	init?<T: CodingKey>(codingKey: T) {
+		if let intValue = codingKey.intValue {
+			self.init(decimalValue: intValue)
+		} else {
+			return nil
+		}
 	}
 
 	init(from decoder: Decoder) throws {
@@ -53,8 +57,8 @@ public extension BibleReferenceContainer {
 		self.init(decimalValue: try container.decode(Int.self))
 	}
 	
-	var codingKey: Int {
-		return decimalValue
+	var codingKey: BibleReferenceCodingKey {
+		return BibleReferenceCodingKey(decimalReference: decimalValue)
 	}
 	
 	func encode(to encoder: Encoder) throws {
@@ -136,6 +140,35 @@ public extension BibleReferenceContainer {
 		}
 	}
 }
+
+@available(iOS 15.4, macOS 12.3, *)
+public struct BibleReferenceCodingKey: CodingKey {
+	public var decimalValue: Int
+	
+	public init(decimalReference: Int) {
+		self.decimalValue = decimalReference
+	}
+	
+	public init?(stringValue: String) {
+		guard let intValue = Int(stringValue) else {
+			return nil
+		}
+		decimalValue = intValue
+	}
+	
+	public init?(intValue: Int) {
+		decimalValue = intValue
+	}
+	
+	public var stringValue: String {
+		return decimalValue.string
+	}
+	
+	public var intValue: Int? {
+		return decimalValue
+	}
+}
+
 @available(iOS 15.4, macOS 12.3, *)
 public protocol BookReferenceContainer: BibleReferenceContainer {
 }

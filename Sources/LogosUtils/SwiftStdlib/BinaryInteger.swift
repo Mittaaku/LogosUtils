@@ -31,8 +31,8 @@ extension BinaryInteger {
 	///
 	///		10.string -> "10"
 	///
-	var string: Int? {
-		return Int(self)
+	var string: String {
+		return String(self)
 	}
 	
 	func checkBit(at position: Int) -> Bool {
