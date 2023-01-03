@@ -35,4 +35,11 @@ public extension SetAlgebra {
         }
         self = result
     }
+	
+	@discardableResult mutating func insertIf(nonNil value: Element?) -> Bool {
+		guard let value else {
+			return
+		}
+		self.insert(value)
+	}
 }

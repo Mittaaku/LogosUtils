@@ -10,10 +10,26 @@ import Foundation
 // MARK: - Methods
 public extension RangeReplaceableCollection {
 
-    mutating func append(optionally element: Self.Iterator.Element?) {
-        guard let element = element else {
-            return
-        }
-        self.append(element)
-    }
+	@discardableResult mutating func appendIfNotNil(_ value: Element?) -> Bool {
+		guard let value else {
+			return false
+		}
+		self.append(value)
+		return true
+	}
+	
+	
 }
+
+extension RangeReplaceableCollection where Element: Equatable {
+	
+	@discardableResult mutating func appendIfNoneEquates(_ element: Element) -> (appended: Bool, memberAfterAppend: Element) {
+		if let index = firstIndex(of: element) {
+			return (false, self[index])
+		} else {
+			append(element)
+			return (true, element)
+		}
+	}
+}
+
