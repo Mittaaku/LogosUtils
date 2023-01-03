@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic, CodingKeyRepresentable {
 	
 	var rawValue: Int { get set }
@@ -15,7 +15,7 @@ public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, C
 	init(rawValue: Int)
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public extension BibleIndex {
 	var id: Int {
 		return rawValue
@@ -45,7 +45,7 @@ public extension BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct BookNumber: BibleIndex {
 	public var rawValue: Int
 	
@@ -65,7 +65,7 @@ public struct BookNumber: BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct ChapterNumber: BibleIndex {
 	public var rawValue: Int
 	
@@ -78,7 +78,7 @@ public struct ChapterNumber: BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct VerseNumber: BibleIndex {
 	public var rawValue: Int
 	
@@ -91,7 +91,7 @@ public struct VerseNumber: BibleIndex {
 	}
 }
 
-@available(iOS 13.0, macOS 12.3, *)
+@available(iOS 15.4, macOS 12.3, *)
 public struct TokenNumber: BibleIndex {
 	public var rawValue: Int
 	
