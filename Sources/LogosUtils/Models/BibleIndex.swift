@@ -8,7 +8,7 @@
 import Foundation
 
 @available(iOS 13.0, macOS 10.15, *)
-public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible {
+public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic {
 	
 	var rawValue: Int { get set }
 	
@@ -17,7 +17,6 @@ public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, C
 
 @available(iOS 13.0, macOS 10.15, *)
 public extension BibleIndex {
-	
 	var id: Int {
 		return rawValue
 	}
@@ -36,6 +35,14 @@ public extension BibleIndex {
 		var container = encoder.unkeyedContainer()
 		try container.encode(rawValue)
 	}
+	
+	static func + (lhs: Self, rhs: Self) -> Self {
+		return Self(rawValue: lhs.rawValue + rhs.rawValue)
+	}
+	
+	static func - (lhs: Self, rhs: Self) -> Self {
+		return Self(rawValue: lhs.rawValue - rhs.rawValue)
+	}
 }
 
 @available(iOS 13.0, macOS 10.15, *)
@@ -44,6 +51,10 @@ public struct BookNumber: BibleIndex {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+	}
+	
+	public init(integerLiteral: Int) {
+		self.rawValue = integerLiteral
 	}
 	
 	public var name: BookName {
@@ -61,6 +72,10 @@ public struct ChapterNumber: BibleIndex {
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
 	}
+	
+	public init(integerLiteral: Int) {
+		self.rawValue = integerLiteral
+	}
 }
 
 @available(iOS 13.0, macOS 10.15, *)
@@ -69,6 +84,10 @@ public struct VerseNumber: BibleIndex {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+	}
+	
+	public init(integerLiteral: Int) {
+		self.rawValue = integerLiteral
 	}
 }
 
