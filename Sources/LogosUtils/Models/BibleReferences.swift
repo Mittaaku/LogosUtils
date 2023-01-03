@@ -57,7 +57,7 @@ public extension BibleReferenceContainer {
 		self.init(decimalValue: try container.decode(Int.self))
 	}
 	
-	var codingKey: BibleReferenceCodingKey {
+	var codingKey: CodingKey {
 		return BibleReferenceCodingKey(decimalReference: decimalValue)
 	}
 	
