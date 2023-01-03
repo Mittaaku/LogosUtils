@@ -128,6 +128,13 @@ public extension BookReferenceContainer {
 	var bookReference: BookReference {
 		return BookReference(rawValue: rawValue & bookIdBits)
 	}
+	
+	var bookName: BookName {
+		guard let result = BookName(rawValue: rawValue / bookRadix) else {
+			fatalError("Book index out of bounds")
+		}
+		return result
+	}
 }
 
 @available(iOS 13.0, macOS 10.15, *)

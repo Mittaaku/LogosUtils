@@ -16,14 +16,25 @@ public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, C
 }
 
 @available(iOS 13.0, macOS 10.15, *)
-extension BibleIndex {
+public extension BibleIndex {
 	
-	public var id: Int {
+	var id: Int {
 		return rawValue
 	}
 	
-	public var description: String {
+	var description: String {
 		return String(rawValue)
+	}
+	
+	init(from decoder: Decoder) throws {
+		var container = try decoder.unkeyedContainer()
+		let rawValue = try container.decode(Int.self)
+		self.init(rawValue: rawValue)
+	}
+	
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.unkeyedContainer()
+		try container.encode(rawValue)
 	}
 }
 
@@ -33,6 +44,13 @@ public struct BookNumber: BibleIndex {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+	}
+	
+	public var name: BookName {
+		guard let result = BookName(rawValue: rawValue) else {
+			fatalError("Book index out of bounds")
+		}
+		return result
 	}
 }
 
