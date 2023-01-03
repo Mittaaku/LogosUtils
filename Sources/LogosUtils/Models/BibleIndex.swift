@@ -26,7 +26,7 @@ public extension BibleIndex {
 	}
 	
 	init(from decoder: Decoder) throws {
-		var container = try decoder.singleValueContainer()
+		let container = try decoder.singleValueContainer()
 		let rawValue = try container.decode(Int.self)
 		self.init(rawValue: rawValue)
 	}
@@ -80,6 +80,19 @@ public struct ChapterNumber: BibleIndex {
 
 @available(iOS 13.0, macOS 12.3, *)
 public struct VerseNumber: BibleIndex {
+	public var rawValue: Int
+	
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+	
+	public init(integerLiteral: Int) {
+		self.rawValue = integerLiteral
+	}
+}
+
+@available(iOS 13.0, macOS 12.3, *)
+public struct TokenNumber: BibleIndex {
 	public var rawValue: Int
 	
 	public init(rawValue: Int) {

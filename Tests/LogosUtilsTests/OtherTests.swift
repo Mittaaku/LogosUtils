@@ -11,11 +11,11 @@ import XCTest
 @available(iOS 13.0, macOS 12.3, *)
 final class ReferenceTests: XCTestCase {
 	
-	let reference1 = VerseReference(bookNumber: 3, chapterNumber: 1, verseNumber: 2)
-	let reference2 = VerseReference(bookNumber: 3, chapterNumber: 1, verseNumber: 4)
-	let reference3 = VerseReference(bookNumber: 3, chapterNumber: 2, verseNumber: 1)
-	let reference4 = VerseReference(bookNumber: 1, chapterNumber: 2, verseNumber: 1)
-	var reference5 = TokenReference(bookNumber: 1, chapterNumber: 2, verseNumber: 3, tokenIndex: 1)
+	let reference1 = VerseReference(book: 3, chapter: 1, verse: 2)
+	let reference2 = VerseReference(book: 3, chapter: 1, verse: 4)
+	let reference3 = VerseReference(book: 3, chapter: 2, verse: 1)
+	let reference4 = VerseReference(book: 1, chapter: 2, verse: 1)
+	var reference5 = TokenReference(book: 1, chapter: 2, verse: 3, token: 1)
 	var reference6 = BookReference(bookNumber: 1)
 	var reference7 = BookReference(bookNumber: 66)
 	var reference8 = BookReference(bookNumber: 51)
@@ -43,8 +43,8 @@ final class ReferenceTests: XCTestCase {
 		reference5.verseNumber += 1
 		XCTAssertEqual(reference5.verseNumber, 4)
 		
-		reference5.tokenIndex += 1
-		XCTAssertEqual(reference5.tokenIndex, 2)
+		reference5.tokenNumber += 1
+		XCTAssertEqual(reference5.tokenNumber, 2)
 		
 		reference5.bookNumber += 1
 		XCTAssertEqual(reference5.bookNumber, 3)

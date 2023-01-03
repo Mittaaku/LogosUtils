@@ -26,7 +26,7 @@ fileprivate let reverseVerseIdBits		= verseBits ^ tokenIdBits
 fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
 @available(iOS 13.0, macOS 12.3, *)
-public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable {
+public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable, CodingKeyRepresentable {
 	var totalIndices: Int { get }
 	
 	var rawValue: Int { get set }
@@ -198,12 +198,12 @@ public extension TokenReferenceContainer {
 		return rawValue & tokenIdBits
 	}
 	
-	var tokenIndex: Int {
+	var tokenNumber: TokenNumber {
 		get {
-			return (rawValue & tokenBits) / tokenRadix
+			return TokenNumber(rawValue: (rawValue & tokenBits) / tokenRadix)
 		}
 		set {
-			rawValue = (rawValue & reverseTokenIdBits) + (newValue * tokenRadix)
+			rawValue = (rawValue & reverseTokenIdBits) + (newValue.rawValue * tokenRadix)
 		}
 	}
 	
@@ -238,12 +238,12 @@ public struct ChapterReference: ChapterReferenceContainer {
 		self.rawValue = rawValue
 	}
 	
-	public init(bookNumber book: Int, chapterNumber chapter: Int) {
+	public init(book: Int, chapter: Int) {
 		self.rawValue = (book * bookRadix)
 		+ (chapter * chapterRadix)
 	}
 	
-	public init(bookReference: BookReference, chapterNumber chapter: Int) {
+	public init(bookReference: BookReference, chapter: Int) {
 		self.rawValue = bookReference.rawValue
 		+ (chapter * chapterRadix)
 	}
@@ -259,19 +259,19 @@ public struct VerseReference: VerseReferenceContainer {
 		self.rawValue = rawValue
 	}
 	
-	public init(bookNumber book: Int, chapterNumber chapter: Int, verseNumber verse: Int) {
+	public init(book: Int, chapter: Int, verse: Int) {
 		self.rawValue = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 	}
 	
-	public init(bookReference: BookReference, chapterNumber chapter: Int, verseNumber verse: Int) {
+	public init(bookReference: BookReference, chapter: Int, verse: Int) {
 		self.rawValue = bookReference.rawValue
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 	}
 	
-	public init(chapterReference: ChapterReference, verseNumber verse: Int) {
+	public init(chapterReference: ChapterReference, verse: Int) {
 		self.rawValue = chapterReference.rawValue
 		+ (verse * chapterRadix)
 	}
@@ -287,27 +287,27 @@ public struct TokenReference: TokenReferenceContainer {
 		self.rawValue = rawValue
 	}
 	
-	public init(bookNumber book: Int, chapterNumber chapter: Int, verseNumber verse: Int, tokenIndex token: Int) {
+	public init(book: Int, chapter: Int, verse: Int, token: Int) {
 		self.rawValue = (book * bookRadix)
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(bookReference: BookReference, chapterNumber chapter: Int, verseNumber verse: Int, tokenIndex token: Int) {
+	public init(bookReference: BookReference, chapter: Int, verse: Int, token: Int) {
 		self.rawValue = bookReference.rawValue
 		+ (chapter * chapterRadix)
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(chapterReference: ChapterReference, verseNumber verse: Int, tokenIndex token: Int) {
+	public init(chapterReference: ChapterReference, verse: Int, token: Int) {
 		self.rawValue = chapterReference.rawValue
 		+ (verse * verseRadix)
 		+ (token * tokenRadix)
 	}
 	
-	public init(verseReference: VerseReference, tokenIndex token: Int) {
+	public init(verseReference: VerseReference, token: Int) {
 		self.rawValue = verseReference.rawValue
 		+ (token * tokenRadix)
 	}
