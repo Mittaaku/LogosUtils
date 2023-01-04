@@ -268,7 +268,7 @@ public struct BookReference: BookReferenceContainer {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
-		assert(isValid, "Attempted to initilize invalid reference")
+		assert(rawValue == rawValue & Self.validIdBits, "Attempted to initilize invalid reference")
 	}
 	
 	public init(bookNumber: Int) {
@@ -285,7 +285,7 @@ public struct ChapterReference: ChapterReferenceContainer {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
-		assert(isValid, "Attempted to initilize invalid reference")
+		assert(rawValue == rawValue & Self.validIdBits, "Attempted to initilize invalid reference")
 	}
 	
 	public init(book: Int, chapter: Int) {
@@ -308,7 +308,7 @@ public struct VerseReference: VerseReferenceContainer {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
-		assert(isValid, "Attempted to initilize invalid reference")
+		assert(rawValue == rawValue & Self.validIdBits, "Attempted to initilize invalid reference")
 	}
 	
 	public init(book: Int, chapter: Int, verse: Int) {
@@ -338,7 +338,7 @@ public struct TokenReference: TokenReferenceContainer {
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
-		assert(isValid, "Attempted to initilize invalid reference")
+		assert(rawValue == rawValue & Self.validIdBits, "Attempted to initilize invalid reference")
 	}
 	
 	public init(book: Int, chapter: Int, verse: Int, token: Int) {
