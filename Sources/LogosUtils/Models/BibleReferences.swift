@@ -35,6 +35,7 @@ fileprivate var propertyNames = ["book", "chapter", "verse", "token"]
 @available(iOS 15.4, macOS 12.3, *)
 public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, CustomDebugStringConvertible, RawRepresentable, CodingKeyRepresentable {
 	static var totalIndices: Int { get }
+	static var validIdBits: Int { get }
 	
 	var rawValue: Int { get set }
 	
@@ -53,7 +54,7 @@ public extension BibleReferenceContainer {
 			return nil
 		}
 	}
-
+	
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		self.init(decimalValue: try container.decode(Int.self))
@@ -127,6 +128,9 @@ public extension BibleReferenceContainer {
 	}
 	
 	var isValid: Bool {
+		guard rawValue == rawValue & Self.validIdBits else {
+			return false
+		}
 		return rawIndices.allSatisfy(\.isPositive)
 	}
 	
@@ -258,100 +262,108 @@ public extension TokenReferenceContainer {
 @available(iOS 15.4, macOS 12.3, *)
 public struct BookReference: BookReferenceContainer {
 	public static let totalIndices: Int = 1
+	public static let validIdBits: Int = bookIdBits
 	
 	public var rawValue: Int
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+		assert(isValid, "Attempted to initilize invalid reference")
 	}
 	
 	public init(bookNumber: Int) {
-		self.rawValue = (bookNumber * bookRadix)
+		self.init(rawValue: bookNumber * bookRadix)
 	}
 }
 
 @available(iOS 15.4, macOS 12.3, *)
 public struct ChapterReference: ChapterReferenceContainer {
 	public static let totalIndices: Int = 2
+	public static let validIdBits: Int = chapterIdBits
 	
 	public var rawValue: Int
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+		assert(isValid, "Attempted to initilize invalid reference")
 	}
 	
 	public init(book: Int, chapter: Int) {
-		self.rawValue = (book * bookRadix)
-		+ (chapter * chapterRadix)
+		self.init(rawValue: book * bookRadix
+				  + chapter * chapterRadix)
 	}
 	
 	public init(bookReference: BookReference, chapter: Int) {
-		self.rawValue = bookReference.rawValue
-		+ (chapter * chapterRadix)
+		self.init(rawValue: bookReference.rawValue
+				  + chapter * chapterRadix)
 	}
 }
 
 @available(iOS 15.4, macOS 12.3, *)
 public struct VerseReference: VerseReferenceContainer {
 	public static let totalIndices: Int = 3
+	public static let validIdBits: Int = verseIdBits
 	
 	public var rawValue: Int
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+		assert(isValid, "Attempted to initilize invalid reference")
 	}
 	
 	public init(book: Int, chapter: Int, verse: Int) {
-		self.rawValue = (book * bookRadix)
-		+ (chapter * chapterRadix)
-		+ (verse * verseRadix)
+		self.init(rawValue: book * bookRadix
+				  + chapter * chapterRadix
+				  + verse * verseRadix)
 	}
 	
 	public init(bookReference: BookReference, chapter: Int, verse: Int) {
-		self.rawValue = bookReference.rawValue
-		+ (chapter * chapterRadix)
-		+ (verse * verseRadix)
+		self.init(rawValue: bookReference.rawValue
+				  + chapter * chapterRadix
+				  + verse * verseRadix)
 	}
 	
 	public init(chapterReference: ChapterReference, verse: Int) {
-		self.rawValue = chapterReference.rawValue
-		+ (verse * chapterRadix)
+		self.init(rawValue: chapterReference.rawValue
+				  + verse * chapterRadix)
 	}
 }
 
 @available(iOS 15.4, macOS 12.3, *)
 public struct TokenReference: TokenReferenceContainer {
 	public static let totalIndices: Int = 4
+	public static let validIdBits: Int = tokenIdBits
 	
 	public var rawValue: Int
 	
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
+		assert(isValid, "Attempted to initilize invalid reference")
 	}
 	
 	public init(book: Int, chapter: Int, verse: Int, token: Int) {
-		self.rawValue = (book * bookRadix)
-		+ (chapter * chapterRadix)
-		+ (verse * verseRadix)
-		+ (token * tokenRadix)
+		self.init(rawValue: book * bookRadix
+				  + chapter * chapterRadix
+				  + verse * verseRadix
+				  + token * tokenRadix)
 	}
 	
 	public init(bookReference: BookReference, chapter: Int, verse: Int, token: Int) {
-		self.rawValue = bookReference.rawValue
-		+ (chapter * chapterRadix)
-		+ (verse * verseRadix)
-		+ (token * tokenRadix)
+		self.init(rawValue: bookReference.rawValue
+				  + chapter * chapterRadix
+				  + verse * verseRadix
+				  + token * tokenRadix)
 	}
 	
 	public init(chapterReference: ChapterReference, verse: Int, token: Int) {
-		self.rawValue = chapterReference.rawValue
-		+ (verse * verseRadix)
-		+ (token * tokenRadix)
+		self.init(rawValue: chapterReference.rawValue
+				  + verse * verseRadix
+				  + token * tokenRadix)
 	}
 	
 	public init(verseReference: VerseReference, token: Int) {
-		self.rawValue = verseReference.rawValue
-		+ (token * tokenRadix)
+		self.init(rawValue: verseReference.rawValue
+				  + token * tokenRadix)
 	}
 }
 
