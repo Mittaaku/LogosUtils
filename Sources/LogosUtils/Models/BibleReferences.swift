@@ -58,7 +58,7 @@ public extension BibleReferenceContainer {
 	}
 	
 	var codingKey: CodingKey {
-		return BibleReferenceCodingKey(decimalReference: decimalValue)
+		return IntegerCodingKey(rawValue: decimalValue)
 	}
 	
 	func encode(to encoder: Encoder) throws {
@@ -138,34 +138,6 @@ public extension BibleReferenceContainer {
 		default:
 			return .identical
 		}
-	}
-}
-
-@available(iOS 15.4, macOS 12.3, *)
-public struct BibleReferenceCodingKey: CodingKey {
-	public var decimalValue: Int
-	
-	public init(decimalReference: Int) {
-		self.decimalValue = decimalReference
-	}
-	
-	public init?(stringValue: String) {
-		guard let intValue = Int(stringValue) else {
-			return nil
-		}
-		decimalValue = intValue
-	}
-	
-	public init?(intValue: Int) {
-		decimalValue = intValue
-	}
-	
-	public var stringValue: String {
-		return decimalValue.string
-	}
-	
-	public var intValue: Int? {
-		return decimalValue
 	}
 }
 
