@@ -30,8 +30,10 @@ fileprivate let reverseChapterIdBits	= chapterBits ^ tokenIdBits
 fileprivate let reverseVerseIdBits		= verseBits ^ tokenIdBits
 fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
+fileprivate var propertyNames = ["book", "chapter", "verse", "token"]
+
 @available(iOS 15.4, macOS 12.3, *)
-public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, RawRepresentable, CodingKeyRepresentable {
+public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, CustomDebugStringConvertible, RawRepresentable, CodingKeyRepresentable {
 	static var totalIndices: Int { get }
 	
 	var rawValue: Int { get set }
@@ -100,8 +102,13 @@ public extension BibleReferenceContainer {
 		hasher.combine(rawValue)
 	}
 	
+	var debugDescription: String {
+		let mapped = zip(propertyNames, rawIndices).map { $0.0 + ": " + String($0.1) }
+		return "(" + mapped.joined(separator: ", ") + ")"
+	}
+	
 	var description: String {
-		return rawIndices.description
+		return "0x" + String(format:"%02X", rawValue)
 	}
 	
 	var id: Int {
