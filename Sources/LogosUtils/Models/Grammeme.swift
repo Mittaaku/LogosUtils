@@ -728,7 +728,7 @@ public extension Voice {
 // ---------------------------------------------------
 // MARK: Word Category
 // ---------------------------------------------------
-enum WordCategory: Int, Grammeme {
+public enum WordCategory: Int, Grammeme {
 	
 	// MARK: Pronouns
 	case correlativePronoun
@@ -777,7 +777,7 @@ enum WordCategory: Int, Grammeme {
 	case verb
 }
 
-extension WordCategory {
+public extension WordCategory {
 	
 	static var caseByAbbreviation = Self.generateCaseByAbbreviation()
 	static var nameByCase = Self.generateNameByCase()
