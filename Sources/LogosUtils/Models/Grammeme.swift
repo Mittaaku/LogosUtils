@@ -9,7 +9,7 @@
 
 import Foundation
 
-public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, RawRepresentable {
+public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, RawRepresentable, LosslessStringConvertible {
 	var abbreviations: [String] { get }
 	var rawValue: Int { get }
 	
@@ -42,6 +42,13 @@ public extension Grammeme {
 	var name: String {
 		guard let result = Self.nameByCase[self] else {
 			fatalError("Missing name for '\(String(describing: self))'")
+		}
+		return result
+	}
+	
+	var description: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
 		}
 		return result
 	}
@@ -742,7 +749,6 @@ public enum WordCategory: Int, Grammeme {
 	case reciprocalPronoun
 	case reflexivePronoun
 	case relativePronoun
-	
 	
 	// MARK: Suffixes
 	case directionalSuffix

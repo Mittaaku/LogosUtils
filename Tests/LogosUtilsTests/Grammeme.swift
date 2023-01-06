@@ -13,5 +13,6 @@ final class GrammemeTests: XCTestCase {
 		let nominative = GrammaticalCase.nominative
 		XCTAssertEqual(nominative.abbreviation, "Nom")
 		XCTAssertEqual(nominative.name, "Nominative")
+		XCTAssertEqual(nominative.description, "nominative")
 	}
 }

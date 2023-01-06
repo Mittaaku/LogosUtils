@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.description  = <<-DESC
                     This is my personal Swift utility library. There are many like it, but this one is mine.
                    DESC
-  spec.homepage     = "https://theographics.org"
+  spec.homepage     = "https://reformert.no"
   spec.license      = { :type => "MIT", :file => "LICENSE" }
   spec.author             = { "Tom-Roger Mittag" => "mittaaku@protonmail.com" }
   spec.ios.deployment_target = "9.0"
