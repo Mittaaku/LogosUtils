@@ -101,6 +101,18 @@ public extension String {
 
 // MARK: - Methods
 public extension String {
+	
+	/// LogosUtils: Convert camel case to capitalized case separated by spaces.
+	/// Credit: https://stackoverflow.com/questions/41292671/separating-camelcase-string-into-space-separated-words-in-swift
+	func camelCaseToCapitalized() -> String {
+		return self
+			.replacingOccurrences(of: "([A-Z])",
+								  with: " $1",
+								  options: .regularExpression,
+								  range: range(of: self))
+			.trimmingCharacters(in: .whitespacesAndNewlines)
+			.capitalized // If input is in llamaCase
+	}
 
 	/// LogosUtils: Check whether the String contains the Diacritic.
 	func contains(diacritic: Diacritic) -> Bool {
