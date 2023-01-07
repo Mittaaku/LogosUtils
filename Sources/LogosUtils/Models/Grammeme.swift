@@ -514,11 +514,11 @@ public extension Person {
 	var abbreviations: [String] {
 		switch self {
 		case .firstPerson:
-			return ["1st"]
+			return ["1", "1st"]
 		case .secondPerson:
-			return ["2nd"]
+			return ["2", "2nd"]
 		case .thirdPerson:
-			return ["3rd"]
+			return ["3", "3rd"]
 		}
 	}
 }

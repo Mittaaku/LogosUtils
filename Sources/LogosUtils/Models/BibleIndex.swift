@@ -6,7 +6,7 @@
 import Foundation
 
 @available(iOS 15.4, macOS 12.3, *)
-public protocol BibleIndex: RawRepresentable, Codable, Hashable, Identifiable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic, CodingKeyRepresentable {
+public protocol BibleIndex: RawRepresentable, Codable, Hashable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic, Identifiable, CodingKeyRepresentable {
 	
 	var rawValue: Int { get set }
 	
