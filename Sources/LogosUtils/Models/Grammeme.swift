@@ -250,7 +250,7 @@ public extension GreekTense {
 		case .pluperfect:
 			return ["Pluperf", "L"]
 		case .present:
-			return ["Pres"]
+			return ["Pres", "P"]
 		case .secondAorist:
 			return ["2Aor", "2A"]
 		case .secondFuture:
