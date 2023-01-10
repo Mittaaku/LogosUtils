@@ -5,7 +5,7 @@
 
 import Foundation
 
-extension BinaryInteger {
+public extension BinaryInteger {
 	
 	var isZero: Bool {
 		return self == 0
