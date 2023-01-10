@@ -246,12 +246,7 @@ public extension TokenReferenceContainer {
 	}
 	
 	var tokenIndex: Int {
-		get {
-			return tokenNumber.rawValue - 1
-		}
-		set {
-			tokenNumber = TokenNumber(rawValue: newValue + 1)
-		}
+		return tokenNumber.rawValue - 1
 	}
 	
 	var tokenNumber: TokenNumber {
