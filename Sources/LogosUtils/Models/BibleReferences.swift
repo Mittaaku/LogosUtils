@@ -245,6 +245,15 @@ public extension TokenReferenceContainer {
 		return rawValue & tokenIdBits
 	}
 	
+	var tokenIndex: Int {
+		get {
+			return tokenNumber.rawValue - 1
+		}
+		set {
+			tokenNumber = TokenNumber(rawValue: newValue + 1)
+		}
+	}
+	
 	var tokenNumber: TokenNumber {
 		get {
 			return TokenNumber(rawValue: (rawValue & tokenBits) / tokenRadix)
