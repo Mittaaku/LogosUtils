@@ -54,9 +54,6 @@ final class ReferenceTests: XCTestCase {
 		reference5.bookNumber += 1
 		XCTAssertEqual(reference5.bookNumber, 3)
 		
-		XCTAssertEqual(reference6.bookName, .genesis)
-		XCTAssertEqual(reference7.bookName, .revelation)
-		
 		XCTAssertEqual(reference1.description, "0x3010200")
 		XCTAssertEqual(reference1.debugDescription, "(book: 3, chapter: 1, verse: 2)")
 		XCTAssertEqual(reference1.indices, [3, 1, 2])

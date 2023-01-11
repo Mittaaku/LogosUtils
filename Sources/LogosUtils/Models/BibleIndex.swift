@@ -15,14 +15,6 @@ public protocol BibleIndex: RawRepresentable, Codable, Hashable, CustomStringCon
 
 @available(iOS 15.4, macOS 12.3, *)
 public extension BibleIndex {
-	var id: Int {
-		return rawValue
-	}
-	
-	var description: String {
-		return String(rawValue)
-	}
-	
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		let rawValue = try container.decode(Int.self)
@@ -32,6 +24,14 @@ public extension BibleIndex {
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
 		try container.encode(rawValue)
+	}
+	
+	var id: Int {
+		return rawValue
+	}
+	
+	var description: String {
+		return String(rawValue)
 	}
 	
 	static func + (lhs: Self, rhs: Self) -> Self {
@@ -54,13 +54,76 @@ public struct BookNumber: BibleIndex {
 	public init(integerLiteral: Int) {
 		self.rawValue = integerLiteral
 	}
+}
 	
-	public var name: BookName {
-		guard let result = BookName(rawValue: rawValue) else {
-			fatalError("Book index out of bounds")
-		}
-		return result
-	}
+@available(iOS 15.4, macOS 12.3, *)
+extension BookNumber {
+	static var genesis = 1
+	static var exodus = 2
+	static var leviticus = 3
+	static var numbers = 4
+	static var deuteronomy = 5
+	static var joshua = 6
+	static var judges = 7
+	static var ruth = 8
+	static var firstSamuel = 9
+	static var secondSamuel = 10
+	static var firstKings = 11
+	static var secondKings = 12
+	static var firstChronicles = 13
+	static var secondChronicles = 14
+	static var ezra = 15
+	static var nehemiah = 16
+	static var esther = 17
+	static var job = 18
+	static var psalms = 19
+	static var proverbs = 20
+	static var ecclesiastes = 21
+	static var songOfSongs = 22
+	static var isaiah = 23
+	static var jeremiah = 24
+	static var lamentations = 25
+	static var ezekiel = 26
+	static var daniel = 27
+	static var hosea = 28
+	static var joel = 29
+	static var amos = 30
+	static var obadiah = 31
+	static var jonah = 32
+	static var micah = 33
+	static var nahum = 34
+	static var habakkuk = 35
+	static var zephaniah = 36
+	static var haggai = 37
+	static var zechariah = 38
+	static var malachi = 39
+	static var matthew = 40
+	static var mark = 41
+	static var luke = 42
+	static var john = 43
+	static var actsOfTheApostles = 44
+	static var romans = 45
+	static var firstCorinthians = 46
+	static var secondCorinthians = 47
+	static var galatians = 48
+	static var ephesians = 49
+	static var philippians = 50
+	static var colossians = 51
+	static var firstThessalonians = 52
+	static var secondThessalonians = 53
+	static var firstTimothy = 54
+	static var secondTimothy = 55
+	static var titus = 56
+	static var philemon = 57
+	static var hebrews = 58
+	static var james = 59
+	static var firstPeter = 60
+	static var secondPeter = 61
+	static var firstJohn = 62
+	static var secondJohn = 63
+	static var thirdJohn = 64
+	static var jude = 65
+	static var revelation = 66
 }
 
 @available(iOS 15.4, macOS 12.3, *)
@@ -100,73 +163,4 @@ public struct TokenNumber: BibleIndex {
 	public init(integerLiteral: Int) {
 		self.rawValue = integerLiteral
 	}
-}
-
-public enum BookName: Int {
-	case genesis = 1
-	case exodus
-	case leviticus
-	case numbers
-	case deuteronomy
-	case joshua
-	case judges
-	case ruth
-	case firstSamuel
-	case secondSamuel
-	case firstKings
-	case secondKings
-	case firstChronicles
-	case secondChronicles
-	case ezra
-	case nehemiah
-	case esther
-	case job
-	case psalms
-	case proverbs
-	case ecclesiastes
-	case songOfSongs
-	case isaiah
-	case jeremiah
-	case lamentations
-	case ezekiel
-	case daniel
-	case hosea
-	case joel
-	case amos
-	case obadiah
-	case jonah
-	case micah
-	case nahum
-	case habakkuk
-	case zephaniah
-	case haggai
-	case zechariah
-	case malachi
-	case matthew
-	case mark
-	case luke
-	case john
-	case actsOfTheApostles
-	case romans
-	case firstCorinthians
-	case secondCorinthians
-	case galatians
-	case ephesians
-	case philippians
-	case colossians
-	case firstThessalonians
-	case secondThessalonians
-	case firstTimothy
-	case secondTimothy
-	case titus
-	case philemon
-	case hebrews
-	case james
-	case firstPeter
-	case secondPeter
-	case firstJohn
-	case secondJohn
-	case thirdJohn
-	case jude
-	case revelation
 }
