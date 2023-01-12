@@ -446,9 +446,10 @@ public extension HebrewVerbStem {
 // MARK: Language
 // ---------------------------------------------------
 public enum Language: Int, Grammeme {
-	case hebrew
 	case aramaic
+	case english
 	case greek
+	case hebrew
 }
 
 public extension Language {
@@ -458,12 +459,14 @@ public extension Language {
 	
 	var abbreviations: [String] {
 		switch self {
-		case .hebrew:
-			return ["H"]
 		case .aramaic:
 			return ["A"]
+		case .english:
+			return ["E"]
 		case .greek:
 			return ["G"]
+		case .hebrew:
+			return ["H"]
 		}
 	}
 }
