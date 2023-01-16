@@ -163,6 +163,10 @@ public extension BookReferenceContainer {
 		return rawValue & bookIdBits
 	}
 	
+	var bookIndex: Int {
+		return bookNumber.rawValue - 1
+	}
+	
 	var bookNumber: BookNumber {
 		get {
 			return BookNumber(rawValue: rawValue / bookRadix)
@@ -188,6 +192,10 @@ public extension ChapterReferenceContainer {
 		return rawValue & chapterIdBits
 	}
 	
+	var chapterIndex: Int {
+		return chapterNumber.rawValue - 1
+	}
+	
 	var chapterNumber: ChapterNumber {
 		get {
 			return ChapterNumber(rawValue: (rawValue & chapterBits) / chapterRadix)
@@ -211,6 +219,10 @@ public extension VerseReferenceContainer {
 	
 	var verseId: Int {
 		return rawValue & verseIdBits
+	}
+	
+	var verseIndex: Int {
+		return verseNumber.rawValue - 1
 	}
 	
 	var verseNumber: VerseNumber {

@@ -104,7 +104,7 @@ public extension String {
 	
 	/// LogosUtils: Convert camel case to capitalized case separated by spaces.
 	/// Credit: https://stackoverflow.com/questions/41292671/separating-camelcase-string-into-space-separated-words-in-swift
-	func camelCaseToCapitalized() -> String {
+	var camelCaseToCapitalized: String {
 		return self
 			.replacingOccurrences(of: "([A-Z])",
 								  with: " $1",

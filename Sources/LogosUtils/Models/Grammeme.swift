@@ -71,7 +71,7 @@ public extension Grammeme {
 	static func generateNameByCase() -> [Self: String] {
 		var result = [Self: String]()
 		for grammeme in Self.allCases {
-			result[grammeme] = String(describing: grammeme).camelCaseToCapitalized()
+			result[grammeme] = String(describing: grammeme).camelCaseToCapitalized
 		}
 		return result
 	}
