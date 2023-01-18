@@ -45,9 +45,10 @@ public extension Dictionary where Key == String {
 			}
 		}
 		
+		let keyPrefix = key
 		var counter = 1
 		while self[key] != nil {
-			key = "\(key)\(counter)"
+			key = "\(keyPrefix)\(counter)"
 			counter += 1
 		}
 		
