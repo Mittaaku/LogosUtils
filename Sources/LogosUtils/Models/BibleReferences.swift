@@ -57,16 +57,16 @@ public extension BibleReferenceContainer {
 	
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
-		self.init(decimalValue: try container.decode(Int.self))
+		self.init(rawValue: try container.decode(Int.self))
 	}
 	
 	var codingKey: CodingKey {
-		return IntegerCodingKey(rawValue: decimalValue)
+		return IntegerCodingKey(rawValue: rawValue)
 	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
-		try container.encode(decimalValue)
+		try container.encode(rawValue)
 	}
 	
 	// MARK: Collections
