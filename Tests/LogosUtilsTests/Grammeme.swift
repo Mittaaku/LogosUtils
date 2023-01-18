@@ -14,5 +14,6 @@ final class GrammemeTests: XCTestCase {
 		XCTAssertEqual(nominative.abbreviation, "Nom")
 		XCTAssertEqual(nominative.name, "Nominative")
 		XCTAssertEqual(nominative.description, "nominative")
+		XCTAssertEqual(nominative.codingKey, "n")
 	}
 }

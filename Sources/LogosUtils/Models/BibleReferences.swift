@@ -152,6 +152,8 @@ public extension BibleReferenceContainer {
 	}
 }
 
+// MARK: Book
+
 @available(iOS 15.4, macOS 12.3, *)
 public protocol BookReferenceContainer: BibleReferenceContainer {
 }
@@ -180,6 +182,24 @@ public extension BookReferenceContainer {
 		return BookReference(rawValue: rawValue & bookIdBits)
 	}
 }
+
+@available(iOS 15.4, macOS 12.3, *)
+public struct BookReference: BookReferenceContainer {
+	public static let totalIndices: Int = 1
+	public static let validIdBits: Int = bookIdBits
+	
+	public var rawValue: Int
+	
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+	
+	public init(book: Int) {
+		self.init(rawValue: book * bookRadix)
+	}
+}
+
+// MARK: Chapter
 
 @available(iOS 15.4, macOS 12.3, *)
 public protocol ChapterReferenceContainer: BookReferenceContainer {
@@ -211,6 +231,30 @@ public extension ChapterReferenceContainer {
 }
 
 @available(iOS 15.4, macOS 12.3, *)
+public struct ChapterReference: ChapterReferenceContainer {
+	public static let totalIndices: Int = 2
+	public static let validIdBits: Int = chapterIdBits
+	
+	public var rawValue: Int
+	
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+	
+	public init(book: Int, chapter: Int) {
+		self.init(rawValue: book * bookRadix
+				  + chapter * chapterRadix)
+	}
+	
+	public init(bookReference: BookReference, chapter: Int) {
+		self.init(rawValue: bookReference.rawValue
+				  + chapter * chapterRadix)
+	}
+}
+
+// MARK: Verse
+
+@available(iOS 15.4, macOS 12.3, *)
 public protocol VerseReferenceContainer: ChapterReferenceContainer {
 }
 
@@ -240,73 +284,6 @@ public extension VerseReferenceContainer {
 }
 
 @available(iOS 15.4, macOS 12.3, *)
-public protocol TokenReferenceContainer: VerseReferenceContainer {
-}
-
-@available(iOS 15.4, macOS 12.3, *)
-public extension TokenReferenceContainer {
-	
-	var tokenId: Int {
-		return rawValue & tokenIdBits
-	}
-	
-	var tokenIndex: Int {
-		return tokenNumber.rawValue - 1
-	}
-	
-	var tokenNumber: TokenNumber {
-		get {
-			return TokenNumber(rawValue: (rawValue & tokenBits) / tokenRadix)
-		}
-		set {
-			rawValue = (rawValue & reverseTokenIdBits) + (newValue.rawValue * tokenRadix)
-		}
-	}
-	
-	var tokenReference: TokenReference {
-		return TokenReference(rawValue: rawValue & verseIdBits)
-	}
-}
-
-@available(iOS 15.4, macOS 12.3, *)
-public struct BookReference: BookReferenceContainer {
-	public static let totalIndices: Int = 1
-	public static let validIdBits: Int = bookIdBits
-	
-	public var rawValue: Int
-	
-	public init(rawValue: Int) {
-		self.rawValue = rawValue
-	}
-	
-	public init(book: Int) {
-		self.init(rawValue: book * bookRadix)
-	}
-}
-
-@available(iOS 15.4, macOS 12.3, *)
-public struct ChapterReference: ChapterReferenceContainer {
-	public static let totalIndices: Int = 2
-	public static let validIdBits: Int = chapterIdBits
-	
-	public var rawValue: Int
-	
-	public init(rawValue: Int) {
-		self.rawValue = rawValue
-	}
-	
-	public init(book: Int, chapter: Int) {
-		self.init(rawValue: book * bookRadix
-				  + chapter * chapterRadix)
-	}
-	
-	public init(bookReference: BookReference, chapter: Int) {
-		self.init(rawValue: bookReference.rawValue
-				  + chapter * chapterRadix)
-	}
-}
-
-@available(iOS 15.4, macOS 12.3, *)
 public struct VerseReference: VerseReferenceContainer {
 	public static let totalIndices: Int = 3
 	public static let validIdBits: Int = verseIdBits
@@ -332,6 +309,37 @@ public struct VerseReference: VerseReferenceContainer {
 	public init(chapterReference: ChapterReference, verse: Int) {
 		self.init(rawValue: chapterReference.rawValue
 				  + verse * chapterRadix)
+	}
+}
+
+// MARK: Token
+
+@available(iOS 15.4, macOS 12.3, *)
+public protocol TokenReferenceContainer: VerseReferenceContainer {
+}
+
+@available(iOS 15.4, macOS 12.3, *)
+public extension TokenReferenceContainer {
+	
+	var tokenId: Int {
+		return rawValue & tokenIdBits
+	}
+	
+	var tokenIndex: Int {
+		return tokenNumber.rawValue - 1
+	}
+	
+	var tokenNumber: TokenNumber {
+		get {
+			return TokenNumber(rawValue: (rawValue & tokenBits) / tokenRadix)
+		}
+		set {
+			rawValue = (rawValue & reverseTokenIdBits) + (newValue.rawValue * tokenRadix)
+		}
+	}
+	
+	var tokenReference: TokenReference {
+		return TokenReference(rawValue: rawValue & verseIdBits)
 	}
 }
 

@@ -44,3 +44,31 @@ public extension SetAlgebra {
 		return true
 	}
 }
+
+public extension SetAlgebra where Element == String {
+	
+	func makeUniqueElement(fromCamelCaseString string: String) -> String {
+		assert(!string.isEmpty, "Input string cannot be empty")
+		var element = ""
+		
+		let first = string.first!
+		assert(!first.isUppercase, "Input string is not camel case")
+		element.append(first)
+		
+		for character in string {
+			if character.isUppercase {
+				element.append(character.lowercased())
+			} else if character.isNumber {
+				element.append(character)
+			}
+		}
+		
+		var counter = 1
+		while contains(element) {
+			element = "\(element)\(counter)"
+			counter += 1
+		}
+		
+		return element
+	}
+}
