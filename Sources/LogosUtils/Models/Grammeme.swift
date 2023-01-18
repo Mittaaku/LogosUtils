@@ -61,7 +61,7 @@ public extension Grammeme {
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
-		try container.encode(abbreviation)
+		try container.encode(codingKey)
 	}
 	
 	static func generateCaseByAbbreviation() -> [String: Self] {
