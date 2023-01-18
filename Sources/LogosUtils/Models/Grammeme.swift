@@ -9,13 +9,10 @@
 
 import Foundation
 
-public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, RawRepresentable, LosslessStringConvertible {
+public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, LosslessStringConvertible, RawRepresentable where RawValue == Int {
 	var abbreviations: [String] { get }
-	var rawValue: Int { get }
 	
 	static var caseByAbbreviation: [String: Self] { get }
-	static var caseByCodingKey: [String: Self] { get }
-	static var codingKeyByCase: [Self: String] { get }
 	static var nameByCase: [Self: String] { get }
 }
 
@@ -30,8 +27,8 @@ public extension Grammeme {
 	
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
-		let key = try container.decode(String.self)
-		guard let result = Self.caseByCodingKey[key] else {
+		let key = try container.decode(Int.self)
+		guard let result = Self.init(rawValue: key) else {
 			preconditionFailure("Invalid \(Self.self) key '\(key)'.")
 		}
 		self = result
@@ -39,10 +36,6 @@ public extension Grammeme {
 	
 	var abbreviation: String {
 		return abbreviations[0]
-	}
-	
-	var codingKey: String {
-		return Self.codingKeyByCase[self]!
 	}
 	
 	var name: String {
@@ -61,7 +54,7 @@ public extension Grammeme {
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
-		try container.encode(codingKey)
+		try container.encode(rawValue)
 	}
 	
 	static func generateCaseByAbbreviation() -> [String: Self] {
@@ -70,17 +63,6 @@ public extension Grammeme {
 			for shorthand in grammeme.abbreviations {
 				result[shorthand] = grammeme
 			}
-		}
-		return result
-	}
-	
-	static func generateCodingKeyByCase() -> [Self: String] {
-		var result = [Self: String]()
-		var uniqueKeys = Set<String>()
-		for grammeme in Self.allCases {
-			let key = uniqueKeys.makeUniqueElement(fromCamelCaseString: String(describing: grammeme))
-			uniqueKeys.insert(key)
-			result[grammeme] = key
 		}
 		return result
 	}
@@ -108,8 +90,6 @@ public enum Declension: Int, Grammeme {
 public extension Declension {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	static var declinableSet: Set<Self> = [.firstDeclension, .secondDeclension, .thirdDeclension]
 	
@@ -147,8 +127,6 @@ public enum GrammaticalCase: Int, Grammeme {
 public extension GrammaticalCase {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -179,8 +157,6 @@ public enum GrammaticalDegree: Int, Grammeme {
 public extension GrammaticalDegree {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -208,8 +184,6 @@ public enum Gender: Int, Grammeme {
 public extension Gender {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -260,8 +234,6 @@ public enum GreekTense: Int, Grammeme {
 public extension GreekTense {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -311,8 +283,6 @@ public enum GreekVerbMode: Int, Grammeme {
 public extension GreekVerbMode {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -344,8 +314,6 @@ public enum HebrewState: Int, Grammeme {
 public extension HebrewState {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -376,8 +344,6 @@ public enum HebrewVerbMode: Int, Grammeme {
 public extension HebrewVerbMode {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -423,8 +389,6 @@ public enum HebrewVerbStem: Int, Grammeme {
 public extension HebrewVerbStem {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -490,8 +454,6 @@ public enum Language: Int, Grammeme {
 public extension Language {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -523,8 +485,6 @@ public enum Number: Int, Grammeme {
 public extension Number {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -551,8 +511,6 @@ public enum Person: Int, Grammeme {
 public extension Person {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -585,8 +543,6 @@ public enum NounType: Int, Grammeme {
 public extension NounType {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	static var properSet: Set<Self> = [.properTitle, .properTitleGentilic, .properLocation, .properLocationGentilic, .properPerson, .properPersonGentilic]
@@ -644,8 +600,6 @@ public enum Punctuation: Int, Grammeme {
 public extension Punctuation {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	static var separators: Set<Punctuation> = [.period, .comma, .semicolon, .questionMark, .paseq, .verseEnd, .sectionMark]
@@ -756,8 +710,6 @@ public enum Voice: Int, Grammeme {
 public extension Voice {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {
@@ -838,8 +790,6 @@ public enum WordCategory: Int, Grammeme {
 public extension WordCategory {
 	
 	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var caseByCodingKey = codingKeyByCase.flipped()
-	static var codingKeyByCase = generateCodingKeyByCase()
 	static var nameByCase = generateNameByCase()
 	
 	var abbreviations: [String] {

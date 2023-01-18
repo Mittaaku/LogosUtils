@@ -63,9 +63,10 @@ public extension SetAlgebra where Element == String {
 			}
 		}
 		
+		let elementPrefix = element
 		var counter = 1
 		while contains(element) {
-			element = "\(element)\(counter)"
+			element = "\(elementPrefix)\(counter)"
 			counter += 1
 		}
 		
