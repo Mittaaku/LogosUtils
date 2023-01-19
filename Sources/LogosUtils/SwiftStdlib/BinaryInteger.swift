@@ -27,14 +27,6 @@ public extension BinaryInteger {
 		return (self % 2) != 0
 	}
 	
-	/// LogosUtils: Get String from Int.
-	///
-	///		10.string -> "10"
-	///
-	var string: String {
-		return String(self)
-	}
-	
 	func checkBit(at position: Int) -> Bool {
 		return (self & (1 << position)) != 0
 	}

@@ -25,7 +25,7 @@ public struct IntegerCodingKey: CodingKey {
 	}
 	
 	public var stringValue: String {
-		return rawValue.string
+		return String(rawValue)
 	}
 	
 	public var intValue: Int? {
