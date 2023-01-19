@@ -26,10 +26,6 @@ public extension Collection {
 		}
 		return allCombinations
 	}
-
-    subscript(safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
 }
 
 // MARK: - Properties
