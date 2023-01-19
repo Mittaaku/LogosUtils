@@ -7,11 +7,6 @@ import Foundation
 
 // MARK: Properties
 public extension UnicodeScalar {
-	
-	/// LogosUtils: Initialize a String from the UnicodeScalar.
-	var string: String {
-		return String(self)
-	}
 }
 
 // MARK: Methods

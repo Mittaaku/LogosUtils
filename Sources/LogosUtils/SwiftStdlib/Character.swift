@@ -9,11 +9,6 @@ import Foundation
 
 // MARK: Properties
 public extension Character {
-
-	/// LogosUtils: Initialize a String from the Character.
-    var string: String {
-        return String(self)
-    }
 }
 
 // MARK: Methods
