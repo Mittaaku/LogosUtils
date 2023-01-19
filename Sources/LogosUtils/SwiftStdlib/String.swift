@@ -39,23 +39,6 @@ public extension String {
 	var isNotBlank: Bool {
 		return !isBlank
 	}
-	
-	/// LogosUtils: Check whether the string consists of Greek only.
-	///
-	///     "123".isDigits -> true
-	///     "abc".isDigits -> false
-	var isDigits: Bool {
-		return NSRegularExpression.digitStringPattern.matches(string: self)
-	}
-	
-	/// LogosUtils: Check whether the string consists of Greek only.
-	///
-	///     ".".isBlank -> false
-	///     " ".isBlank -> true
-	///     "".isBlank -> false
-	var isWhitespace: Bool {
-		return NSRegularExpression.whitespaceStringPattern.matches(string: self)
-	}
 }
 
 // MARK: - Language Properties
