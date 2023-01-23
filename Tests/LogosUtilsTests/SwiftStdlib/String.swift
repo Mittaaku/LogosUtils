@@ -1,5 +1,7 @@
+import Foundation
 import XCTest
 @testable import LogosUtils
+
 
 final class StringTests: XCTestCase {
 
@@ -66,5 +68,27 @@ final class StringTests: XCTestCase {
 		let string = "testing"
 		let range = string.index(string.endIndex, offsetBy: -2) ..< string.endIndex
 		XCTAssertEqual(string.uppercased(range: range), "testiNG")
+	}
+	
+	@available(iOS 15.0, macOS 13.0, *)
+	func testSplitAndRetrain() {
+		
+		typealias Result = (String, String?)
+		
+		let string = "NA27+NA28+Tyn+SBL+WH+Treg+NIV  <2: TR+Byz"
+		
+		let regex1 = try! Regex<Substring>("<")
+		let result1 = string.splitByAndRetrain(separator: regex1)
+		let comparingResult1: [Result] = [("NA27+NA28+Tyn+SBL+WH+Treg+NIV  ", "<"), ("2: TR+Byz", nil)]
+		XCTAssertEqual(result1[0].split, comparingResult1[0].0)
+		XCTAssertEqual(result1[0].separator, comparingResult1[0].1)
+		XCTAssertEqual(result1[1].split, comparingResult1[1].0)
+		XCTAssertEqual(result1[1].separator, comparingResult1[1].1)
+		
+		let regex2 = try! Regex<Substring>(">")
+		let result2 = string.splitByAndRetrain(separator: regex2)
+		let comparingResult2: [Result] = [("NA27+NA28+Tyn+SBL+WH+Treg+NIV  <2: TR+Byz", nil)]
+		XCTAssertEqual(result2[0].split, comparingResult2[0].0)
+		XCTAssertEqual(result2[0].separator, comparingResult2[0].1)
 	}
 }

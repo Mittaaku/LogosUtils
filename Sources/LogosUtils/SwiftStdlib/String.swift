@@ -125,7 +125,7 @@ public extension String {
     }
 	
 	@available(iOS 15.0, macOS 13.0, *)
-	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(split: String, separator: String?)]? {
+	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(split: String, separator: String?)] {
 		let matches = self.matches(of: regex)
 		var result = [(String, String?)]()
 		var startIndex = self.startIndex
