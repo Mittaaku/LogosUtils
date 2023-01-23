@@ -125,19 +125,22 @@ public extension String {
     }
 	
 	@available(iOS 15.0, macOS 13.0, *)
-	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(split: String, separator: String?)] {
+	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(leadingSeparator: String?, content: String, trailingSeparator: String?)] {
 		let matches = self.matches(of: regex)
-		var result = [(String, String?)]()
+		var result = [(String?, String, String?)]()
 		var startIndex = self.startIndex
+		var leadingSeparator: String? = nil
+		
 		for match in matches {
-			let splitter = self[match.range.lowerBound ..< match.range.upperBound]
-			let split = self[startIndex ..< match.range.lowerBound]
-			result.append((String(split), String(splitter)))
+			let trailingSeparator = String(self[match.range.lowerBound ..< match.range.upperBound])
+			let content = String(self[startIndex ..< match.range.lowerBound])
+			result.append((leadingSeparator, content, trailingSeparator))
 			startIndex = match.range.upperBound
+			leadingSeparator = trailingSeparator
 		}
 		let finalString = String(self[startIndex...])
 		if !finalString.isEmpty {
-			result.append((finalString, nil))
+			result.append((leadingSeparator, finalString, nil))
 		}
 		return result
 	}
