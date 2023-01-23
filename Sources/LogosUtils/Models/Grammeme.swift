@@ -13,7 +13,6 @@ public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, LosslessSt
 	var abbreviations: [String] { get }
 	
 	static var caseByAbbreviation: [String: Self] { get }
-	static var nameByCase: [Self: String] { get }
 }
 
 public extension Grammeme {
@@ -39,10 +38,7 @@ public extension Grammeme {
 	}
 	
 	var name: String {
-		guard let result = Self.nameByCase[self] else {
-			fatalError("Missing name for '\(String(describing: self))'")
-		}
-		return result
+		return String(describing: self).camelCaseToCapitalized
 	}
 	
 	var description: String {
@@ -55,24 +51,6 @@ public extension Grammeme {
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
 		try container.encode(rawValue)
-	}
-	
-	static func generateCaseByAbbreviation() -> [String: Self] {
-		var result = [String: Self]()
-		for grammeme in Self.allCases {
-			for shorthand in grammeme.abbreviations {
-				result[shorthand] = grammeme
-			}
-		}
-		return result
-	}
-	
-	static func generateNameByCase() -> [Self: String] {
-		var result = [Self: String]()
-		for grammeme in Self.allCases {
-			result[grammeme] = String(describing: grammeme).camelCaseToCapitalized
-		}
-		return result
 	}
 }
 
@@ -89,8 +67,7 @@ public enum Declension: Int, Grammeme {
 
 public extension Declension {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	static var declinableSet: Set<Self> = [.firstDeclension, .secondDeclension, .thirdDeclension]
 	
 	var abbreviations: [String] {
@@ -126,8 +103,7 @@ public enum GrammaticalCase: Int, Grammeme {
 
 public extension GrammaticalCase {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -156,8 +132,7 @@ public enum GrammaticalDegree: Int, Grammeme {
 
 public extension GrammaticalDegree {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -183,8 +158,7 @@ public enum Gender: Int, Grammeme {
 
 public extension Gender {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -233,8 +207,7 @@ public enum GreekTense: Int, Grammeme {
 
 public extension GreekTense {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -282,8 +255,7 @@ public enum GreekVerbMode: Int, Grammeme {
 
 public extension GreekVerbMode {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -313,8 +285,7 @@ public enum HebrewState: Int, Grammeme {
 
 public extension HebrewState {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -343,8 +314,7 @@ public enum HebrewVerbMode: Int, Grammeme {
 
 public extension HebrewVerbMode {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -388,8 +358,7 @@ public enum HebrewVerbStem: Int, Grammeme {
 
 public extension HebrewVerbStem {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -453,8 +422,7 @@ public enum Language: Int, Grammeme {
 
 public extension Language {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -484,8 +452,7 @@ public enum Number: Int, Grammeme {
 
 public extension Number {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -510,8 +477,7 @@ public enum Person: Int, Grammeme {
 
 public extension Person {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -542,8 +508,7 @@ public enum NounType: Int, Grammeme {
 
 public extension NounType {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	static var properSet: Set<Self> = [.properTitle, .properTitleGentilic, .properLocation, .properLocationGentilic, .properPerson, .properPersonGentilic]
 	
@@ -599,8 +564,15 @@ public enum Punctuation: Int, Grammeme {
 
 public extension Punctuation {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	init?(character: String) {
+		guard let value = Self.caseByCharacter[character] else {
+			return nil
+		}
+		self = value
+	}
+	
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
+	static var caseByCharacter = makeDictionaryByValue(\.characters)
 	
 	static var separators: Set<Punctuation> = [.period, .comma, .semicolon, .questionMark, .paseq, .verseEnd, .sectionMark]
 	static var dashes: Set<Punctuation> = [.hyphen]
@@ -709,8 +681,7 @@ public enum Voice: Int, Grammeme {
 
 public extension Voice {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {
@@ -789,8 +760,7 @@ public enum WordCategory: Int, Grammeme {
 
 public extension WordCategory {
 	
-	static var caseByAbbreviation = generateCaseByAbbreviation()
-	static var nameByCase = generateNameByCase()
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
 	var abbreviations: [String] {
 		switch self {

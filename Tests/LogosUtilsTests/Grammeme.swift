@@ -14,5 +14,8 @@ final class GrammemeTests: XCTestCase {
 		XCTAssertEqual(nominative.abbreviation, "Nom")
 		XCTAssertEqual(nominative.name, "Nominative")
 		XCTAssertEqual(nominative.description, "nominative")
+		
+		let punctuation = Punctuation(character: ".")
+		XCTAssertEqual(punctuation, .period)
 	}
 }

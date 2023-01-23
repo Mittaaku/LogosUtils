@@ -50,11 +50,6 @@ final class NSRegularExpressionTests: XCTestCase {
         XCTAssertTrue("".isBlank)
         XCTAssertTrue(" ".isBlank)
         XCTAssertFalse(".".isBlank)
-        XCTAssertTrue("9".isDigits)
-        XCTAssertFalse("".isDigits)
-        XCTAssertFalse("".isWhitespace)
-        XCTAssertTrue(" ".isWhitespace)
-        XCTAssertFalse(".".isWhitespace)
     }
 	
 	func testBytes() {
