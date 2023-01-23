@@ -123,6 +123,24 @@ public extension String {
         removeLast(k)
         return result
     }
+	
+	@available(iOS 15.0, macOS 13.0, *)
+	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(split: String, separator: String?)]? {
+		let matches = self.matches(of: regex)
+		var result = [(String, String?)]()
+		var startIndex = self.startIndex
+		for match in matches {
+			let splitter = self[match.range.lowerBound ..< match.range.upperBound]
+			let split = self[startIndex ..< match.range.lowerBound]
+			result.append((String(split), String(splitter)))
+			startIndex = match.range.upperBound
+		}
+		let finalString = String(self[startIndex...])
+		if !finalString.isEmpty {
+			result.append((finalString, nil))
+		}
+		return result
+	}
 
     func strippingDiacritics() -> String {
         return self.folding(options: .diacriticInsensitive, locale: .current)
