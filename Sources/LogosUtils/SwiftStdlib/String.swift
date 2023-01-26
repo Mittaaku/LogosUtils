@@ -124,7 +124,7 @@ public extension String {
         return result
     }
 	
-	@available(iOS 15.0, macOS 13.0, *)
+	@available(iOS 16.0, macOS 13.0, *)
 	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(leadingSeparator: String?, content: String, trailingSeparator: String?)] {
 		let matches = self.matches(of: regex)
 		var result = [(String?, String, String?)]()
