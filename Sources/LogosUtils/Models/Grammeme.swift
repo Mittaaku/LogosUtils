@@ -91,6 +91,31 @@ public extension Declension {
 }
 
 // ---------------------------------------------------
+// MARK: Etymology
+// ---------------------------------------------------
+public enum Etymology: Int, Grammeme {
+	case aramaic
+	case greek
+	case hebrew
+}
+
+public extension Etymology {
+	
+	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
+	
+	var abbreviations: [String] {
+		switch self {
+		case .aramaic:
+			return ["A"]
+		case .greek:
+			return ["G"]
+		case .hebrew:
+			return ["H"]
+		}
+	}
+}
+
+// ---------------------------------------------------
 // MARK: Grammatical Case
 // ---------------------------------------------------
 public enum GrammaticalCase: Int, Grammeme {
@@ -406,31 +431,6 @@ public extension HebrewVerbStem {
 			return "Passive"
 		case .hithpael, .nithpael:
 			return "Reflexive"
-		}
-	}
-}
-
-// ---------------------------------------------------
-// MARK: Language
-// ---------------------------------------------------
-public enum EtymologicalLanguage: Int, Grammeme {
-	case aramaic
-	case greek
-	case hebrew
-}
-
-public extension EtymologicalLanguage {
-	
-	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
-	
-	var abbreviations: [String] {
-		switch self {
-		case .aramaic:
-			return ["A"]
-		case .greek:
-			return ["G"]
-		case .hebrew:
-			return ["H"]
 		}
 	}
 }
