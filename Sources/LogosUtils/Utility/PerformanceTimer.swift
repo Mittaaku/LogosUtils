@@ -14,6 +14,13 @@ public class PerformanceTimer {
         self.taskName = taskName
         self.startTime = CFAbsoluteTimeGetCurrent()
     }
+	
+	public init(taskName: String? = nil, closure: () -> Void) {
+		self.taskName = taskName
+		self.startTime = CFAbsoluteTimeGetCurrent()
+		closure()
+		endTime = CFAbsoluteTimeGetCurrent()
+	}
 
     public func stop() -> CFAbsoluteTime {
         endTime = CFAbsoluteTimeGetCurrent()
