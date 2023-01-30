@@ -413,14 +413,13 @@ public extension HebrewVerbStem {
 // ---------------------------------------------------
 // MARK: Language
 // ---------------------------------------------------
-public enum Language: Int, Grammeme {
+public enum EtymologicalLanguage: Int, Grammeme {
 	case aramaic
-	case english
 	case greek
 	case hebrew
 }
 
-public extension Language {
+public extension EtymologicalLanguage {
 	
 	static var caseByAbbreviation = makeDictionaryByValue(\.abbreviations)
 	
@@ -428,8 +427,6 @@ public extension Language {
 		switch self {
 		case .aramaic:
 			return ["A"]
-		case .english:
-			return ["E"]
 		case .greek:
 			return ["G"]
 		case .hebrew:
