@@ -9,12 +9,4 @@ import Foundation
 
 // MARK: - Properties
 public extension SignedInteger {
-	
-    var abs: Self {
-        return Swift.abs(self)
-    }
-
-    var isNegative: Bool {
-        return self < 0
-    }
 }

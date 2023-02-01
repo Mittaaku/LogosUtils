@@ -16,4 +16,3 @@ public func getEnumCaseName<T>(for value: T) -> String? {
 	}
 	return nil
 }
-

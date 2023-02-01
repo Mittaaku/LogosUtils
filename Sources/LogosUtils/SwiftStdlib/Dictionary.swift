@@ -28,6 +28,7 @@ public extension Dictionary where Value: Sequence, Value.Element: Hashable {
 }
 
 public extension Dictionary where Key == String {
+	
 	func makeUniqueKey(fromCamelCaseString string: String) -> String {
 		assert(!string.isEmpty, "Input string cannot be empty")
 		

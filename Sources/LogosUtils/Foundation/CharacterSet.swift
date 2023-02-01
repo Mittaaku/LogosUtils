@@ -3,9 +3,10 @@
 //  Copyright Tom-Roger Mittag 2022.
 //
 
+#if canImport(Foundation)
 import Foundation
 
-// MARK: Static variables
+// MARK: - Static variables
 public extension CharacterSet {
 	
 	static var greekVowels = CharacterSet(charactersIn: "ΑαΕεΗηΙιΟοΥυΩω")
@@ -14,7 +15,4 @@ public extension CharacterSet {
 	
 	static var greekNonInflective = CharacterSet(charactersIn: "\u{300}\u{301}\u{313}\u{314}")
 }
-
-// MARK: Methods
-public extension CharacterSet {
-}
+#endif

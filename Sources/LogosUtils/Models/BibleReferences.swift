@@ -94,7 +94,7 @@ public extension BibleReferenceContainer {
 	init(decimalValue: Int) {
 		var result = 0
 		for index in 0 ..< 4 {
-			result += ((decimalValue / 1000.pow(to: index)) % 1000) * (1 << (8 * index))
+			result += ((decimalValue / 1000 ** index) % 1000) * (1 << (8 * index))
 		}
 		self.init(rawValue: result)
 	}
@@ -121,7 +121,7 @@ public extension BibleReferenceContainer {
 		var result = 0
 		for index in bytes.indices {
 			let multiplicand = Int(bytes[index])
-			let multiplier = 1000.pow(to: Int(index))
+			let multiplier = 1000 ** Int(index)
 			result += multiplier * multiplicand
 		}
 		return result
@@ -131,7 +131,7 @@ public extension BibleReferenceContainer {
 		guard rawValue == rawValue & Self.validIdBits else {
 			return false
 		}
-		return rawIndices.allSatisfy(\.isPositive)
+		return rawIndices.allSatisfy { $0 > 0 }
 	}
 	
 	func offset(from reference: any BibleReferenceContainer) -> ReferenceOffset {

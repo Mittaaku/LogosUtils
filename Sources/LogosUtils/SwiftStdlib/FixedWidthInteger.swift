@@ -3,7 +3,9 @@
 //  Copyright Tom-Roger Mittag 2022.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 public extension FixedWidthInteger {
 	
@@ -16,10 +18,6 @@ public extension FixedWidthInteger {
 			}
 		}
 		return [UInt8](bytePtr)
-	}
-	
-	func pow(to power: Self) -> Self {
-		return LogosUtils.pow(self, power)
 	}
 }
 

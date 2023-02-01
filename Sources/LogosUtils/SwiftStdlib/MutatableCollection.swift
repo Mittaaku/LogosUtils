@@ -52,21 +52,6 @@ public extension MutableCollection where Self: RangeReplaceableCollection {
         removeSubrange(nextAvailableIndex ..< endIndex)
         return
     }
-    
-    mutating func filterOutInPlace(by predicate: (Element) throws -> Bool) rethrows {
-        var availableIndexIterator = indices.makeIterator()
-        var nextAvailableIndex = availableIndexIterator.next()!
-        for currentSlot in indices {
-            let element = self[currentSlot]
-            guard try !predicate(element) else {
-                continue
-            }
-            self[nextAvailableIndex] = element
-            nextAvailableIndex = availableIndexIterator.next()!
-        }
-        removeSubrange(nextAvailableIndex ..< endIndex)
-        return
-    }
 
     mutating func partitionOff(by predicate: (Element) throws -> Bool) rethrows -> [Element] {
         var availableIndexIterator = indices.makeIterator()

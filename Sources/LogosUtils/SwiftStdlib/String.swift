@@ -7,19 +7,21 @@
 import Foundation
 #endif
 
-// MARK: - Properties
+// MARK: - Static Regex Pattern Variables
+@available(iOS 16.0, macOS 13.0, *)
 public extension String {
-
-    var characters: [Character] {
-        return Array(self)
-    }
-
-    var nonBlank: Self? {
-        return isBlank ? nil : self
-    }
+	static var digitStringPattern = try! Regex(#"^\d+$"#)
+	static var whitespaceStringPattern = try! Regex(#"^\s+$"#)
+	static var whitespaceOrEmptyStringPattern = try! Regex(#"^\s*$"#)
+	
+	static var spacedGreekPattern = try! Regex(#"^[\p{script=Greek}\s]+$"#)
+	static var greekPattern = try! Regex(#"^[\p{script=Greek}]+$"#)
+	
+	static var spacedHebrewPattern = try! Regex(#"^[\p{script=Hebrew}\s]+$"#)
+	static var hebrewPattern = try! Regex(#"^[\p{script=Hebrew}]+$"#)
 }
 
-// MARK: - Evaluating Properties
+// MARK: - Properties
 public extension String {
 	
 	/// LogosUtils: Checks that the string is not empty and does not contain only whitespace.
@@ -27,49 +29,50 @@ public extension String {
 	///     ".".isBlank -> false
 	///     " ".isBlank -> true
 	///     "".isBlank -> true
+	@available(iOS 16.0, macOS 13.0, *)
 	var isBlank: Bool {
-		return NSRegularExpression.whitespaceOrEmptyStringPattern.matches(string: self)
+		return starts(with: String.whitespaceOrEmptyStringPattern)
 	}
 	
-	/// LogosUtils: Inverse of .isBlank.
-	///
-	///     ".".isNotBlank -> true
-	///     " ".isNotBlank -> false
-	///     "".isNotBlank -> false
-	var isNotBlank: Bool {
-		return !isBlank
+	@available(iOS 16.0, macOS 13.0, *)
+	var nonBlank: Self? {
+		return isBlank ? nil : self
 	}
 }
 
 // MARK: - Language Properties
 public extension String {
-	/// LogosUtils: Check whether the string consists of Greek characters.
+	/// LogosUtils: Check whether the string consists of Greek characters and whitespace.
+	@available(iOS 16.0, macOS 13.0, *)
 	var isSpacedGreek: Bool {
-		return NSRegularExpression.spacedGreekPattern.matches(string: self)
+		return String.spacedGreekPattern ~= self
 	}
 	
-	/// LogosUtils: Check whether the string consists of Greek characters.
+	/// LogosUtils: Check whether the string consists of only Greek characters without whitespace.
+	@available(iOS 16.0, macOS 13.0, *)
 	var isGreek: Bool {
-		return NSRegularExpression.greekPattern.matches(string: self)
+		return String.greekPattern ~= self
 	}
 	
-	/// LogosUtils: Check whether the string consists of Hebrew characters.
+	/// LogosUtils: Check whether the string consists of Hebrew characters and whitespace.
+	@available(iOS 16.0, macOS 13.0, *)
 	var isSpacedHebrew: Bool {
-		return NSRegularExpression.spacedHebrewPattern.matches(string: self)
+		return String.spacedHebrewPattern ~= self
 	}
 	
-	/// LogosUtils: Check whether the string consists of Hebrew characters.
+	/// LogosUtils: Check whether the string consists of only Hebrew characters without whitespace.
+	@available(iOS 16.0, macOS 13.0, *)
 	var isHebrew: Bool {
-		return NSRegularExpression.hebrewPattern.matches(string: self)
+		return String.hebrewPattern ~= self
 	}
 	
 	/// LogosUtils: Returns the latin transliteration of a greek string.
-	var greekTransliteration: String? {
+	var latinizeGreek: String? {
 		return applyingTransform(.latinToGreek, reverse: true)?.lowercased()
 	}
 	
 	/// LogosUtils: Returns the latin transliteration of a hebrew string.
-	var hebrewTransliteration: String? {
+	var latinizeHebrew: String? {
 		return applyingTransform(.latinToHebrew, reverse: true)?.lowercased()
 	}
 }
@@ -125,6 +128,18 @@ public extension String {
     }
 	
 	@available(iOS 16.0, macOS 13.0, *)
+	func filter(using regex: any RegexComponent) -> String {
+		var result = ""
+		for range in ranges(of: regex) {
+			guard !range.isEmpty else {
+				continue
+			}
+			result += self[range]
+		}
+		return result
+	}
+	
+	@available(iOS 16.0, macOS 13.0, *)
 	func splitByAndRetrain(separator regex: Regex<Substring>) -> [(leadingSeparator: String?, content: String, trailingSeparator: String?)] {
 		let matches = self.matches(of: regex)
 		var result = [(String?, String, String?)]()
@@ -163,8 +178,4 @@ public extension String {
 	func lowercased(range: Range<String.Index>) -> String {
 		return replacingCharacters(in: range.lowerBound ..< range.upperBound, with: self[range].lowercased())
 	}
-}
-
-func ~= (lhs: String, rhs: NSRegularExpression) -> Bool {
-    return rhs.matches(string: lhs)
 }

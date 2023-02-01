@@ -41,6 +41,14 @@ final class StringTests: XCTestCase {
         XCTAssertEqual("áa".strippingDiacritics(), "aa")
     }
 	
+	@available(iOS 16.0, macOS 13.0, *)
+	func testIsBlank() {
+		XCTAssertTrue("".isBlank)
+		XCTAssertTrue(" ".isBlank)
+		XCTAssertFalse(".".isBlank)
+	}
+	
+	@available(iOS 16.0, macOS 13.0, *)
 	func testIsGreek() {
 		XCTAssertEqual("φύἐάὶηη".isGreek, true)
 		XCTAssertEqual("φηη".isGreek, true)
@@ -52,6 +60,7 @@ final class StringTests: XCTestCase {
 		XCTAssertEqual("φηη fwfw".isSpacedGreek, false)
 	}
 	
+	@available(iOS 16.0, macOS 13.0, *)
 	func testIsHebrew() {
 		XCTAssertEqual("וְרוּו".isHebrew, true)
 		XCTAssertEqual("כככיקיחק".isHebrew, true)
@@ -70,9 +79,8 @@ final class StringTests: XCTestCase {
 		XCTAssertEqual(string.uppercased(range: range), "testiNG")
 	}
 	
-	@available(iOS 15.0, macOS 13.0, *)
+	@available(iOS 16.0, macOS 13.0, *)
 	func testSplitByAndRetrain() {
-		
 		typealias Result = (String?, String, String?)
 		
 		let string = "NA27+NA28+Tyn+SBL+WH+Treg+NIV  <2: TR+Byz"
@@ -88,5 +96,10 @@ final class StringTests: XCTestCase {
 		XCTAssertEqual(result1[1].leadingSeparator, comparingResult1[1].0)
 		XCTAssertEqual(result1[1].content, comparingResult1[1].1)
 		XCTAssertEqual(result1[1].trailingSeparator, comparingResult1[1].2)
+	}
+	
+	@available(iOS 16.0, macOS 13.0, *)
+	func testFilter() {
+		XCTAssertEqual("4ever".filter(using: try! Regex(#"\d+"#)), "4")
 	}
 }

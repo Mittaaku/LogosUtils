@@ -34,8 +34,11 @@ public extension Collection {
     var nonEmpty: Self? {
         return isEmpty ? nil : self
     }
+}
+
+extension Collection where Element == Substring {
 	
-	var isNotEmpty: Bool {
-		return !isEmpty
+	var strings: [String] {
+		return map { return String($0) }
 	}
 }

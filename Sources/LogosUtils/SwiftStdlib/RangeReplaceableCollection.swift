@@ -17,8 +17,6 @@ public extension RangeReplaceableCollection {
 		self.append(value)
 		return true
 	}
-	
-	
 }
 
 public extension RangeReplaceableCollection where Element: Equatable {

@@ -14,18 +14,6 @@ final class NSRegularExpressionTests: XCTestCase {
         XCTAssertEqual(divided.notMatching, "ever")
     }
     
-    func testFilter() {
-        XCTAssertEqual(NSRegularExpression(#"[0-9]"#).filter(string: alphanumerics), "4")
-    }
-
-    func testMatches() {
-        XCTAssertTrue(letters ~= NSRegularExpression(#"\w"#))
-        XCTAssertFalse(letters ~= NSRegularExpression(#"\d"#))
-        let numericRegex = NSRegularExpression(#"[0-9]"#)
-        XCTAssertTrue(alphanumerics ~= numericRegex)
-        XCTAssertFalse(letters ~= numericRegex)
-    }
-    
     func testMatchesToArray() {
         XCTAssertEqual(NSRegularExpression(#"^(\d+)_\w+.(\d+).(\d+)"#).matchesToArray(string: ref), [["41", "001", "002"]])
     }
@@ -33,23 +21,6 @@ final class NSRegularExpressionTests: XCTestCase {
     func testReplacing() {
         XCTAssertEqual(NSRegularExpression(#"e"#).replace(string: alphanumerics, withTemplate: "a"), "4avar")
         XCTAssertEqual(NSRegularExpression(#"[a-z]"#).replace(string: alphanumerics, withTemplate: "R"), "4RRRR")
-    }
-    
-    func testFirstMatch() {
-        let test = NSRegularExpression(#"e"#).firstMatch(in: alphanumerics)
-        XCTAssertNotNil(test)
-    }
-
-    func testSplit() {
-        XCTAssertEqual(NSRegularExpression(#"4"#).split(string: alphanumerics), ["ever"])
-        XCTAssertEqual(NSRegularExpression(#"(4)"#).split(string: alphanumerics), ["4", "ever"])
-        XCTAssertEqual(NSRegularExpression(#"e"#).split(string: alphanumerics), ["4", "v", "r"])
-    }
-    
-    func testStringStates() {
-        XCTAssertTrue("".isBlank)
-        XCTAssertTrue(" ".isBlank)
-        XCTAssertFalse(".".isBlank)
     }
 	
 	func testBytes() {

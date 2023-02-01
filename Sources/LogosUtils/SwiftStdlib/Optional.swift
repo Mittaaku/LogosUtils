@@ -9,11 +9,4 @@ import Foundation
 
 // MARK: - Methods
 public extension Optional {
-
-    func unwrapped(or error: @autoclosure () -> Swift.Error) throws -> Wrapped {
-        guard let value = self else {
-            throw error()
-        }
-        return value
-    }
 }
