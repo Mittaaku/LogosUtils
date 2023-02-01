@@ -59,6 +59,11 @@ public extension Substring {
 	}
 #endif
 	
+	/// LogosUtils: String value from substring.
+	var string: String {
+		return String(self)
+	}
+	
 #if canImport(Foundation) && canImport(SwifterSwift)
 	/// LogosUtils: Get URL from substring (if applicable).
 	///
