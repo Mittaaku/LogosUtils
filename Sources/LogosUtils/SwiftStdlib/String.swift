@@ -29,12 +29,10 @@ public extension String {
 	///     ".".isBlank -> false
 	///     " ".isBlank -> true
 	///     "".isBlank -> true
-	@available(iOS 16.0, macOS 13.0, *)
 	var isBlank: Bool {
-		return starts(with: String.whitespaceOrEmptyStringPattern)
+		return trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 	}
 	
-	@available(iOS 16.0, macOS 13.0, *)
 	var nonBlank: Self? {
 		return isBlank ? nil : self
 	}
