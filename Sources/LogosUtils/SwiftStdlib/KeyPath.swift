@@ -5,6 +5,6 @@
 
 import Foundation
 
-prefix func !<T>(keyPath: KeyPath<T, Bool>) -> (T) -> Bool {
+public prefix func !<T>(keyPath: KeyPath<T, Bool>) -> (T) -> Bool {
 	return { !$0[keyPath: keyPath] }
 }
