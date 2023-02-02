@@ -35,10 +35,3 @@ public extension Collection {
         return isEmpty ? nil : self
     }
 }
-
-extension Collection where Element == Substring {
-	
-	var strings: [String] {
-		return map { return String($0) }
-	}
-}

@@ -55,3 +55,10 @@ public extension Sequence where Element: Hashable {
 		return filter { set.insert($0).inserted }
 	}
 }
+
+public extension Sequence where Element == Substring {
+	
+	var strings: [String] {
+		return map { return String($0) }
+	}
+}
