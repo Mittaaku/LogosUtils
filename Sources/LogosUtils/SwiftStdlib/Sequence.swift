@@ -48,7 +48,7 @@ public extension Sequence {
 	}
 }
 
-extension Sequence where Element: Hashable {
+public extension Sequence where Element: Hashable {
 	
 	func filteredByUniqueHashes() -> [Element] {
 		var set = Set<Element>()
