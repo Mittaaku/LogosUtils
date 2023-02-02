@@ -12,7 +12,7 @@ import CoreGraphics
 #endif
 
 #if canImport(SwifterSwift)
-import SwifterSwift
+import SwifterSwift 
 #endif
 
 // MARK: - Properties
