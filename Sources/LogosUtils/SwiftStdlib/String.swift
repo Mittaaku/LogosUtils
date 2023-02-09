@@ -19,6 +19,34 @@ public extension String {
 	
 	static var spacedHebrewPattern = try! Regex(#"^[\p{script=Hebrew}\s]+$"#)
 	static var hebrewPattern = try! Regex(#"^[\p{script=Hebrew}]+$"#)
+	
+	static var htmlToMarkdownEscapePattern = {
+		let escapeChars = ["_", "*", "[", "]", "(", ")", "#", "+", "-", ".", "!"]
+		let escapePattern = escapeChars.map({ NSRegularExpression.escapedPattern(for: $0) }).joined(separator: "|")
+		return try! Regex(escapePattern)
+	}()
+	
+	static var htmlToMarkdownReplacements: [(pattern: String, template: String)] = [
+		("<i>", "*"),
+		("</i>", "*"),
+		("<em>", "*"),
+		("</em>", "*"),
+		("<b>", "**"),
+		("</b>", "**"),
+		("<strong>", "**"),
+		("</strong>", "**"),
+		("<code>", "`"),
+		("</code>", "`"),
+		("<pre>", "```\n"),
+		("</pre>", "\n```"),
+		("<br>", "\n"),
+		("<[^>]+>", ""),
+	]
+	
+	static var htmlToMarkdownReplacementRegex = {
+		let replacementPattern = htmlToMarkdownReplacements.map({ NSRegularExpression.escapedPattern(for: $0.pattern) }).joined(separator: "|")
+		return try! Regex(replacementPattern)
+	}()
 }
 
 // MARK: - Properties
@@ -40,6 +68,31 @@ public extension String {
 
 // MARK: - Language Properties
 public extension String {
+	
+	/// LogosUtils: Convert camel case to capitalized case separated by spaces.
+	/// Credit: https://stackoverflow.com/questions/41292671/separating-camelcase-string-into-space-separated-words-in-swift
+	var camelCaseToCapitalized: String {
+		return self
+			.replacingOccurrences(of: "([A-Z])",
+								  with: " $1",
+								  options: .regularExpression,
+								  range: range(of: self))
+			.trimmingCharacters(in: .whitespacesAndNewlines)
+			.capitalized // If input is in llamaCase
+	}
+	
+	@available(iOS 16.0, macOS 13.0, *)
+	var htmlToMarkdown: String {
+		// Escape characters
+		let escapedString = replacing(Self.htmlToMarkdownEscapePattern) { "\\\($0.0)" }
+		return escapedString.replacing(Self.htmlToMarkdownReplacementRegex) { match in
+			guard let matchedIndex = Self.htmlToMarkdownReplacements.firstIndex(where: { $0.pattern == match.0 }) else {
+				return String(match.0)
+			}
+			return Self.htmlToMarkdownReplacements[matchedIndex].template
+		}
+	}
+	
 	/// LogosUtils: Check whether the string consists of Greek characters and whitespace.
 	@available(iOS 16.0, macOS 13.0, *)
 	var isSpacedGreek: Bool {
@@ -77,18 +130,6 @@ public extension String {
 
 // MARK: - Methods
 public extension String {
-	
-	/// LogosUtils: Convert camel case to capitalized case separated by spaces.
-	/// Credit: https://stackoverflow.com/questions/41292671/separating-camelcase-string-into-space-separated-words-in-swift
-	var camelCaseToCapitalized: String {
-		return self
-			.replacingOccurrences(of: "([A-Z])",
-								  with: " $1",
-								  options: .regularExpression,
-								  range: range(of: self))
-			.trimmingCharacters(in: .whitespacesAndNewlines)
-			.capitalized // If input is in llamaCase
-	}
 
 	/// LogosUtils: Check whether the String contains the Diacritic.
 	func contains(diacritic: Diacritic) -> Bool {

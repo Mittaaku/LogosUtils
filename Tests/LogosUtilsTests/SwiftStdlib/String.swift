@@ -42,6 +42,11 @@ final class StringTests: XCTestCase {
     }
 	
 	@available(iOS 16.0, macOS 13.0, *)
+	func testHtmlToMarkdown() {
+		XCTAssertEqual("<i>wow</i> *<b>wow</b>".htmlToMarkdown, #"*wow* \***wow**"#)
+	}
+	
+	@available(iOS 16.0, macOS 13.0, *)
 	func testIsBlank() {
 		XCTAssertTrue("".isBlank)
 		XCTAssertTrue(" ".isBlank)
