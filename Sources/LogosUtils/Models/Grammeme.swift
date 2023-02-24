@@ -17,8 +17,8 @@ public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, LosslessSt
 
 public extension Grammeme {
 	
-	init?(_ abbreviation: String) {
-		guard let grammeme = Self.caseByAbbreviation[abbreviation] else {
+	init?(_ abbreviation: String?) {
+		guard let abbreviation, let grammeme = Self.caseByAbbreviation[abbreviation] else {
 			return nil
 		}
 		self = grammeme
@@ -603,9 +603,9 @@ public extension Punctuation {
 		case .bracketsClose:
 			return ["BClose"]
 		case .doubleBracketsOpen:
-			return ["PPOpen"]
+			return ["DBOpen"]
 		case .doubleBracketsClose:
-			return ["PPClose"]
+			return ["DBClose"]
 		case .verseEnd:
 			return ["VerseEnd"]
 		case .paseq:
