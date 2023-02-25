@@ -19,6 +19,21 @@ public extension FixedWidthInteger {
 		}
 		return [UInt8](bytePtr)
 	}
+	
+	func checkBit(at index: Self) -> Bool {
+		precondition(index >= 0 && index < Self.bitWidth, "Index out of range")
+		return (self & (1 << index)) != 0
+	}
+	
+	mutating func setBit(at index: Self) {
+		precondition(index >= 0 && index < Self.bitWidth, "Index out of range")
+		self |= (1 << index)
+	}
+	
+	mutating func unsetBit(at index: Self) {
+		precondition(index >= 0 && index < Self.bitWidth, "Index out of range")
+		self &= ~(1 << index)
+	}
 }
 
 public func pow<T: FixedWidthInteger, U: FixedWidthInteger>(_ base: T, _ power: U) -> T {

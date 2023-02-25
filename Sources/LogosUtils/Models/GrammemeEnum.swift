@@ -9,55 +9,37 @@
 
 import Foundation
 
-public protocol Grammeme: Codable, Equatable, Hashable, CaseIterable, LosslessStringConvertible, RawRepresentable where RawValue == Int {
+public protocol GrammemeEnum: GrammemeType, CaseIterable {
 	var abbreviations: [String] { get }
 	
 	static var caseByAbbreviation: [String: Self] { get }
 }
 
-public extension Grammeme {
+public extension GrammemeEnum {
 	
-	init?(_ abbreviation: String?) {
-		guard let abbreviation, let grammeme = Self.caseByAbbreviation[abbreviation] else {
+	init?(abbreviation: String) {
+		guard let grammeme = Self.caseByAbbreviation[abbreviation] else {
 			return nil
 		}
 		self = grammeme
-	}
-	
-	init(from decoder: Decoder) throws {
-		let container = try decoder.singleValueContainer()
-		let key = try container.decode(Int.self)
-		guard let result = Self.init(rawValue: key) else {
-			preconditionFailure("Invalid \(Self.self) key '\(key)'.")
-		}
-		self = result
 	}
 	
 	var abbreviation: String {
 		return abbreviations[0]
 	}
 	
-	var name: String {
-		return String(describing: self).camelCaseToCapitalized
-	}
-	
-	var description: String {
+	var fullName: String {
 		guard let result = getEnumCaseName(for: self) else {
 			fatalError("Unable to get case name for enum'")
 		}
-		return result
-	}
-	
-	func encode(to encoder: Encoder) throws {
-		var container = encoder.singleValueContainer()
-		try container.encode(rawValue)
+		return result.camelCaseToCapitalized
 	}
 }
 
 // ---------------------------------------------------
 // MARK: Declension
 // ---------------------------------------------------
-public enum Declension: Int, Grammeme {
+public enum Declension: Int, GrammemeEnum {
 	case firstDeclension
 	case secondDeclension
 	case thirdDeclension
@@ -73,15 +55,15 @@ public extension Declension {
 	var abbreviations: [String] {
 		switch self {
 		case .firstDeclension:
-			return ["1D"]
+			return ["1Decl"]
 		case .secondDeclension:
-			return ["2D"]
+			return ["2Decl"]
 		case .thirdDeclension:
-			return ["3D"]
+			return ["3Decl"]
 		case .indeclinableNumber:
-			return ["IN", "NUI"]
+			return ["IndeclNum", "IN", "NUI"]
 		case .indeclinableLetter:
-			return ["IL", "LI"]
+			return ["IndeclLet", "IL", "LI"]
 		}
 	}
 	
@@ -93,7 +75,7 @@ public extension Declension {
 // ---------------------------------------------------
 // MARK: Etymology
 // ---------------------------------------------------
-public enum Etymology: Int, Grammeme {
+public enum Etymology: Int, GrammemeEnum {
 	case aramaic
 	case greek
 	case hebrew
@@ -118,7 +100,7 @@ public extension Etymology {
 // ---------------------------------------------------
 // MARK: Grammatical Case
 // ---------------------------------------------------
-public enum GrammaticalCase: Int, Grammeme {
+public enum GrammaticalCase: Int, GrammemeEnum {
 	case nominative
 	case accusitive
 	case genitive
@@ -149,7 +131,7 @@ public extension GrammaticalCase {
 // ---------------------------------------------------
 // MARK: Grammatical Degree
 // ---------------------------------------------------
-public enum GrammaticalDegree: Int, Grammeme {
+public enum GrammaticalDegree: Int, GrammemeEnum {
 	case positive
 	case comparative
 	case superlative
@@ -174,7 +156,7 @@ public extension GrammaticalDegree {
 // ---------------------------------------------------
 // MARK: Gender
 // ---------------------------------------------------
-public enum Gender: Int, Grammeme {
+public enum Gender: Int, GrammemeEnum {
 	case masculine
 	case feminine
 	case neuter
@@ -215,7 +197,7 @@ public extension Gender {
 // ---------------------------------------------------
 // MARK: Greek Tense
 // ---------------------------------------------------
-public enum GreekTense: Int, Grammeme {
+public enum Tense: Int, GrammemeEnum {
 	case aorist
 	case future
 	case imperfect
@@ -230,7 +212,7 @@ public enum GreekTense: Int, Grammeme {
 	case secondPresent
 }
 
-public extension GreekTense {
+public extension Tense {
 	
 	static var caseByAbbreviation = makeDictionaryUsingValue(\.abbreviations)
 	
@@ -265,9 +247,9 @@ public extension GreekTense {
 }
 
 // ---------------------------------------------------
-// MARK: Greek Verb Mode (Form/Mood)
+// MARK: Verb Mode (including mood)
 // ---------------------------------------------------
-public enum GreekVerbMode: Int, Grammeme {
+public enum VerbForm: Int, GrammemeEnum {
 	// Non-finite forms
 	case infinitive
 	case participle
@@ -278,7 +260,7 @@ public enum GreekVerbMode: Int, Grammeme {
 	case subjunctive
 }
 
-public extension GreekVerbMode {
+public extension VerbForm {
 	
 	static var caseByAbbreviation = makeDictionaryUsingValue(\.abbreviations)
 	
@@ -303,7 +285,7 @@ public extension GreekVerbMode {
 // ---------------------------------------------------
 // MARK: Hebrew State
 // ---------------------------------------------------
-public enum HebrewState: Int, Grammeme {
+public enum HebrewState: Int, GrammemeEnum {
 	case absolute
 	case construct
 }
@@ -325,7 +307,7 @@ public extension HebrewState {
 // ---------------------------------------------------
 // MARK: Hebrew Verb Mode
 // ---------------------------------------------------
-public enum HebrewVerbMode: Int, Grammeme {
+public enum HebrewVerbMode: Int, GrammemeEnum {
 	case infinitive
 	case imperative
 	case imperfect
@@ -368,7 +350,7 @@ public extension HebrewVerbMode {
 // ---------------------------------------------------
 // MARK: Hebrew Verb Stem
 // ---------------------------------------------------
-public enum HebrewVerbStem: Int, Grammeme {
+public enum HebrewVerbStem: Int, GrammemeEnum {
 	case qal
 	case niphal
 	case piel
@@ -438,7 +420,7 @@ public extension HebrewVerbStem {
 // ---------------------------------------------------
 // MARK: Number
 // ---------------------------------------------------
-public enum Number: Int, Grammeme {
+public enum Number: Int, GrammemeEnum {
 	// sourcery: codingKey
 	case singular
 	// sourcery: codingKey
@@ -466,7 +448,7 @@ public extension Number {
 // ---------------------------------------------------
 // MARK: Person
 // ---------------------------------------------------
-public enum Person: Int, Grammeme {
+public enum Person: Int, GrammemeEnum {
 	case firstPerson
 	case secondPerson
 	case thirdPerson
@@ -491,7 +473,7 @@ public extension Person {
 // ---------------------------------------------------
 // MARK: Noun Type
 // ---------------------------------------------------
-public enum NounType: Int, Grammeme {
+public enum NounType: Int, GrammemeEnum {
 	case common
 	case commonNumeral
 	case commonNumeralPosition
@@ -540,7 +522,7 @@ public extension NounType {
 // ---------------------------------------------------
 // MARK: Punctuation
 // ---------------------------------------------------
-public enum Punctuation: Int, Grammeme {
+public enum Punctuation: Int, GrammemeEnum {
 	case unknown
 	case paragraphMark
 	case period
@@ -664,7 +646,7 @@ public extension Punctuation {
 // ---------------------------------------------------
 // MARK: Voice
 // ---------------------------------------------------
-public enum Voice: Int, Grammeme {
+public enum Voice: Int, GrammemeEnum {
 	case active
 	case activeImpersonal
 	case middle
@@ -707,7 +689,7 @@ public extension Voice {
 // ---------------------------------------------------
 // MARK: Word Category
 // ---------------------------------------------------
-public enum WordCategory: Int, Grammeme {
+public enum WordClass: Int, GrammemeEnum {
 	
 	// MARK: Pronouns
 	case correlativePronoun
@@ -755,7 +737,7 @@ public enum WordCategory: Int, Grammeme {
 	case verb
 }
 
-public extension WordCategory {
+public extension WordClass {
 	
 	static var caseByAbbreviation = makeDictionaryUsingValue(\.abbreviations)
 	

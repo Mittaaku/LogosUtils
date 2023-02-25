@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.license      = { :type => "MIT", :file => "LICENSE" }
   spec.author             = { "Tom-Roger Mittag" => "mittaaku@protonmail.com" }
   spec.ios.deployment_target = "9.0"
-  spec.osx.deployment_target = "10.9"
+  spec.osx.deployment_target = "13.0"
   spec.source       = { :git => "https://github.com/Mittaaku/LogosUtils.git", :tag => "#{spec.version}" }
   spec.source_files  = "LogosUtils", "LogosUtils/**/*.{swift}"
   spec.exclude_files = "LogosUtils/Exclude"

@@ -13,10 +13,6 @@ public extension BinaryInteger {
 	var isZero: Bool {
 		return self == 0
 	}
-	
-	func checkBit(at position: Int) -> Bool {
-		return (self & (1 << position)) != 0
-	}
 }
 
 // MARK: - Methods
