@@ -1,8 +1,6 @@
 //
-//  File.swift
-//  
-//
-//  Created by Tom-Roger Mittag on 24/02/2023.
+//  LogosUtils
+//  Copyright Tom-Roger Mittag 2023.
 //
 
 import Foundation

@@ -1,17 +1,13 @@
 //
-//  File.swift
-//  
-//
-//  Created by Tom-Roger Mittag on 25/02/2023.
+//  LogosUtils
+//  Copyright Tom-Roger Mittag 2023.
 //
 
 import Foundation
 
 public protocol GrammemeType: Codable, Equatable, Hashable, LosslessStringConvertible, RawRepresentable where RawValue == Int {
 	init?(abbreviation: String)
-	
 	var abbreviation: String { get }
-	
 	var fullName: String { get }
 }
 

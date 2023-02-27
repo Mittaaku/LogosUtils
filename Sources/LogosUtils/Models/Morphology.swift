@@ -9,7 +9,7 @@ import Foundation
 public let grammemeSplitter = try! Regex(#";"#)
 
 @available(iOS 16.0, macOS 13.0, *)
-public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable, Codable {
+public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable, Codable, Hashable {
 	public typealias RawValue = String
 	
 	public var etymology: Etymology? = nil
@@ -65,7 +65,7 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 	}
 }
 
-// MARK: Properties
+// MARK: - Computed Properties
 @available(iOS 16.0, macOS 13.0, *)
 public extension Morphology {
 	

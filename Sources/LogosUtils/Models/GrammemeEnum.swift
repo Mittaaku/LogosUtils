@@ -421,11 +421,8 @@ public extension HebrewVerbStem {
 // MARK: Number
 // ---------------------------------------------------
 public enum Number: Int, GrammemeEnum {
-	// sourcery: codingKey
 	case singular
-	// sourcery: codingKey
 	case dual
-	// sourcery: codingKey
 	case plural
 }
 
@@ -461,11 +458,11 @@ public extension Person {
 	var abbreviations: [String] {
 		switch self {
 		case .firstPerson:
-			return ["1", "1st"]
+			return ["1P", "1", "1st"]
 		case .secondPerson:
-			return ["2", "2nd"]
+			return ["2P", "2", "2nd"]
 		case .thirdPerson:
-			return ["3", "3rd"]
+			return ["3P", "3", "3rd"]
 		}
 	}
 }
