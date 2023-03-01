@@ -6,7 +6,7 @@
 import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
-public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+public class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	public var index: Int = 0
 	public var reference: TokenReference
 	public var altReference: TokenReference? = nil
@@ -21,7 +21,7 @@ public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringCon
 		self.reference = reference
 	}
 	
-	public init(from decoder: Decoder) throws {
+	required public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		index = try! values.decode(forKey: .index)
@@ -53,6 +53,19 @@ public extension Token {
 @available(iOS 16.0, macOS 13.0, *)
 public extension Token {
 	
+	func duplicate() -> Token {
+		let duplicate = Token(reference: reference)
+		duplicate.index = index
+		duplicate.altReference = altReference
+		duplicate.relatedReference = relatedReference
+		duplicate.surfaceForm = surfaceForm
+		duplicate.lexicalID = lexicalID
+		duplicate.morphologies = morphologies
+		duplicate.translation = translation
+		duplicate.extraProperties = extraProperties
+		return duplicate
+	}
+	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		// Required properties
@@ -67,11 +80,19 @@ public extension Token {
 		try! container.encodeIfPresent(translation, forKey: .translation)
 		try! container.encodeIfPresent(extraProperties.nonEmpty, forKey: .extraProperties)
 	}
+	
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(index)
+	}
 }
 
 // MARK: - Functions and static variables
 @available(iOS 16.0, macOS 13.0, *)
 public extension Token {
+	
+	static func == (lhs: Token, rhs: Token) -> Bool {
+		lhs.index == rhs.index
+	}
 }
 
 // MARK: - CodingKeys struct

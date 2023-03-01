@@ -6,7 +6,7 @@
 import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
-public struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	public var lexicalID: String
 	public var lexicalForm: String
 	public var gloss: String? = nil
@@ -21,7 +21,7 @@ public struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringCo
 		self.lexicalForm = lexicalForm
 	}
 	
-	public init(from decoder: Decoder) throws {
+	required public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		lexicalID = try! values.decode(forKey: .lexicalID)
@@ -57,6 +57,17 @@ public extension Lexeme {
 // MARK: - Methods
 @available(iOS 16.0, macOS 13.0, *)
 public extension Lexeme {
+	
+	func duplicate() -> Lexeme {
+		let duplicate = Lexeme(lexicalID: lexicalID, lexicalForm: lexicalForm)
+		duplicate.gloss = gloss
+		duplicate.definition = definition
+		duplicate.wordFormMorphologies = wordFormMorphologies
+		duplicate.crasisLexicalIDs = crasisLexicalIDs
+		duplicate.searchMatchingString = searchMatchingString
+		duplicate.extraProperties = extraProperties
+		return duplicate
+	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
