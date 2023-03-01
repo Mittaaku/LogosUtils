@@ -47,6 +47,10 @@ public extension Token {
 	var id: Int {
 		return index
 	}
+	
+	var isPlaceholder: Bool {
+		return index == 0
+	}
 }
 
 // MARK: - Methods
