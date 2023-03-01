@@ -7,8 +7,8 @@ import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
-	public private(set) var lexicalID: String
-	public private(set) var lexicalForm: String
+	public var lexicalID: String
+	public var lexicalForm: String
 	public var gloss: String? = nil
 	public var definition: String? = nil
 	public var wordFormMorphologies: [Morphology] = []

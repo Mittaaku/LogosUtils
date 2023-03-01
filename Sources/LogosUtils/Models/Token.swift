@@ -7,8 +7,8 @@ import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
-	public private(set) var index: Int
-	public private(set) var reference: TokenReference
+	public var index: Int = 0
+	public var reference: TokenReference
 	public var altReference: TokenReference? = nil
 	public var relatedReference: TokenReference? = nil
 	public var surfaceForm: String = ""
@@ -17,8 +17,7 @@ public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringCon
 	public var translation: String? = nil
 	public var extraProperties: [String: String] = [:]
 	
-	public init(index: Int, reference: TokenReference) {
-		self.index = index
+	public init(reference: TokenReference) {
 		self.reference = reference
 	}
 	
