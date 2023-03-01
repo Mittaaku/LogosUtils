@@ -7,14 +7,14 @@ import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
-	private(set) var lexicalID: String
-	private(set) var lexicalForm: String
-	var gloss: String? = nil
-	var definition: String? = nil
-	var wordFormMorphologies: [Morphology] = []
-	var crasisLexicalIDs: [String]? = nil
-	private(set) var searchMatchingString: String = ""
-	var extraProperties: [String: String] = [:]
+	public private(set) var lexicalID: String
+	public private(set) var lexicalForm: String
+	public var gloss: String? = nil
+	public var definition: String? = nil
+	public var wordFormMorphologies: [Morphology] = []
+	public var crasisLexicalIDs: [String]? = nil
+	public private(set) var searchMatchingString: String = ""
+	public var extraProperties: [String: String] = [:]
 	
 	public init(lexicalID: String, lexicalForm: String) {
 		self.lexicalID = lexicalID

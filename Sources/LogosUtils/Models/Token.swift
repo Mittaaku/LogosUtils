@@ -7,15 +7,15 @@ import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
-	private(set) var index: Int
-	private(set) var reference: TokenReference
-	var altReference: TokenReference? = nil
-	var relatedReference: TokenReference? = nil
-	var surfaceForm: String = ""
-	var lexicalID: String? = nil
-	var morphologies: [Morphology] = []
-	var translation: String? = nil
-	var extraProperties: [String: String] = [:]
+	public private(set) var index: Int
+	public private(set) var reference: TokenReference
+	public var altReference: TokenReference? = nil
+	public var relatedReference: TokenReference? = nil
+	public var surfaceForm: String = ""
+	public var lexicalID: String? = nil
+	public var morphologies: [Morphology] = []
+	public var translation: String? = nil
+	public var extraProperties: [String: String] = [:]
 	
 	public init(index: Int, reference: TokenReference) {
 		self.index = index
