@@ -6,7 +6,7 @@
 import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
-struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	private(set) var index: Int
 	private(set) var reference: TokenReference
 	var altReference: TokenReference? = nil
@@ -17,12 +17,12 @@ struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertibl
 	var translation: String? = nil
 	var extraProperties: [String: String] = [:]
 	
-	init(index: Int, reference: TokenReference) {
+	public init(index: Int, reference: TokenReference) {
 		self.index = index
 		self.reference = reference
 	}
 	
-	init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		index = try! values.decode(forKey: .index)
@@ -40,7 +40,7 @@ struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertibl
 
 // MARK: - Computed Properties
 @available(iOS 16.0, macOS 13.0, *)
-extension Token {
+public extension Token {
 	var description: String {
 		return "\(reference.debugDescription) \(surfaceForm)"
 	}
@@ -52,7 +52,7 @@ extension Token {
 
 // MARK: - Methods
 @available(iOS 16.0, macOS 13.0, *)
-extension Token {
+public extension Token {
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
@@ -72,12 +72,12 @@ extension Token {
 
 // MARK: - Functions and static variables
 @available(iOS 16.0, macOS 13.0, *)
-extension Token {
+public extension Token {
 }
 
 // MARK: - CodingKeys struct
 @available(iOS 16.0, macOS 13.0, *)
-extension Token {
+public extension Token {
 	
 	enum CodingKeys: String, CodingKey, CaseIterable {
 		case index
@@ -90,7 +90,7 @@ extension Token {
 		case translation
 		case extraProperties
 		
-		var stringValue: String {
+		public var stringValue: String {
 			return CodingKeys.stringKeyByCase[self]!
 		}
 		

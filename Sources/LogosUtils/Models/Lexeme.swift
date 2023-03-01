@@ -6,7 +6,7 @@
 import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
-struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+public struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	private(set) var lexicalID: String
 	private(set) var lexicalForm: String
 	var gloss: String? = nil
@@ -16,12 +16,12 @@ struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertib
 	private(set) var searchMatchingString: String = ""
 	var extraProperties: [String: String] = [:]
 	
-	init(lexicalID: String, lexicalForm: String) {
+	public init(lexicalID: String, lexicalForm: String) {
 		self.lexicalID = lexicalID
 		self.lexicalForm = lexicalForm
 	}
 	
-	init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		lexicalID = try! values.decode(forKey: .lexicalID)
@@ -39,7 +39,7 @@ struct Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertib
 
 // MARK: - Computed Properties
 @available(iOS 16.0, macOS 13.0, *)
-extension Lexeme {
+public extension Lexeme {
 	
 	var description: String {
 		return "\(lexicalID).\(gloss ?? "?")"
@@ -56,7 +56,7 @@ extension Lexeme {
 
 // MARK: - Methods
 @available(iOS 16.0, macOS 13.0, *)
-extension Lexeme {
+public extension Lexeme {
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
@@ -78,7 +78,7 @@ extension Lexeme {
 
 // MARK: - Functions
 @available(iOS 16.0, macOS 13.0, *)
-extension Lexeme {
+public extension Lexeme {
 	
 	static func == (lhs: Lexeme, rhs: Lexeme) -> Bool {
 		lhs.id == rhs.id
@@ -87,7 +87,7 @@ extension Lexeme {
 
 // MARK: - CodingKeys struct
 @available(iOS 16.0, macOS 13.0, *)
-extension Lexeme {
+public extension Lexeme {
 	enum CodingKeys: String, CodingKey, CaseIterable {
 		case lexicalID
 		case lexicalForm
@@ -97,7 +97,7 @@ extension Lexeme {
 		case crasisLexicalIDs
 		case extraProperties
 		
-		var stringValue: String {
+		public var stringValue: String {
 			return CodingKeys.stringKeyByCase[self]!
 		}
 		
