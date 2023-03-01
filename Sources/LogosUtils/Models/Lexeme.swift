@@ -14,7 +14,7 @@ public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringCon
 	public var wordFormMorphologies: [Morphology] = []
 	public var crasisLexicalIDs: [String]? = nil
 	public private(set) var searchMatchingString: String = ""
-	public var extraProperties: [String: String] = [:]
+	public var tempProperties: [String: String] = [:]
 	
 	public init(lexicalID: String, lexicalForm: String) {
 		self.lexicalID = lexicalID
@@ -31,7 +31,6 @@ public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringCon
 		definition = try! values.decodeIfPresent(forKey: .definition)
 		wordFormMorphologies = try! values.decodeIfPresent(forKey: .wordFormMorphologies) ?? []
 		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs)
-		extraProperties = try! values.decodeIfPresent(forKey: .extraProperties) ?? [:]
 		// Non-encoded properties
 		searchMatchingString = "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
 	}
@@ -65,7 +64,6 @@ public extension Lexeme {
 		duplicate.wordFormMorphologies = wordFormMorphologies
 		duplicate.crasisLexicalIDs = crasisLexicalIDs
 		duplicate.searchMatchingString = searchMatchingString
-		duplicate.extraProperties = extraProperties
 		return duplicate
 	}
 	
@@ -79,7 +77,6 @@ public extension Lexeme {
 		try! container.encodeIfPresent(definition, forKey: .definition)
 		try! container.encodeIfPresent(wordFormMorphologies.nonEmpty, forKey: .wordFormMorphologies)
 		try! container.encodeIfPresent(crasisLexicalIDs, forKey: .crasisLexicalIDs)
-		try! container.encodeIfPresent(extraProperties.nonEmpty, forKey: .extraProperties)
 	}
 	
 	func hash(into hasher: inout Hasher) {
@@ -106,7 +103,6 @@ public extension Lexeme {
 		case definition
 		case wordFormMorphologies
 		case crasisLexicalIDs
-		case extraProperties
 		
 		public var stringValue: String {
 			return CodingKeys.stringKeyByCase[self]!

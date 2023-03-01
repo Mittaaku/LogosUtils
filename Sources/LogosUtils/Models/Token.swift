@@ -15,7 +15,7 @@ public class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConv
 	public var lexicalID: String? = nil
 	public var morphologies: [Morphology] = []
 	public var translation: String? = nil
-	public var extraProperties: [String: String] = [:]
+	public var tempProperties: [String: String] = [:]
 	
 	public init(reference: TokenReference) {
 		self.reference = reference
@@ -33,7 +33,6 @@ public class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConv
 		lexicalID = try! values.decodeIfPresent(forKey: .lexicalID)
 		morphologies = try! values.decodeIfPresent(forKey: .morphologies) ?? []
 		translation = try! values.decodeIfPresent(forKey: .translation)
-		extraProperties = try! values.decodeIfPresent(forKey: .extraProperties) ?? [:]
 	}
 }
 
@@ -51,6 +50,15 @@ public extension Token {
 	var isPlaceholder: Bool {
 		return index == 0
 	}
+	
+	var lexicalForm: String? {
+		get {
+			return tempProperties["lexicalForm"]
+		}
+		set {
+			tempProperties["lexicalForm"] = newValue
+		}
+	}
 }
 
 // MARK: - Methods
@@ -66,7 +74,7 @@ public extension Token {
 		duplicate.lexicalID = lexicalID
 		duplicate.morphologies = morphologies
 		duplicate.translation = translation
-		duplicate.extraProperties = extraProperties
+		duplicate.tempProperties = tempProperties
 		return duplicate
 	}
 	
@@ -82,7 +90,6 @@ public extension Token {
 		try! container.encodeIfPresent(lexicalID, forKey: .lexicalID)
 		try! container.encodeIfPresent(morphologies.nonEmpty, forKey: .morphologies)
 		try! container.encodeIfPresent(translation, forKey: .translation)
-		try! container.encodeIfPresent(extraProperties.nonEmpty, forKey: .extraProperties)
 	}
 	
 	func hash(into hasher: inout Hasher) {
@@ -112,7 +119,6 @@ public extension Token {
 		case surfaceForm
 		case morphologies
 		case translation
-		case extraProperties
 		
 		public var stringValue: String {
 			return CodingKeys.stringKeyByCase[self]!
