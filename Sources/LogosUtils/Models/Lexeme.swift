@@ -7,6 +7,7 @@ import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
 public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+	
 	public var lexicalID: String
 	public var lexicalForm: String
 	public var gloss: String? = nil
@@ -31,8 +32,6 @@ public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringCon
 		definition = try! values.decodeIfPresent(forKey: .definition)
 		wordFormMorphologies = try! values.decodeIfPresent(forKey: .wordFormMorphologies) ?? []
 		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs)
-		// Non-encoded properties
-		searchMatchingString = "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
 	}
 }
 
@@ -81,6 +80,10 @@ public extension Lexeme {
 	
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(lexicalID)
+	}
+	
+	func postprocess(language: Language) {
+		
 	}
 }
 

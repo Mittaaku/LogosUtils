@@ -50,15 +50,6 @@ public extension Token {
 	var isPlaceholder: Bool {
 		return index == 0
 	}
-	
-	var lexicalForm: String? {
-		get {
-			return tempProperties["lexicalForm"]
-		}
-		set {
-			tempProperties["lexicalForm"] = newValue
-		}
-	}
 }
 
 // MARK: - Methods

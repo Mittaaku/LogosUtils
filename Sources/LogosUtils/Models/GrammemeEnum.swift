@@ -73,15 +73,15 @@ public extension Declension {
 }
 
 // ---------------------------------------------------
-// MARK: Etymology
+// MARK: Language
 // ---------------------------------------------------
-public enum Etymology: Int, GrammemeEnum {
+public enum Language: Int, GrammemeEnum {
 	case aramaic
 	case greek
 	case hebrew
 }
 
-public extension Etymology {
+public extension Language {
 	
 	static var caseByAbbreviation = makeDictionaryUsingValue(\.abbreviations)
 	

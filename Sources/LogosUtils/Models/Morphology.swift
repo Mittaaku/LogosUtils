@@ -12,7 +12,8 @@ public let grammemeSplitter = try! Regex(#";"#)
 public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable, Codable, Hashable {
 	public typealias RawValue = String
 	
-	public var etymology: Etymology? = nil
+	public var language: Language
+	public var etymology: Language? = nil
 	public var wordClass: WordClass? = nil
 	public var verbForm: VerbForm? = nil
 	public var tense: Tense? = nil
@@ -26,7 +27,8 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 	public var degree: GrammaticalDegree? = nil
 	public var punctuation: Punctuation? = nil
 	
-	public init() {
+	public init(language: Language) {
+		self.language = language
 	}
 	
 	public init?(rawValue: String) {
@@ -45,10 +47,15 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 	
 	public init(rawAbbreviation: String) {
 		let rawGrammemes = rawAbbreviation.split(separator: grammemeSplitter, omittingEmptySubsequences: false).strings
-		guard rawGrammemes.count == 13 else {
-			preconditionFailure("Invalid grammeme count in string '\(description)'")
+		guard rawGrammemes.count == 14 else {
+			preconditionFailure("Invalid grammeme count in string '\(rawAbbreviation)'")
 		}
 		var iterator = rawGrammemes.makeIterator()
+		guard let languageComponent = iterator.next(),
+			  let language = Language(abbreviation: languageComponent) else {
+			preconditionFailure("Invalid language component in string '\(rawAbbreviation)'")
+		}
+		self.language = language
 		etymology = .init(optionalAbbreviation: iterator.next())
 		wordClass = .init(optionalAbbreviation: iterator.next())
 		verbForm = .init(optionalAbbreviation: iterator.next())
@@ -79,7 +86,7 @@ public extension Morphology {
 	}
 	
 	var grammemes: [(any GrammemeType)?] {
-		return [etymology, wordClass, verbForm, tense, grammaticalCase, genders, voice, person, number, declension, nounType, degree, punctuation]
+		return [language, etymology, wordClass, verbForm, tense, grammaticalCase, genders, voice, person, number, declension, nounType, degree, punctuation]
 	}
 	
 	var compactAbbreviation: String {

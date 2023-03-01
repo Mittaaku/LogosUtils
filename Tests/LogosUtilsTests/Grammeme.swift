@@ -76,7 +76,7 @@ final class GrammemeTests: XCTestCase {
 	
 	@available(iOS 16.0, macOS 13.0, *)
 	func testMorphology() {
-		var uncoded = LogosUtils.Morphology()
+		var uncoded = LogosUtils.Morphology(language: .greek)
 		uncoded.number = .singular
 		uncoded.verbForm = .imperative
 		uncoded.wordClass = .adverb
@@ -84,13 +84,13 @@ final class GrammemeTests: XCTestCase {
 		uncoded.declension = .firstDeclension
 		uncoded.person = .thirdPerson
 		uncoded.nounType = .commonNumeralPosition
-		uncoded.etymology = .aramaic
+		uncoded.etymology = .hebrew
 		uncoded.degree = .positive
 		uncoded.grammaticalCase = .genitive
 		uncoded.punctuation = .comma
 		uncoded.tense = .perfect
 		uncoded.voice = .middlePassive
-		XCTAssertEqual(uncoded.description, "A;Adv;Imp;Perf;Gen;Masc/Fem;MidPass;3;Sg;1Decl;CommNumPos;Pos;Comma")
+		XCTAssertEqual(uncoded.description, "G;H;Adv;Imp;Perf;Gen;Masc/Fem;MidPass;3P;Sg;1Decl;CommNumPos;Pos;Comma")
 		
 		let codedString = uncoded.description
 		let decoded = Morphology(codedString)
