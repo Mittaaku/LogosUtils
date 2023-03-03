@@ -11,7 +11,7 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 	public var lexicalForm: String = ""
 	public var gloss: String? = nil
 	public var definition: String? = nil
-	public var wordFormMorphologies: [Morphology] = []
+	public var wordFormMorphologies: [Morphology]? = nil
 	public var crasisLexicalIDs: [String]? = nil
 	public private(set) var searchMatchingString: String = ""
 	
@@ -27,7 +27,7 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 		gloss = try! values.decodeIfPresent(forKey: .gloss)
 		definition = try! values.decodeIfPresent(forKey: .definition)
 		wordFormMorphologies = try! values.decodeIfPresent(forKey: .wordFormMorphologies) ?? []
-		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs)
+		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs) ?? []
 	}
 	
 	public init(duplicating lexeme: Lexeme) {
@@ -54,7 +54,7 @@ public extension Lexeme {
 	}
 	
 	var isCrasis: Bool {
-		return crasisLexicalIDs != nil
+		return crasisLexicalIDs?.count ?? 0 > 0
 	}
 }
 
@@ -68,10 +68,10 @@ public extension Lexeme {
 		try! container.encode(lexicalID, forKey: .lexicalID)
 		try! container.encode(lexicalForm, forKey: .lexicalForm)
 		// Optional properties
-		try! container.encodeIfPresent(gloss, forKey: .gloss)
-		try! container.encodeIfPresent(definition, forKey: .definition)
-		try! container.encodeIfPresent(wordFormMorphologies.nonEmpty, forKey: .wordFormMorphologies)
-		try! container.encodeIfPresent(crasisLexicalIDs, forKey: .crasisLexicalIDs)
+		try! container.encodeIfPresent(gloss?.nonBlank, forKey: .gloss)
+		try! container.encodeIfPresent(definition?.nonBlank, forKey: .definition)
+		try! container.encodeIfPresent(wordFormMorphologies?.nonEmpty, forKey: .wordFormMorphologies)
+		try! container.encodeIfPresent(crasisLexicalIDs?.nonEmpty, forKey: .crasisLexicalIDs)
 	}
 	
 	func hash(into hasher: inout Hasher) {

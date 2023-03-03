@@ -14,7 +14,7 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 	public var surfaceForm: String = ""
 	public var lexicalID: String? = nil
 	public var lexeme: Lexeme? = nil
-	public var morphologies: [Morphology] = []
+	public var morphologies: [Morphology]? = nil
 	public var translation: String? = nil
 	
 	public init() {
@@ -30,7 +30,7 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 		altReference = try! values.decodeIfPresent(forKey: .altReference)
 		relatedReference = try! values.decodeIfPresent(forKey: .relatedReference)
 		lexicalID = try! values.decodeIfPresent(forKey: .lexicalID)
-		morphologies = try! values.decodeIfPresent(forKey: .morphologies) ?? []
+		morphologies = try! values.decodeIfPresent(forKey: .morphologies)
 		translation = try! values.decodeIfPresent(forKey: .translation)
 	}
 	
@@ -76,7 +76,7 @@ public extension Token {
 		try! container.encodeIfPresent(altReference, forKey: .altReference)
 		try! container.encodeIfPresent(relatedReference, forKey: .relatedReference)
 		try! container.encodeIfPresent(lexicalID, forKey: .lexicalID)
-		try! container.encodeIfPresent(morphologies.nonEmpty, forKey: .morphologies)
+		try! container.encodeIfPresent(morphologies?.nonEmpty, forKey: .morphologies)
 		try! container.encodeIfPresent(translation, forKey: .translation)
 	}
 	
