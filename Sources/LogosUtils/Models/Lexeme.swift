@@ -31,6 +31,16 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 		wordFormMorphologies = try! values.decodeIfPresent(forKey: .wordFormMorphologies) ?? []
 		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs)
 	}
+	
+	public init(duplicating lexeme: Lexeme) {
+		lexicalID = lexeme.lexicalID
+		lexicalForm = lexeme.lexicalForm
+		gloss = lexeme.gloss
+		definition = lexeme.definition
+		wordFormMorphologies = lexeme.wordFormMorphologies
+		crasisLexicalIDs = lexeme.crasisLexicalIDs
+		searchMatchingString = lexeme.searchMatchingString
+	}
 }
 
 // MARK: - Computed Properties
@@ -53,16 +63,6 @@ public extension Lexeme {
 // MARK: - Methods
 @available(iOS 16.0, macOS 13.0, *)
 public extension Lexeme {
-	
-	func duplicate() -> Lexeme {
-		let duplicate = Lexeme(lexicalID: lexicalID, lexicalForm: lexicalForm)
-		duplicate.gloss = gloss
-		duplicate.definition = definition
-		duplicate.wordFormMorphologies = wordFormMorphologies
-		duplicate.crasisLexicalIDs = crasisLexicalIDs
-		duplicate.searchMatchingString = searchMatchingString
-		return duplicate
-	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)

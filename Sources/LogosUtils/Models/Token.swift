@@ -34,6 +34,17 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 		morphologies = try! values.decodeIfPresent(forKey: .morphologies) ?? []
 		translation = try! values.decodeIfPresent(forKey: .translation)
 	}
+	
+	public init(duplicating token: Token) {
+		index = token.index
+		reference = token.reference
+		altReference = token.altReference
+		relatedReference = token.relatedReference
+		surfaceForm = token.surfaceForm
+		lexicalID = token.lexicalID
+		morphologies = token.morphologies
+		translation = token.translation
+	}
 }
 
 // MARK: - Computed Properties
@@ -55,18 +66,6 @@ public extension Token {
 // MARK: - Methods
 @available(iOS 16.0, macOS 13.0, *)
 public extension Token {
-	
-	func duplicate() -> Token {
-		let duplicate = Token(reference: reference)
-		duplicate.index = index
-		duplicate.altReference = altReference
-		duplicate.relatedReference = relatedReference
-		duplicate.surfaceForm = surfaceForm
-		duplicate.lexicalID = lexicalID
-		duplicate.morphologies = morphologies
-		duplicate.translation = translation
-		return duplicate
-	}
 	
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
