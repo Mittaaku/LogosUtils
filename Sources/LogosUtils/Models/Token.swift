@@ -58,7 +58,7 @@ public extension Token {
 	}
 	
 	var isPlaceholder: Bool {
-		return index == 0
+		return reference.rawValue == 0
 	}
 }
 
