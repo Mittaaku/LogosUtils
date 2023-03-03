@@ -13,6 +13,7 @@ public class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConv
 	public var relatedReference: TokenReference? = nil
 	public var surfaceForm: String = ""
 	public var lexicalID: String? = nil
+	public var lexeme: Lexeme? = nil
 	public var morphologies: [Morphology] = []
 	public var translation: String? = nil
 	public var tempProperties: [String: String] = [:]
