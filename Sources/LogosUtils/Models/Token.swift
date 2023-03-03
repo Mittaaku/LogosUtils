@@ -8,7 +8,7 @@ import Foundation
 @available(iOS 16.0, macOS 13.0, *)
 open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	public var index: Int = 0
-	public var reference: TokenReference
+	public var reference: TokenReference = TokenReference()
 	public var altReference: TokenReference? = nil
 	public var relatedReference: TokenReference? = nil
 	public var surfaceForm: String = ""
@@ -17,8 +17,7 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 	public var morphologies: [Morphology] = []
 	public var translation: String? = nil
 	
-	public init(reference: TokenReference) {
-		self.reference = reference
+	public init() {
 	}
 	
 	required public init(from decoder: Decoder) throws {

@@ -7,17 +7,15 @@ import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
 open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
-	public var lexicalID: String
-	public var lexicalForm: String
+	public var lexicalID: String = ""
+	public var lexicalForm: String = ""
 	public var gloss: String? = nil
 	public var definition: String? = nil
 	public var wordFormMorphologies: [Morphology] = []
 	public var crasisLexicalIDs: [String]? = nil
 	public private(set) var searchMatchingString: String = ""
 	
-	public init(lexicalID: String, lexicalForm: String) {
-		self.lexicalID = lexicalID
-		self.lexicalForm = lexicalForm
+	public init() {
 	}
 	
 	required public init(from decoder: Decoder) throws {

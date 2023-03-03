@@ -45,6 +45,10 @@ public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashabl
 @available(iOS 15.4, macOS 12.3, *)
 public extension BibleReferenceContainer {
 	
+	init() {
+		self.init(rawValue: 0)
+	}
+	
 	// MARK: Coding
 	
 	init?<T: CodingKey>(codingKey: T) {
