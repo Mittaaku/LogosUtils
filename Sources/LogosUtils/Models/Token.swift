@@ -6,7 +6,7 @@
 import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
-public class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	public var index: Int = 0
 	public var reference: TokenReference
 	public var altReference: TokenReference? = nil
@@ -16,7 +16,6 @@ public class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConv
 	public var lexeme: Lexeme? = nil
 	public var morphologies: [Morphology] = []
 	public var translation: String? = nil
-	public var tempProperties: [String: String] = [:]
 	
 	public init(reference: TokenReference) {
 		self.reference = reference
@@ -66,7 +65,6 @@ public extension Token {
 		duplicate.lexicalID = lexicalID
 		duplicate.morphologies = morphologies
 		duplicate.translation = translation
-		duplicate.tempProperties = tempProperties
 		return duplicate
 	}
 	

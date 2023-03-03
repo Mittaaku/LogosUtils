@@ -6,8 +6,7 @@
 import Foundation
 
 @available(iOS 16.0, macOS 13.0, *)
-public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
-	
+open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	public var lexicalID: String
 	public var lexicalForm: String
 	public var gloss: String? = nil
@@ -15,7 +14,6 @@ public class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringCon
 	public var wordFormMorphologies: [Morphology] = []
 	public var crasisLexicalIDs: [String]? = nil
 	public private(set) var searchMatchingString: String = ""
-	public var tempProperties: [String: String] = [:]
 	
 	public init(lexicalID: String, lexicalForm: String) {
 		self.lexicalID = lexicalID
@@ -80,10 +78,6 @@ public extension Lexeme {
 	
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(lexicalID)
-	}
-	
-	func postprocess(language: Language) {
-		
 	}
 }
 
