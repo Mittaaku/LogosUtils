@@ -80,6 +80,14 @@ public extension Lexeme {
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(lexicalID)
 	}
+	
+	func makeMorphologyDescription(withFormat format: Morphology.DescriptionFormat) -> String? {
+		guard let wordFormMorphologies else {
+			return nil
+		}
+		let formattedMorphologies = wordFormMorphologies.compactMap { $0.makeMorphologyDescription(withFormat: format) }
+		return formattedMorphologies.joined(separator: "; ")
+	}
 }
 
 // MARK: - Functions

@@ -84,6 +84,14 @@ public extension Token {
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(index)
 	}
+	
+	func makeMorphologyDescription(withFormat format: Morphology.DescriptionFormat) -> String? {
+		guard let morphologies else {
+			return nil
+		}
+		let formattedMorphologies = morphologies.compactMap { $0.makeMorphologyDescription(withFormat: format) }
+		return formattedMorphologies.joined(separator: "; ")
+	}
 }
 
 // MARK: - Functions and static variables
