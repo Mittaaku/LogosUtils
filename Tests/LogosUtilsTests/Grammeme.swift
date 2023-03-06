@@ -7,6 +7,9 @@ import XCTest
 import Foundation
 import LogosUtils
 
+@available(iOS 16.0, macOS 13.0, *)
+typealias Morphology = LogosUtils.Morphology
+
 final class GrammemeTests: XCTestCase {
 	
 	func testGrammeme() {
@@ -76,25 +79,45 @@ final class GrammemeTests: XCTestCase {
 	
 	@available(iOS 16.0, macOS 13.0, *)
 	func testMorphology() {
-		var uncoded = LogosUtils.Morphology(language: .greek)
+		var uncoded = LogosUtils.Morphology()
+		uncoded.language = .greek
 		uncoded.number = .singular
 		uncoded.verbForm = .imperative
 		uncoded.wordClass = .adverb
 		uncoded.genders = [.masculine, .feminine]
 		uncoded.declension = .firstDeclension
-		uncoded.person = .thirdPerson
-		uncoded.nounType = .commonNumeralPosition
+		uncoded.person = .third
+		uncoded.nounType = .proper
 		uncoded.etymology = .hebrew
 		uncoded.degree = .positive
 		uncoded.grammaticalCase = .genitive
 		uncoded.punctuation = .comma
 		uncoded.tense = .perfect
 		uncoded.voice = .middlePassive
-		XCTAssertEqual(uncoded.description, "G;H;Adv;Imp;Perf;Gen;Masc/Fem;MidPass;3P;Sg;1Decl;CommNumPos;Pos;Comma")
+		XCTAssertEqual(uncoded.description, "G;H;Adv;Imp;Perf;Gen;Masc/Fem;MidPass;3P;Sg;1Decl;Prop;Pos;Comma")
 		
 		let codedString = uncoded.description
 		let decoded = Morphology(codedString)
 		XCTAssertEqual(uncoded, decoded)
 		XCTAssertEqual(uncoded.description, decoded?.description)
+	}
+	
+	@available(iOS 16.0, macOS 13.0, *)
+	func testMorphologyDescription() {
+		var morph1 = Morphology()
+		morph1.wordClass = .verb
+		morph1.tense = .imperfect
+		morph1.number = .plural
+		morph1.voice = .active
+		morph1.verbForm = .indicative
+		morph1.person = .first
+		XCTAssertEqual(morph1.makeMorphologyDescription(withFormat: .fullName), "Verb Indicative Imperfect Active 1st Person Plural")
+		
+		var morph2 = Morphology()
+		morph2.language = .greek
+		morph2.wordClass = .noun
+		morph2.gender = .feminine
+		morph2.nounType = .proper
+		XCTAssertEqual(morph2.makeMorphologyDescription(withFormat: .fullName), "Proper Greek Noun Feminine")
 	}
 }

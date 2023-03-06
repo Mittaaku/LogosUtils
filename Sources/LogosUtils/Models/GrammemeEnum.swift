@@ -15,6 +15,7 @@ public protocol GrammemeEnum: GrammemeType, CaseIterable {
 	static var caseByAbbreviation: [String: Self] { get }
 }
 
+// MARK: - Computed Properties
 public extension GrammemeEnum {
 	
 	init?(abbreviation: String) {
@@ -27,13 +28,10 @@ public extension GrammemeEnum {
 	var abbreviation: String {
 		return abbreviations[0]
 	}
-	
-	var fullName: String {
-		guard let result = getEnumCaseName(for: self) else {
-			fatalError("Unable to get case name for enum'")
-		}
-		return result.camelCaseToCapitalized
-	}
+}
+
+// MARK: - Methods
+public extension GrammemeEnum {
 }
 
 // ---------------------------------------------------
@@ -67,6 +65,13 @@ public extension Declension {
 		}
 	}
 	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
+	
 	var isDeclinable: Bool {
 		return Self.declinableSet.contains(self)
 	}
@@ -94,6 +99,13 @@ public extension Language {
 		case .hebrew:
 			return ["H"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 }
 
@@ -126,6 +138,13 @@ public extension GrammaticalCase {
 			return ["Voc", "V"]
 		}
 	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
 }
 
 // ---------------------------------------------------
@@ -150,6 +169,13 @@ public extension GrammaticalDegree {
 		case .superlative:
 			return ["Supl", "S"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 }
 
@@ -178,6 +204,13 @@ public extension Gender {
 		case .common:
 			return ["Comm", "C", "c", "b"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 	
 	var greekArticle: String {
@@ -244,6 +277,13 @@ public extension Tense {
 			return ["2Pres", "2P"]
 		}
 	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
 }
 
 // ---------------------------------------------------
@@ -280,6 +320,13 @@ public extension VerbForm {
 			return ["Sbjv", "S"]
 		}
 	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
 }
 
 // ---------------------------------------------------
@@ -301,6 +348,13 @@ public extension HebrewState {
 		case .construct:
 			return ["Con", "c"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 }
 
@@ -344,6 +398,13 @@ public extension HebrewVerbMode {
 		case .perfectConsecutive:
 			return ["PerfConsec", "q"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 }
 
@@ -403,6 +464,13 @@ public extension HebrewVerbStem {
 		}
 	}
 	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
+	
 	var voice: String {
 		switch self {
 		case .qal, .piel, .hiphil, .tiphil:
@@ -440,15 +508,22 @@ public extension Number {
 			return ["Pl", "P", "p"]
 		}
 	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
 }
 
 // ---------------------------------------------------
 // MARK: Person
 // ---------------------------------------------------
 public enum Person: Int, GrammemeEnum {
-	case firstPerson
-	case secondPerson
-	case thirdPerson
+	case first
+	case second
+	case third
 }
 
 public extension Person {
@@ -457,12 +532,23 @@ public extension Person {
 	
 	var abbreviations: [String] {
 		switch self {
-		case .firstPerson:
+		case .first:
 			return ["1P", "1", "1st"]
-		case .secondPerson:
+		case .second:
 			return ["2P", "2", "2nd"]
-		case .thirdPerson:
+		case .third:
 			return ["3P", "3", "3rd"]
+		}
+	}
+	
+	var fullName: String {
+		switch self {
+		case .first:
+			return "1st Person"
+		case .second:
+			return "2nd Person"
+		case .third:
+			return "3rd Person"
 		}
 	}
 }
@@ -472,47 +558,29 @@ public extension Person {
 // ---------------------------------------------------
 public enum NounType: Int, GrammemeEnum {
 	case common
-	case commonNumeral
-	case commonNumeralPosition
-	case properTitle
-	case properTitleGentilic
-	case properLocation
-	case properLocationGentilic
-	case properPerson
-	case properPersonGentilic
+	case proper
 }
 
 public extension NounType {
 	
 	static var caseByAbbreviation = makeDictionaryUsingValue(\.abbreviations)
 	
-	static var properSet: Set<Self> = [.properTitle, .properTitleGentilic, .properLocation, .properLocationGentilic, .properPerson, .properPersonGentilic]
-	
 	var abbreviations: [String] {
 		switch self {
 		case .common:
-			return ["Comm", "a"]
-		case .commonNumeral:
-			return ["CommNum", "c"]
-		case .commonNumeralPosition:
-			return ["CommNumPos", "o"]
-		case .properTitle:
-			return ["PropTitle", "T"]
-		case .properTitleGentilic:
-			return ["PropTitleG", "TG"]
-		case .properLocation:
-			return ["PropLoc", "L"]
-		case .properLocationGentilic:
-			return ["PropLocG", "LG"]
-		case .properPerson:
-			return ["PropPer", "P"]
-		case .properPersonGentilic:
-			return ["PropPerG", "PG"]
+			return ["Comm", "a", "c", "o"]
+		case .proper:
+			return ["Prop", "T", "TG", "L", "LG", "P", "PG"]
 		}
 	}
 	
-	var isProperNoun: Bool {
-		return Self.properSet.contains(self)
+	var fullName: String {
+		switch self {
+		case .common:
+			return "Common"
+		case .proper:
+			return "Proper"
+		}
 	}
 }
 
@@ -631,6 +699,13 @@ public extension Punctuation {
 		}
 	}
 	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
+	}
+	
 	var hasLeadingSpace: Bool {
 		return Self.leadingSpaceSet.contains(self)
 	}
@@ -680,6 +755,13 @@ public extension Voice {
 		case .indefinite:
 			return ["Indf", "X"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 }
 
@@ -807,5 +889,12 @@ public extension WordClass {
 		case .verb:
 			return ["Verb"]
 		}
+	}
+	
+	var fullName: String {
+		guard let result = getEnumCaseName(for: self) else {
+			fatalError("Unable to get case name for enum'")
+		}
+		return result.camelCaseToCapitalized
 	}
 }

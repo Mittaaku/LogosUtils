@@ -10,9 +10,10 @@ public let grammemeSplitter = try! Regex(#";"#)
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable, Codable, Hashable {
+	
 	public typealias RawValue = String
 	
-	public var language: Language
+	public var language: Language? = nil
 	public var etymology: Language? = nil
 	public var wordClass: WordClass? = nil
 	public var verbForm: VerbForm? = nil
@@ -27,8 +28,7 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 	public var degree: GrammaticalDegree? = nil
 	public var punctuation: Punctuation? = nil
 	
-	public init(language: Language) {
-		self.language = language
+	public init() {
 	}
 	
 	public init?(rawValue: String) {
@@ -85,22 +85,22 @@ public extension Morphology {
 		}
 	}
 	
-	var grammemes: [(any GrammemeType)?] {
+	var allGrammemes: [(any GrammemeType)?] {
 		return [language, etymology, wordClass, verbForm, tense, grammaticalCase, genders, voice, person, number, declension, nounType, degree, punctuation]
-	}
-	
-	var compactAbbreviation: String {
-		let strings = grammemes.compactMap { return $0?.description }
-		return strings.joined(separator: ", ")
-	}
-	
-	var rawAbbreviation: String {
-		let strings = grammemes.map { return $0?.description ?? "" }
-		return strings.joined(separator: ";")
 	}
 	
 	var description: String {
 		return rawAbbreviation
+	}
+	
+	var describedGrammemes: [(any GrammemeType)] {
+		let describable: [(any GrammemeType)?] = [language, wordClass, verbForm, tense, grammaticalCase, genders, voice, person, number, declension, degree]
+		return describable.compactMap { $0 }
+	}
+	
+	var rawAbbreviation: String {
+		let strings = allGrammemes.map { return $0?.description ?? "" }
+		return strings.joined(separator: ";")
 	}
 	
 	var rawValue: String {
@@ -109,10 +109,8 @@ public extension Morphology {
 	
 	var fullName: String {
 		var strings = [String]()
-		if nounType?.isProperNoun == true {
-			strings.append("Proper")
-		}
-		strings += grammemes.compactMap { return $0?.fullName }
+		
+		strings += allGrammemes.compactMap { return $0?.fullName }
 		return strings.joined(separator: ", ")
 	}
 }
@@ -120,4 +118,41 @@ public extension Morphology {
 // MARK: Methods
 @available(iOS 16.0, macOS 13.0, *)
 public extension Morphology {
+	
+	func makeMorphologyDescription(withFormat format: DescriptionFormat) -> String {
+		var result = ""
+		let strings: [String]
+		switch format {
+		case .abbreviation, .commaDelineatedAbbreviation:
+			strings = describedGrammemes.map(\.abbreviation)
+		case .fullName, .commaDelineatedFullName:
+			if nounType == .proper {
+				result.append("Proper ")
+			}
+			strings = describedGrammemes.map(\.fullName)
+		}
+		result += strings.joined(separator: format.deliniator)
+		return result
+	}
+}
+
+// MARK: DescriptionFormat
+@available(iOS 16.0, macOS 13.0, *)
+public extension Morphology {
+	
+	enum DescriptionFormat {
+		case abbreviation
+		case commaDelineatedAbbreviation
+		case fullName
+		case commaDelineatedFullName
+		
+		var deliniator: String {
+			switch self {
+			case .abbreviation, .fullName:
+				return " "
+			case .commaDelineatedAbbreviation, .commaDelineatedFullName:
+				return ", "
+			}
+		}
+	}
 }

@@ -10,6 +10,7 @@ public let grammemeAbbreviationSeparator = try! Regex(#"\/"#)
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct GrammemeSet<Element: GrammemeEnum>: GrammemeType, SetAlgebra, ExpressibleByArrayLiteral {
+	
 	public var rawValue: Int
 	
 	public init() {
@@ -68,12 +69,12 @@ public extension GrammemeSet {
 		return elements.map(\.abbreviation).joined(separator: "/")
 	}
 	
-	var fullName: String {
-		return elements.map(\.fullName).joined(separator: ", ")
-	}
-	
 	var first: Element? {
 		return rawValue != 0 ? Element(rawValue: rawValue.trailingZeroBitCount) : nil
+	}
+	
+	var fullName: String {
+		return elements.map(\.fullName).joined(separator: ", ")
 	}
 	
 	var last: Element? {
@@ -149,4 +150,9 @@ public extension GrammemeSet {
 	mutating func formSymmetricDifference(_ other: __owned Self) {
 		rawValue ^= other.rawValue
 	}
+}
+
+// MARK: Static properties and functions
+@available(iOS 16.0, macOS 13.0, *)
+public extension GrammemeSet {
 }
