@@ -51,11 +51,7 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 			preconditionFailure("Invalid grammeme count in string '\(rawAbbreviation)'")
 		}
 		var iterator = rawGrammemes.makeIterator()
-		guard let languageComponent = iterator.next(),
-			  let language = Language(abbreviation: languageComponent) else {
-			preconditionFailure("Invalid language component in string '\(rawAbbreviation)'")
-		}
-		self.language = language
+		language = .init(optionalAbbreviation: iterator.next())
 		etymology = .init(optionalAbbreviation: iterator.next())
 		wordClass = .init(optionalAbbreviation: iterator.next())
 		verbForm = .init(optionalAbbreviation: iterator.next())
