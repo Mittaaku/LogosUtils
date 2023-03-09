@@ -59,18 +59,18 @@ final class GrammemeTests: XCTestCase {
 		genders.formIntersection([.masculine])
 		XCTAssertEqual(genders, [.masculine])
 		
-		genders.insert(abbreviation: "Neut/Fem")
+		genders.insert(abbreviation: "Neut|Fem")
 		XCTAssertEqual(genders, [.masculine, .feminine, .neuter])
 		
 		genders = GrammemeSet<Gender>.init(abbreviation: "Masc")!
 		XCTAssertEqual(genders, [.masculine])
 		
-		genders = GrammemeSet<Gender>.init(otherSet: genders, abbreviation: "Neut/Fem")
+		genders = GrammemeSet<Gender>.init(otherSet: genders, abbreviation: "Neut|Fem")
 		XCTAssertEqual(genders, [.masculine, .feminine, .neuter])
 		
-		genders = GrammemeSet<Gender>.init("Masc/Fem")!
+		genders = GrammemeSet<Gender>.init("Masc|Fem")!
 		XCTAssertEqual(genders, [.masculine, .feminine])
-		XCTAssertEqual(genders.description, "Masc/Fem")
+		XCTAssertEqual(genders.description, "Masc|Fem")
 		
 		genders = [.masculine, .feminine, .neuter]
 		XCTAssertEqual(genders.first, .masculine)
@@ -119,5 +119,14 @@ final class GrammemeTests: XCTestCase {
 		morph2.gender = .feminine
 		morph2.nounType = .proper
 		XCTAssertEqual(morph2.makeMorphologyDescription(withFormat: .fullName), "Proper Greek Noun Feminine")
+		
+		var morph3 = Morphology()
+		morph3.wordClass = .verb
+		morph3.tense = .future
+		morph3.number = .singular
+		morph3.voice = .passive
+		morph3.verbForm = .indicative
+		morph3.person = .second
+		XCTAssertEqual(morph3.makeMorphologyDescription(withFormat: .abbreviation), "Verb Ind Fut Pass 2P Sg")
 	}
 }

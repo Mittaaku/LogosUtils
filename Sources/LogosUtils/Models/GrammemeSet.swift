@@ -5,8 +5,10 @@
 
 import Foundation
 
+public let grammemeSeparatingCharacter = #"&"#
+
 @available(iOS 16.0, macOS 13.0, *)
-public let grammemeAbbreviationSeparator = try! Regex(#"\/"#)
+public let grammemeSeparator = try! Regex(#"\&"#)
 
 @available(iOS 16.0, macOS 13.0, *)
 public struct GrammemeSet<Element: GrammemeEnum>: GrammemeType, SetAlgebra, ExpressibleByArrayLiteral {
@@ -66,7 +68,7 @@ public extension GrammemeSet {
 	}
 	
 	var abbreviation: String {
-		return elements.map(\.abbreviation).joined(separator: "/")
+		return elements.map(\.abbreviation).joined(separator: grammemeSeparatingCharacter)
 	}
 	
 	var first: Element? {
@@ -87,7 +89,7 @@ public extension GrammemeSet {
 public extension GrammemeSet {
 	
 	mutating func insert(abbreviation: String) {
-		for singularAbbreviation in abbreviation.split(separator: grammemeAbbreviationSeparator) {
+		for singularAbbreviation in abbreviation.split(separator: grammemeSeparator) {
 			insert(singularAbbreviation: singularAbbreviation.string)
 		}
 	}

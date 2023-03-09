@@ -758,10 +758,20 @@ public extension Voice {
 	}
 	
 	var fullName: String {
-		guard let result = getEnumCaseName(for: self) else {
-			fatalError("Unable to get case name for enum'")
+		switch self {
+		case .active:
+			return "Act"
+		case .activeImpersonal:
+			return "ActImpers"
+		case .middle, .middleDeponent:
+			return "Mid"
+		case .middlePassive, .middlePassiveDeponent:
+			return "Mid/Pass"
+		case .passive, .passiveDeponent:
+			return "Pass"
+		case .indefinite:
+			return "Indf"
 		}
-		return result.camelCaseToCapitalized
 	}
 }
 

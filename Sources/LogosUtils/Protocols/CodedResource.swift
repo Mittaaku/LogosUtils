@@ -5,7 +5,7 @@
 
 import Foundation
 
-public protocol CodedResource: Decodable {
+public protocol CodedResource: Codable {
 }
 
 public extension CodedResource {
@@ -44,5 +44,14 @@ public extension CodedResource {
 		} catch let error {
 			fatalError(error.localizedDescription)
 		}
+	}
+	
+	@available(OSX 10.15, iOS 13, *)
+	@discardableResult func encode(intoUrl url: URL, outputFormatting: JSONEncoder.OutputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]) throws  -> URL {
+		let encoder = JSONEncoder()
+		encoder.outputFormatting = outputFormatting
+		let jsonData = try encoder.encode(self)
+		try jsonData.write(to: url)
+		return url
 	}
 }
