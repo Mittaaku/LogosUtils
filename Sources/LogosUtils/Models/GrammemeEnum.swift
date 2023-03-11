@@ -82,6 +82,7 @@ public extension Declension {
 // ---------------------------------------------------
 public enum Language: Int, GrammemeEnum {
 	case aramaic
+	case english
 	case greek
 	case hebrew
 }
@@ -94,6 +95,8 @@ public extension Language {
 		switch self {
 		case .aramaic:
 			return ["A"]
+		case .english:
+			return ["E"]
 		case .greek:
 			return ["G"]
 		case .hebrew:
@@ -760,17 +763,17 @@ public extension Voice {
 	var fullName: String {
 		switch self {
 		case .active:
-			return "Act"
+			return "Active"
 		case .activeImpersonal:
-			return "ActImpers"
+			return "Active Impersonal"
 		case .middle, .middleDeponent:
-			return "Mid"
+			return "Middle"
 		case .middlePassive, .middlePassiveDeponent:
-			return "Mid/Pass"
+			return "Middle/Passive"
 		case .passive, .passiveDeponent:
-			return "Pass"
+			return "Passive"
 		case .indefinite:
-			return "Indf"
+			return "Indefinite"
 		}
 	}
 }

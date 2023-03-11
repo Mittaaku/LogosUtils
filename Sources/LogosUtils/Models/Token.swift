@@ -89,7 +89,7 @@ public extension Token {
 		guard let morphologies else {
 			return nil
 		}
-		let formattedMorphologies = morphologies.compactMap { $0.makeMorphologyDescription(withFormat: format) }
+		let formattedMorphologies = morphologies.compactMap { $0.describe(withFormat: format) }
 		return formattedMorphologies.joined(separator: "; ")
 	}
 }
@@ -118,9 +118,7 @@ public extension Token {
 		case translation
 		
 		public var stringValue: String {
-			return CodingKeys.stringKeyByCase[self]!
+			rawValue
 		}
-		
-		static var stringKeyByCase = makeShortenedKeysByCase()
 	}
 }

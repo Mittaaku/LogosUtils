@@ -29,8 +29,7 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 		definition = try! values.decodeIfPresent(forKey: .definition)
 		wordFormMorphologies = try! values.decodeIfPresent(forKey: .wordFormMorphologies) ?? []
 		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs) ?? []
-		// Non-encoded properties
-		searchMatchingString = "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
+		searchMatchingString = try! values.decodeIfPresent(forKey: .searchMatchingString) ?? makeSearchMatchingString()
 	}
 	
 	public init(duplicating lexeme: Lexeme) {
@@ -75,6 +74,7 @@ public extension Lexeme {
 		try! container.encodeIfPresent(definition?.nonBlank, forKey: .definition)
 		try! container.encodeIfPresent(wordFormMorphologies?.nonEmpty, forKey: .wordFormMorphologies)
 		try! container.encodeIfPresent(crasisLexicalIDs?.nonEmpty, forKey: .crasisLexicalIDs)
+		try! container.encodeIfPresent(searchMatchingString.nonBlank, forKey: .searchMatchingString)
 	}
 	
 	func hash(into hasher: inout Hasher) {
@@ -85,8 +85,12 @@ public extension Lexeme {
 		guard let wordFormMorphologies else {
 			return nil
 		}
-		let formattedMorphologies = wordFormMorphologies.compactMap { $0.makeMorphologyDescription(withFormat: format) }
+		let formattedMorphologies = wordFormMorphologies.compactMap { $0.describe(withFormat: format) }
 		return formattedMorphologies.joined(separator: "; ")
+	}
+	
+	func makeSearchMatchingString() -> String {
+		return "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
 	}
 }
 
@@ -109,12 +113,11 @@ public extension Lexeme {
 		case definition
 		case wordFormMorphologies
 		case crasisLexicalIDs
+		case searchMatchingString
 		
 		public var stringValue: String {
-			return CodingKeys.stringKeyByCase[self]!
+			return rawValue
 		}
-		
-		static var stringKeyByCase = makeShortenedKeysByCase()
 	}
 }
 

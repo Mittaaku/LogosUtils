@@ -9,9 +9,9 @@ import Foundation
 public let grammemeSplitter = try! Regex(#";"#)
 
 @available(iOS 16.0, macOS 13.0, *)
-public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable, Codable, Hashable {
+public struct Morphology: Equatable, Codable, Hashable/*, LosslessStringConvertible, RawRepresentable */ {
 	
-	public typealias RawValue = String
+	// public typealias RawValue = String
 	
 	public var language: Language? = nil
 	public var etymology: Language? = nil
@@ -31,6 +31,7 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 	public init() {
 	}
 	
+	/*
 	public init?(rawValue: String) {
 		self.init(rawAbbreviation: rawValue)
 	}
@@ -66,6 +67,7 @@ public struct Morphology: LosslessStringConvertible, RawRepresentable, Equatable
 		degree = .init(optionalAbbreviation: iterator.next())
 		punctuation = .init(optionalAbbreviation: iterator.next())
 	}
+	 */
 }
 
 // MARK: - Computed Properties
@@ -98,24 +100,13 @@ public extension Morphology {
 		let strings = allGrammemes.map { return $0?.description ?? "" }
 		return strings.joined(separator: ";")
 	}
-	
-	var rawValue: String {
-		return rawAbbreviation
-	}
-	
-	var fullName: String {
-		var strings = [String]()
-		
-		strings += allGrammemes.compactMap { return $0?.fullName }
-		return strings.joined(separator: ", ")
-	}
 }
 
 // MARK: Methods
 @available(iOS 16.0, macOS 13.0, *)
 public extension Morphology {
 	
-	func makeMorphologyDescription(withFormat format: DescriptionFormat) -> String {
+	func describe(withFormat format: DescriptionFormat) -> String {
 		var result = ""
 		let strings: [String]
 		switch format {
