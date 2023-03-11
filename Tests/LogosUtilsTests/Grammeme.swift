@@ -80,7 +80,7 @@ final class GrammemeTests: XCTestCase {
 	@available(iOS 16.0, macOS 13.0, *)
 	func testMorphology() {
 		var uncoded = LogosUtils.Morphology()
-		uncoded.language = .greek
+		uncoded.language = .koineGreek
 		uncoded.number = .singular
 		uncoded.verbForm = .imperative
 		uncoded.wordClass = .adverb
@@ -88,7 +88,7 @@ final class GrammemeTests: XCTestCase {
 		uncoded.declension = .firstDeclension
 		uncoded.person = .third
 		uncoded.nounType = .proper
-		uncoded.etymology = .hebrew
+		uncoded.etymology = .biblicalHebrew
 		uncoded.degree = .positive
 		uncoded.grammaticalCase = .genitive
 		uncoded.punctuation = .comma
@@ -116,7 +116,7 @@ final class GrammemeTests: XCTestCase {
 		XCTAssertEqual(morph1.describe(using: .fullName), "Verb Indicative Imperfect Active 1st Person Plural")
 		
 		var morph2 = Morphology()
-		morph2.language = .greek
+		morph2.language = .koineGreek
 		morph2.wordClass = .noun
 		morph2.gender = .feminine
 		morph2.nounType = .proper

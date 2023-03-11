@@ -82,9 +82,9 @@ public extension Declension {
 // ---------------------------------------------------
 public enum Language: Int, GrammemeEnum {
 	case aramaic
+	case biblicalHebrew
 	case english
-	case greek
-	case hebrew
+	case koineGreek
 }
 
 public extension Language {
@@ -97,9 +97,9 @@ public extension Language {
 			return ["A"]
 		case .english:
 			return ["E"]
-		case .greek:
+		case .koineGreek:
 			return ["G"]
-		case .hebrew:
+		case .biblicalHebrew:
 			return ["H"]
 		}
 	}
