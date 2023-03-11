@@ -118,7 +118,7 @@ public extension Token {
 		case translation
 		
 		public var stringValue: String {
-			rawValue
+			return rawValue
 		}
 	}
 }
