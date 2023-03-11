@@ -85,11 +85,11 @@ public extension Token {
 		hasher.combine(index)
 	}
 	
-	func makeMorphologyDescription(withFormat format: Morphology.DescriptionFormat) -> String? {
+	func describeMorphology(using format: Morphology.DescriptionFormat) -> String? {
 		guard let morphologies else {
 			return nil
 		}
-		let formattedMorphologies = morphologies.compactMap { $0.describe(withFormat: format) }
+		let formattedMorphologies = morphologies.compactMap { $0.describe(using: format) }
 		return formattedMorphologies.joined(separator: "; ")
 	}
 }

@@ -14,7 +14,7 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 	public var definition: String? = nil
 	public var wordFormMorphologies: [Morphology]? = nil
 	public var crasisLexicalIDs: [String]? = nil
-	public private(set) var searchMatchingString: String = ""
+	public var searchMatchingString: String = ""
 	
 	public init() {
 	}
@@ -81,11 +81,11 @@ public extension Lexeme {
 		hasher.combine(lexicalID)
 	}
 	
-	func makeMorphologyDescription(withFormat format: Morphology.DescriptionFormat) -> String? {
+	func describeMorphology(using format: Morphology.DescriptionFormat) -> String? {
 		guard let wordFormMorphologies else {
 			return nil
 		}
-		let formattedMorphologies = wordFormMorphologies.compactMap { $0.describe(withFormat: format) }
+		let formattedMorphologies = wordFormMorphologies.compactMap { $0.describe(using: format) }
 		return formattedMorphologies.joined(separator: "; ")
 	}
 	

@@ -113,14 +113,14 @@ final class GrammemeTests: XCTestCase {
 		morph1.voice = .active
 		morph1.verbForm = .indicative
 		morph1.person = .first
-		XCTAssertEqual(morph1.describe(withFormat: .fullName), "Verb Indicative Imperfect Active 1st Person Plural")
+		XCTAssertEqual(morph1.describe(using: .fullName), "Verb Indicative Imperfect Active 1st Person Plural")
 		
 		var morph2 = Morphology()
 		morph2.language = .greek
 		morph2.wordClass = .noun
 		morph2.gender = .feminine
 		morph2.nounType = .proper
-		XCTAssertEqual(morph2.describe(withFormat: .fullName), "Proper Greek Noun Feminine")
+		XCTAssertEqual(morph2.describe(using: .fullName), "Proper Greek Noun Feminine")
 		
 		var morph3 = Morphology()
 		morph3.wordClass = .verb
@@ -129,6 +129,6 @@ final class GrammemeTests: XCTestCase {
 		morph3.voice = .passive
 		morph3.verbForm = .indicative
 		morph3.person = .second
-		XCTAssertEqual(morph3.describe(withFormat: .abbreviation), "Verb Ind Fut Pass 2P Sg")
+		XCTAssertEqual(morph3.describe(using: .abbreviation), "Verb Ind Fut Pass 2P Sg")
 	}
 }

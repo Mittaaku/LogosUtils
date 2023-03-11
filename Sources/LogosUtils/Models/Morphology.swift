@@ -106,7 +106,7 @@ public extension Morphology {
 @available(iOS 16.0, macOS 13.0, *)
 public extension Morphology {
 	
-	func describe(withFormat format: DescriptionFormat) -> String {
+	func describe(using format: DescriptionFormat) -> String {
 		var result = ""
 		let strings: [String]
 		switch format {
