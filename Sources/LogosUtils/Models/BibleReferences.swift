@@ -98,7 +98,7 @@ public extension BibleReferenceContainer {
 	init(decimalValue: Int) {
 		var result = 0
 		for index in 0 ..< 4 {
-			result += ((decimalValue / 1000 ** index) % 1000) * (1 << (8 * index))
+			result += ((decimalValue / pow(1000, index)) % 1000) * (1 << (8 * index))
 		}
 		self.init(rawValue: result)
 	}
@@ -125,7 +125,7 @@ public extension BibleReferenceContainer {
 		var result = 0
 		for index in bytes.indices {
 			let multiplicand = Int(bytes[index])
-			let multiplier = 1000 ** Int(index)
+			let multiplier = pow(1000, Int(index))
 			result += multiplier * multiplicand
 		}
 		return result

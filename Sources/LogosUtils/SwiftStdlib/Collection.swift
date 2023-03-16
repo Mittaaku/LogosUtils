@@ -12,7 +12,7 @@ public extension Collection {
 
 	func generateCombinations() -> [[Element]] {
 		let array = Array(self)
-		let fullCombinationBits = 2 ** array.count - 1
+		let fullCombinationBits = pow(2, array.count) - 1
 		var allCombinations = [[Element]]()
 		
 		for combinationBits in 0 ... fullCombinationBits {

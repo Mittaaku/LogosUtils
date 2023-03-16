@@ -9,8 +9,7 @@ import Foundation
 
 public extension FixedWidthInteger {
 	
-	// Credit: https://stackoverflow.com/questions/29970204/split-uint32-into-uint8-in-swift
-	var bytes: [UInt8] {
+	internal var bytes: [UInt8] {
 		var _endian = littleEndian
 		let bytePtr = withUnsafePointer(to: &_endian) {
 			$0.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout<Self>.size) {
@@ -36,25 +35,10 @@ public extension FixedWidthInteger {
 	}
 }
 
-public func pow<T: FixedWidthInteger, U: FixedWidthInteger>(_ base: T, _ power: U) -> T {
+internal func pow<T: FixedWidthInteger>(_ base: T, _ exponent: T) -> T {
 	var answer: T = 1
-	for _ in 0 ..< power {
+	for _ in 0 ..< exponent {
 		answer *= base
 	}
 	return answer
-}
-
-precedencegroup PowerPrecedence {
-	higherThan: MultiplicationPrecedence
-}
-
-infix operator **: PowerPrecedence
-/// Value of exponentiation.
-///
-/// - Parameters:
-///   - lhs: base value.
-///   - rhs: exponent value.
-/// - Returns: exponentiation value.
-public func **<T: FixedWidthInteger, U: FixedWidthInteger>(lhs: T, rhs: U) -> T {
-	return pow(lhs, rhs)
 }

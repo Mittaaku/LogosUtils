@@ -153,4 +153,8 @@ final class MiscTests: XCTestCase {
 		XCTAssertTrue(setTesting.insertIfNotNil(1))
 		XCTAssertFalse(setTesting.insertIfNotNil(nil))
 	}
+	
+	func testExponent() {
+		XCTAssertEqual(pow(4, 2), 16)
+	}
 }

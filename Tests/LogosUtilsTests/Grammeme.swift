@@ -120,7 +120,7 @@ final class GrammemeTests: XCTestCase {
 		morph2.wordClass = .noun
 		morph2.gender = .feminine
 		morph2.nounType = .proper
-		XCTAssertEqual(morph2.describe(using: .fullName), "Proper Greek Noun Feminine")
+		XCTAssertEqual(morph2.describe(using: .fullName), "Proper Koine Greek Noun Feminine")
 		
 		var morph3 = Morphology()
 		morph3.wordClass = .verb
