@@ -5,21 +5,60 @@
 
 import Foundation
 
+/**
+ The `Token` class represents a token.
+ 
+ Tokens are individual units of information or entities within a larger text. This class provides properties and methods to store and manage token-related data.
+ 
+ Use the `Token` class to represent tokens and perform operations related to tokenization, encoding, decoding, and comparison.
+ */
 @available(iOS 16.0, macOS 13.0, *)
 open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+	
+	// MARK: - Properties
+	
+	/// The index of the token.
 	public var index: Int = 0
+	
+	/// The primary reference associated with the token.
 	public var reference: TokenReference = TokenReference()
+	
+	/// An alternative reference associated with the token, if any.
 	public var altReference: TokenReference? = nil
+	
+	/// A related reference associated with the token, if any.
 	public var relatedReference: TokenReference? = nil
+	
+	/// The surface form of the token (the actual text).
 	public var surfaceForm: String = ""
+	
+	/// The lexical ID of the token, if available.
 	public var lexicalID: String? = nil
+	
+	/// The lexeme associated with the token, if any.
 	public var lexeme: Lexeme? = nil
+	
+	/// The morphologies associated with the token, if any.
 	public var morphologies: [Morphology]? = nil
+	
+	/// The translation of the token, if available.
 	public var translation: String? = nil
 	
+	
+	// MARK: - Initialization
+	
+	/**
+	 Creates a new `Token` instance.
+	 */
 	public init() {
 	}
 	
+	/**
+	 Creates a new `Token` instance by decoding from the given decoder.
+	 
+	 - Parameter decoder: The decoder to read data from.
+	 - Throws: An error if the decoding process fails or if required properties are missing.
+	 */
 	required public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties

@@ -11,7 +11,7 @@ public extension CodingKey where Self: Hashable & CaseIterable & RawRepresentabl
 		var uniqueKeys = Set<String>()
 		var result = [Self: String]()
 		for enumCase in Self.allCases {
-			let key = uniqueKeys.makeUniqueElement(fromCamelCaseString: enumCase.rawValue)
+			let key = uniqueKeys.makeUniqueElement(fromString: enumCase.rawValue)!
 			uniqueKeys.insert(key)
 			result[enumCase] = key
 		}

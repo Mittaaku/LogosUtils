@@ -5,38 +5,51 @@
 
 #if canImport(Foundation)
 import Foundation
-#endif
 
-// MARK: - Initializers
 public extension SetAlgebra {
-    init(intersectionOf sets: [Self]) {
-        var iterator = sets.makeIterator()
-        var result = iterator.next()!
-        while let next = iterator.next() {
-            result.formIntersection(next)
-        }
-        self = result
-    }
-
-    init(symmetricDifferenceOf sets: [Self]) {
-        var iterator = sets.makeIterator()
-        var result = iterator.next()!
-        while let next = iterator.next() {
-            result.formSymmetricDifference(next)
-        }
-        self = result
-    }
-
-    init(unionOf sets: [Self]) {
-        var iterator = sets.makeIterator()
-        var result = iterator.next()!
-        while let next = iterator.next() {
-            result.formUnion(next)
-        }
-        self = result
-    }
 	
-	@discardableResult mutating func insertIfNotNil(_ value: Element?) -> Bool {
+	/// Initializes a set as the intersection of multiple sets.
+	///
+	/// - Parameter sets: An array of sets to intersect.
+	init(intersectionOf sets: [Self]) {
+		var iterator = sets.makeIterator()
+		var result = iterator.next()!
+		while let next = iterator.next() {
+			result.formIntersection(next)
+		}
+		self = result
+	}
+	
+	/// Initializes a set as the symmetric difference of multiple sets.
+	///
+	/// - Parameter sets: An array of sets to compute the symmetric difference.
+	init(symmetricDifferenceOf sets: [Self]) {
+		var iterator = sets.makeIterator()
+		var result = iterator.next()!
+		while let next = iterator.next() {
+			result.formSymmetricDifference(next)
+		}
+		self = result
+	}
+	
+	/// Initializes a set as the union of multiple sets.
+	///
+	/// - Parameter sets: An array of sets to union.
+	init(unionOf sets: [Self]) {
+		var iterator = sets.makeIterator()
+		var result = iterator.next()!
+		while let next = iterator.next() {
+			result.formUnion(next)
+		}
+		self = result
+	}
+	
+	/// Inserts a value into the set if it is not nil.
+	///
+	/// - Parameter value: The value to insert.
+	/// - Returns: `true` if the value was inserted, `false` otherwise.
+	@discardableResult
+	mutating func insertIfNotNil(_ value: Element?) -> Bool {
 		guard let value else {
 			return false
 		}
@@ -47,21 +60,17 @@ public extension SetAlgebra {
 
 public extension SetAlgebra where Element == String {
 	
-	func makeUniqueElement(fromCamelCaseString string: String) -> String {
-		assert(!string.isEmpty, "Input string cannot be empty")
-		var element = ""
+	/// Creates a unique element from a camel case string.
+	///
+	/// - Parameter string: The string to extract initials from.
+	/// - Returns: A unique element derived from the input string.
+	func makeUniqueElement(fromString string: String) -> String? {
 		
-		let first = string.first!
-		assert(!first.isUppercase, "Input string is not camel case")
-		element.append(first)
-		
-		for character in string {
-			if character.isUppercase {
-				element.append(character.lowercased())
-			} else if character.isNumber {
-				element.append(character)
-			}
+		guard let initials = string.extractInitials().nonBlank else {
+			return nil
 		}
+		
+		var element = initials
 		
 		let elementPrefix = element
 		var counter = 1
@@ -73,3 +82,4 @@ public extension SetAlgebra where Element == String {
 		return element
 	}
 }
+#endif

@@ -63,5 +63,16 @@ public extension NSRegularExpression {
         let range = NSRange(location: 0, length: string.count)
         return stringByReplacingMatches(in: string, options: [], range: range, withTemplate: withTemplate)
     }
+	
+	/// Custom pattern matching operator for `NSRegularExpression` on the left-hand side.
+	///
+	/// - Parameters:
+	///   - regex: The `NSRegularExpression` pattern to match against.
+	///   - string: The string value to be checked for a match.
+	/// - Returns: `true` if the `string` matches the specified `NSRegularExpression` pattern, `false` otherwise.
+	static func ~=(regex: NSRegularExpression, string: String) -> Bool {
+		let range = NSRange(location: 0, length: string.utf16.count)
+		return regex.firstMatch(in: string, options: [], range: range) != nil
+	}
 }
 #endif
