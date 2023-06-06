@@ -8,6 +8,8 @@ import Foundation
 @available(iOS 16.0, macOS 13.0, *)
 open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	
+	// MARK: Instance properties
+	
 	public var lexicalID: String = ""
 	public var lexicalForm: String = ""
 	public var gloss: String? = nil
@@ -15,6 +17,8 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 	public var wordFormMorphologies: [Morphology]? = nil
 	public var crasisLexicalIDs: [String]? = nil
 	public var searchMatchingString: String = ""
+	
+	// MARK: Initilization
 	
 	public init() {
 	}
@@ -41,30 +45,24 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 		crasisLexicalIDs = lexeme.crasisLexicalIDs
 		searchMatchingString = lexeme.searchMatchingString
 	}
-}
-
-// MARK: - Computed Properties
-@available(iOS 16.0, macOS 13.0, *)
-public extension Lexeme {
 	
-	var description: String {
+	// MARK: - Computed Properties
+	
+	public var description: String {
 		return "\(lexicalID).\(gloss ?? "?")"
 	}
 	
-	var id: String {
+	public var id: String {
 		return lexicalID
 	}
 	
-	var isCrasis: Bool {
+	public var isCrasis: Bool {
 		return crasisLexicalIDs?.count ?? 0 > 0
 	}
-}
-
-// MARK: - Methods
-@available(iOS 16.0, macOS 13.0, *)
-public extension Lexeme {
 	
-	func encode(to encoder: Encoder) throws {
+	// MARK: - Methods
+	
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		try! container.encode(lexicalID, forKey: .lexicalID)
@@ -77,11 +75,11 @@ public extension Lexeme {
 		try! container.encodeIfPresent(searchMatchingString.nonBlank, forKey: .searchMatchingString)
 	}
 	
-	func hash(into hasher: inout Hasher) {
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(lexicalID)
 	}
 	
-	func describeMorphology(using format: Morphology.DescriptionFormat) -> String? {
+	public func describeMorphology(using format: MorphologyDescriptionFormat) -> String? {
 		guard let wordFormMorphologies else {
 			return nil
 		}
@@ -89,24 +87,19 @@ public extension Lexeme {
 		return formattedMorphologies.joined(separator: "; ")
 	}
 	
-	func makeSearchMatchingString() -> String {
+	public func makeSearchMatchingString() -> String {
 		return "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
 	}
-}
-
-// MARK: - Functions
-@available(iOS 16.0, macOS 13.0, *)
-public extension Lexeme {
 	
-	static func == (lhs: Lexeme, rhs: Lexeme) -> Bool {
+	// MARK: - Custom operator
+	
+	public static func == (lhs: Lexeme, rhs: Lexeme) -> Bool {
 		lhs.id == rhs.id
 	}
-}
-
-// MARK: - CodingKeys struct
-@available(iOS 16.0, macOS 13.0, *)
-public extension Lexeme {
-	enum CodingKeys: String, CodingKey, CaseIterable {
+	
+	// MARK: - Nested types
+	
+	public enum CodingKeys: String, CodingKey, CaseIterable {
 		case lexicalID
 		case lexicalForm
 		case gloss
@@ -120,7 +113,6 @@ public extension Lexeme {
 		}
 	}
 }
-
 
 /*
  

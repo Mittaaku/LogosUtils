@@ -15,7 +15,7 @@ import Foundation
 @available(iOS 16.0, macOS 13.0, *)
 open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	
-	// MARK: - Properties
+	// MARK: - Instance properties
 	
 	/// The index of the token.
 	public var index: Int = 0
@@ -47,18 +47,14 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 	
 	// MARK: - Initialization
 	
-	/**
-	 Creates a new `Token` instance.
-	 */
+	/// Creates a new `Token` instance.
 	public init() {
 	}
 	
-	/**
-	 Creates a new `Token` instance by decoding from the given decoder.
-	 
-	 - Parameter decoder: The decoder to read data from.
-	 - Throws: An error if the decoding process fails or if required properties are missing.
-	 */
+	///  Creates a new `Token` instance by decoding from the given decoder.
+	///
+	///  - Parameter decoder: The decoder to read data from.
+	///  - Throws: An error if the decoding process fails or if required properties are missing.
 	required public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
@@ -83,30 +79,24 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 		morphologies = token.morphologies
 		translation = token.translation
 	}
-}
-
-// MARK: - Computed Properties
-@available(iOS 16.0, macOS 13.0, *)
-public extension Token {
 	
-	var description: String {
+	// MARK: - Computed properties
+	
+	public var description: String {
 		return "\(reference.debugDescription) \(surfaceForm)"
 	}
 	
-	var id: Int {
+	public var id: Int {
 		return index
 	}
 	
-	var isPlaceholder: Bool {
+	public var isPlaceholder: Bool {
 		return reference.rawValue == 0
 	}
-}
-
-// MARK: - Methods
-@available(iOS 16.0, macOS 13.0, *)
-public extension Token {
 	
-	func encode(to encoder: Encoder) throws {
+	// MARK: - Methods
+	
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		try! container.encode(index, forKey: .index)
@@ -120,33 +110,27 @@ public extension Token {
 		try! container.encodeIfPresent(translation, forKey: .translation)
 	}
 	
-	func hash(into hasher: inout Hasher) {
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(index)
 	}
 	
-	func describeMorphology(using format: Morphology.DescriptionFormat) -> String? {
+	public func describeMorphology(using format: MorphologyDescriptionFormat) -> String? {
 		guard let morphologies else {
 			return nil
 		}
 		let formattedMorphologies = morphologies.compactMap { $0.describe(using: format) }
 		return formattedMorphologies.joined(separator: "; ")
 	}
-}
-
-// MARK: - Functions and static variables
-@available(iOS 16.0, macOS 13.0, *)
-public extension Token {
 	
-	static func == (lhs: Token, rhs: Token) -> Bool {
+	// MARK: - Custom operators
+	
+	public static func == (lhs: Token, rhs: Token) -> Bool {
 		lhs.index == rhs.index
 	}
-}
-
-// MARK: - CodingKeys struct
-@available(iOS 16.0, macOS 13.0, *)
-public extension Token {
 	
-	enum CodingKeys: String, CodingKey, CaseIterable {
+	// MARK: - Nested types
+	
+	public enum CodingKeys: String, CodingKey, CaseIterable {
 		case index
 		case reference
 		case altReference

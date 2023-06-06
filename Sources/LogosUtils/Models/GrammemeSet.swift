@@ -71,6 +71,10 @@ public extension GrammemeSet {
 		return elements.map(\.abbreviation).joined(separator: grammemeSeparatingCharacter)
 	}
 	
+	var count: Int {
+		return elements.count
+	}
+	
 	var first: Element? {
 		return rawValue != 0 ? Element(rawValue: rawValue.trailingZeroBitCount) : nil
 	}

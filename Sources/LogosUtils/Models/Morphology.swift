@@ -9,9 +9,9 @@ import Foundation
 public let grammemeSplitter = try! Regex(#";"#)
 
 @available(iOS 16.0, macOS 13.0, *)
-public struct Morphology: Equatable, Codable, Hashable/*, LosslessStringConvertible, RawRepresentable */ {
+public struct Morphology: Equatable, Codable, Hashable, LosslessStringConvertible, RawRepresentable {
 	
-	// public typealias RawValue = String
+	// MARK: - Instance properties
 	
 	public var language: Language? = nil
 	public var etymology: Language? = nil
@@ -28,10 +28,11 @@ public struct Morphology: Equatable, Codable, Hashable/*, LosslessStringConverti
 	public var degree: GrammaticalDegree? = nil
 	public var punctuation: Punctuation? = nil
 	
+	// MARK: - Initilization
+	
 	public init() {
 	}
 	
-	/*
 	public init?(rawValue: String) {
 		self.init(rawAbbreviation: rawValue)
 	}
@@ -67,79 +68,59 @@ public struct Morphology: Equatable, Codable, Hashable/*, LosslessStringConverti
 		degree = .init(optionalAbbreviation: iterator.next())
 		punctuation = .init(optionalAbbreviation: iterator.next())
 	}
-	 */
-}
-
-// MARK: - Computed Properties
-@available(iOS 16.0, macOS 13.0, *)
-public extension Morphology {
 	
-	var gender: Gender? {
+	// MARK: - Computed properties
+	
+	public var gender: Gender? {
 		get {
-			return genders?.first
+			guard let genderElements = genders?.elements else {
+				return nil
+			}
+			assert(genderElements.count == 1, "The .gender property shouldn't be accessed when there are more than one gender.")
+			return genderElements.first
 		}
 		set {
 			genders = .init(newValue)
 		}
 	}
 	
-	var allGrammemes: [(any GrammemeType)?] {
+	public var allGrammemes: [(any GrammemeType)?] {
 		return [language, etymology, wordClass, verbForm, tense, grammaticalCase, genders, voice, person, number, declension, nounType, degree, punctuation]
 	}
 	
-	var description: String {
+	public var description: String {
 		return rawAbbreviation
 	}
 	
-	var describedGrammemes: [(any GrammemeType)] {
+	public var describableGrammemes: [(any GrammemeType)] {
 		let describable: [(any GrammemeType)?] = [language, wordClass, verbForm, tense, grammaticalCase, genders, voice, person, number, declension, degree]
 		return describable.compactMap { $0 }
 	}
 	
-	var rawAbbreviation: String {
+	public var rawAbbreviation: String {
 		let strings = allGrammemes.map { return $0?.description ?? "" }
 		return strings.joined(separator: ";")
 	}
-}
-
-// MARK: Methods
-@available(iOS 16.0, macOS 13.0, *)
-public extension Morphology {
 	
-	func describe(using format: DescriptionFormat) -> String {
+	public var rawValue: String {
+		return rawAbbreviation
+	}
+	
+	// MARK: - Methods
+	
+	public func describe(using format: MorphologyDescriptionFormat) -> String {
 		var result = ""
 		let strings: [String]
 		switch format {
 		case .abbreviation, .commaDelineatedAbbreviation:
-			strings = describedGrammemes.map(\.abbreviation)
+			strings = describableGrammemes.map(\.abbreviation)
 		case .fullName, .commaDelineatedFullName:
 			if nounType == .proper {
 				result.append("Proper ")
 			}
-			strings = describedGrammemes.map(\.fullName)
+			strings = describableGrammemes.map(\.fullName)
 		}
 		result += strings.joined(separator: format.deliniator)
 		return result
-	}
-}
-
-// MARK: DescriptionFormat
-@available(iOS 16.0, macOS 13.0, *)
-public extension Morphology {
-	
-	enum DescriptionFormat {
-		case abbreviation
-		case commaDelineatedAbbreviation
-		case fullName
-		case commaDelineatedFullName
-		
-		var deliniator: String {
-			switch self {
-			case .abbreviation, .fullName:
-				return " "
-			case .commaDelineatedAbbreviation, .commaDelineatedFullName:
-				return ", "
-			}
-		}
 	}
 }
