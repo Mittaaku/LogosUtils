@@ -10,7 +10,7 @@ import Foundation
 /// Tokens are individual units of information or entities within a larger text. This class provides properties and methods to store and manage token-related data.
 ///
 /// Use the `Token` class to represent tokens and perform operations related to tokenization, encoding, decoding, and comparison.
-struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+public struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	
 	// MARK: - Instance properties
 	
@@ -28,9 +28,6 @@ struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertibl
 	
 	/// The lexical ID of the token, if available.
 	public var lexicalID: String? = nil
-	
-	/// The lexeme associated with the token, if any.
-	public var lexeme: Lexeme? = nil
 	
 	/// The morphologies associated with the token, if any.
 	public var morphologies: [Morphology]? = nil

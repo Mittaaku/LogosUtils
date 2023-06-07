@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct Lexeme: Codable, Hashable, Equatable, CustomStringConvertible, Identifiable {
+public struct Lexeme: Codable, Hashable, Equatable, CustomStringConvertible, Identifiable {
 	
 	// MARK: Instance properties
 	
