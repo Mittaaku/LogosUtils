@@ -5,8 +5,7 @@
 
 import Foundation
 
-@available(iOS 16.0, macOS 13.0, *)
-open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+struct Lexeme: Codable, Hashable, Equatable, CustomStringConvertible, Identifiable {
 	
 	// MARK: Instance properties
 	
@@ -23,7 +22,7 @@ open class Lexeme: Codable, Hashable, Identifiable, Equatable, CustomStringConve
 	public init() {
 	}
 	
-	required public init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		lexicalID = try! values.decode(forKey: .lexicalID)

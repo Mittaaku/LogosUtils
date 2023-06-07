@@ -5,12 +5,6 @@
 
 import Foundation
 
-public let grammemeSeparatingCharacter = #"&"#
-
-@available(iOS 16.0, macOS 13.0, *)
-public let grammemeSeparator = try! Regex(#"\&"#)
-
-@available(iOS 16.0, macOS 13.0, *)
 public struct GrammemeSet<Element: GrammemeEnum>: GrammemeType, SetAlgebra, ExpressibleByArrayLiteral {
 	
 	public var rawValue: Int
@@ -46,13 +40,18 @@ public struct GrammemeSet<Element: GrammemeEnum>: GrammemeType, SetAlgebra, Expr
 		rawValue = otherSet?.rawValue ?? 0
 		insert(abbreviation: abbreviation)
 	}
-}
-
-// MARK: Properties
-@available(iOS 16.0, macOS 13.0, *)
-public extension GrammemeSet {
 	
-	var elements: [Element] {
+	// MARK: - Computed properties
+	
+	public var abbreviation: String {
+		return elements.map(\.abbreviation).joined(separator: separatingCharacter)
+	}
+	
+	public var count: Int {
+		return elements.count
+	}
+	
+	public var elements: [Element] {
 		var result = [Element]()
 		let highestBitIndex = Int(flsl(rawValue))
 		for i in 0 ..< highestBitIndex {
@@ -67,61 +66,31 @@ public extension GrammemeSet {
 		return result
 	}
 	
-	var abbreviation: String {
-		return elements.map(\.abbreviation).joined(separator: grammemeSeparatingCharacter)
-	}
-	
-	var count: Int {
-		return elements.count
-	}
-	
-	var first: Element? {
+	public var first: Element? {
 		return rawValue != 0 ? Element(rawValue: rawValue.trailingZeroBitCount) : nil
 	}
 	
-	var fullName: String {
+	public var fullName: String {
 		return elements.map(\.fullName).joined(separator: ", ")
 	}
 	
-	var last: Element? {
+	public var last: Element? {
 		return rawValue != 0 ? Element(rawValue: Int.bitWidth - 1 - rawValue.leadingZeroBitCount) : nil
 	}
-}
-
-// MARK: Methods
-@available(iOS 16.0, macOS 13.0, *)
-public extension GrammemeSet {
 	
-	mutating func insert(abbreviation: String) {
-		for singularAbbreviation in abbreviation.split(separator: grammemeSeparator) {
+	// MARK: - Methods
+	
+	public func contains(_ member: Element) -> Bool {
+		rawValue.checkBit(at: member.rawValue)
+	}
+	
+	public mutating func insert(abbreviation: String) {
+		for singularAbbreviation in abbreviation.split(separator: separatingRegex) {
 			insert(singularAbbreviation: singularAbbreviation.string)
 		}
 	}
 	
-	mutating func insert(singularAbbreviation: String) {
-		guard let element = Element(singularAbbreviation) else {
-			preconditionFailure("Unable to decode element from '\(singularAbbreviation)'")
-		}
-		rawValue.setBit(at: element.rawValue)
-	}
-	
-	func contains(_ member: Element) -> Bool {
-		rawValue.checkBit(at: member.rawValue)
-	}
-	
-	func union(_ other: __owned Self) -> Self {
-		return Self(rawValue: rawValue | other.rawValue)
-	}
-	
-	func intersection(_ other: Self) -> Self {
-		return Self(rawValue: rawValue & other.rawValue)
-	}
-	
-	func symmetricDifference(_ other: __owned Self) -> Self {
-		return Self(rawValue: rawValue ^ other.rawValue)
-	}
-	
-	@discardableResult mutating func insert(_ newMember: __owned Element) -> (inserted: Bool, memberAfterInsert: Element) {
+	@discardableResult public mutating func insert(_ newMember: __owned Element) -> (inserted: Bool, memberAfterInsert: Element) {
 		guard !rawValue.checkBit(at: newMember.rawValue) else {
 			return (false, newMember)
 		}
@@ -129,7 +98,14 @@ public extension GrammemeSet {
 		return (true, newMember)
 	}
 	
-	@discardableResult mutating func remove(_ member: Element) -> Element? {
+	public mutating func insert(singularAbbreviation: String) {
+		guard let element = Element(singularAbbreviation) else {
+			preconditionFailure("Unable to decode element from '\(singularAbbreviation)'")
+		}
+		rawValue.setBit(at: element.rawValue)
+	}
+	
+	@discardableResult public mutating func remove(_ member: Element) -> Element? {
 		guard rawValue.checkBit(at: member.rawValue) else {
 			return nil
 		}
@@ -137,7 +113,7 @@ public extension GrammemeSet {
 		return member
 	}
 	
-	@discardableResult mutating func update(with newMember: __owned Element) -> Element? {
+	@discardableResult public mutating func update(with newMember: __owned Element) -> Element? {
 		guard !rawValue.checkBit(at: newMember.rawValue) else {
 			return newMember
 		}
@@ -145,20 +121,35 @@ public extension GrammemeSet {
 		return nil
 	}
 	
-	mutating func formUnion(_ other: __owned Self) {
+	// MARK: - Merging methods
+	
+	public func union(_ other: __owned Self) -> Self {
+		return Self(rawValue: rawValue | other.rawValue)
+	}
+	
+	public func intersection(_ other: Self) -> Self {
+		return Self(rawValue: rawValue & other.rawValue)
+	}
+	
+	public func symmetricDifference(_ other: __owned Self) -> Self {
+		return Self(rawValue: rawValue ^ other.rawValue)
+	}
+	
+	public mutating func formUnion(_ other: __owned Self) {
 		rawValue |= other.rawValue
 	}
 	
-	mutating func formIntersection(_ other: Self) {
+	public mutating func formIntersection(_ other: Self) {
 		rawValue &= other.rawValue
 	}
 	
-	mutating func formSymmetricDifference(_ other: __owned Self) {
+	public mutating func formSymmetricDifference(_ other: __owned Self) {
 		rawValue ^= other.rawValue
 	}
-}
-
-// MARK: Static properties and functions
-@available(iOS 16.0, macOS 13.0, *)
-public extension GrammemeSet {
+	
+	// MARK: - Static members
+	
+	public let separatingRegex = NSRegularExpression(#"\&"#)
+	
+	public let separatingCharacter = #"&"#
 }

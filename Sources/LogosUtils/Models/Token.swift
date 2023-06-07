@@ -5,26 +5,20 @@
 
 import Foundation
 
-/**
- The `Token` class represents a token.
- 
- Tokens are individual units of information or entities within a larger text. This class provides properties and methods to store and manage token-related data.
- 
- Use the `Token` class to represent tokens and perform operations related to tokenization, encoding, decoding, and comparison.
- */
-@available(iOS 16.0, macOS 13.0, *)
-open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
+/// The `Token` class represents a token.
+///
+/// Tokens are individual units of information or entities within a larger text. This class provides properties and methods to store and manage token-related data.
+///
+/// Use the `Token` class to represent tokens and perform operations related to tokenization, encoding, decoding, and comparison.
+struct Token: Codable, Hashable, Identifiable, Equatable, CustomStringConvertible {
 	
 	// MARK: - Instance properties
 	
-	/// The index of the token.
+	/// The index of the token, which also serves as the id.
 	public var index: Int = 0
 	
 	/// The primary reference associated with the token.
 	public var reference: TokenReference = TokenReference()
-	
-	/// An alternative reference associated with the token, if any.
-	public var altReference: TokenReference? = nil
 	
 	/// A related reference associated with the token, if any.
 	public var relatedReference: TokenReference? = nil
@@ -44,7 +38,6 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 	/// The translation of the token, if available.
 	public var translation: String? = nil
 	
-	
 	// MARK: - Initialization
 	
 	/// Creates a new `Token` instance.
@@ -55,29 +48,17 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 	///
 	///  - Parameter decoder: The decoder to read data from.
 	///  - Throws: An error if the decoding process fails or if required properties are missing.
-	required public init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		// Required properties
 		index = try! values.decode(forKey: .index)
 		reference = try! values.decode(forKey: .reference)
 		surfaceForm = try! values.decode(forKey: .surfaceForm)
 		// Optional properties
-		altReference = try! values.decodeIfPresent(forKey: .altReference)
 		relatedReference = try! values.decodeIfPresent(forKey: .relatedReference)
 		lexicalID = try! values.decodeIfPresent(forKey: .lexicalID)
 		morphologies = try! values.decodeIfPresent(forKey: .morphologies)
 		translation = try! values.decodeIfPresent(forKey: .translation)
-	}
-	
-	public init(duplicating token: Token) {
-		index = token.index
-		reference = token.reference
-		altReference = token.altReference
-		relatedReference = token.relatedReference
-		surfaceForm = token.surfaceForm
-		lexicalID = token.lexicalID
-		morphologies = token.morphologies
-		translation = token.translation
 	}
 	
 	// MARK: - Computed properties
@@ -103,7 +84,6 @@ open class Token: Codable, Hashable, Identifiable, Equatable, CustomStringConver
 		try! container.encode(reference, forKey: .reference)
 		try! container.encode(surfaceForm, forKey: .surfaceForm)
 		// Optional properties
-		try! container.encodeIfPresent(altReference, forKey: .altReference)
 		try! container.encodeIfPresent(relatedReference, forKey: .relatedReference)
 		try! container.encodeIfPresent(lexicalID, forKey: .lexicalID)
 		try! container.encodeIfPresent(morphologies?.nonEmpty, forKey: .morphologies)

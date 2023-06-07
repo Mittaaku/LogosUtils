@@ -32,8 +32,7 @@ fileprivate let reverseTokenIdBits		= tokenBits ^ tokenIdBits
 
 fileprivate var propertyNames = ["book", "chapter", "verse", "token"]
 
-@available(iOS 15.4, macOS 12.3, *)
-public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, Identifiable, CustomStringConvertible, CustomDebugStringConvertible, RawRepresentable, CodingKeyRepresentable {
+public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashable, CustomStringConvertible, CustomDebugStringConvertible, RawRepresentable {
 	static var totalIndices: Int { get }
 	static var validIdBits: Int { get }
 	
@@ -42,7 +41,6 @@ public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashabl
 	init(rawValue: Int)
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public extension BibleReferenceContainer {
 	
 	init() {
@@ -62,10 +60,6 @@ public extension BibleReferenceContainer {
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		self.init(rawValue: try container.decode(Int.self))
-	}
-	
-	var codingKey: CodingKey {
-		return IntegerCodingKey(rawValue: rawValue)
 	}
 	
 	func encode(to encoder: Encoder) throws {
@@ -158,11 +152,9 @@ public extension BibleReferenceContainer {
 
 // MARK: Book
 
-@available(iOS 15.4, macOS 12.3, *)
 public protocol BookReferenceContainer: BibleReferenceContainer {
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public extension BookReferenceContainer {
 	
 	var bookId: Int {
@@ -187,7 +179,6 @@ public extension BookReferenceContainer {
 	}
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public struct BookReference: BookReferenceContainer {
 	public static let totalIndices: Int = 1
 	public static let validIdBits: Int = bookIdBits
@@ -205,11 +196,9 @@ public struct BookReference: BookReferenceContainer {
 
 // MARK: Chapter
 
-@available(iOS 15.4, macOS 12.3, *)
 public protocol ChapterReferenceContainer: BookReferenceContainer {
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public extension ChapterReferenceContainer {
 	
 	var chapterId: Int {
@@ -234,7 +223,6 @@ public extension ChapterReferenceContainer {
 	}
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public struct ChapterReference: ChapterReferenceContainer {
 	public static let totalIndices: Int = 2
 	public static let validIdBits: Int = chapterIdBits
@@ -258,11 +246,9 @@ public struct ChapterReference: ChapterReferenceContainer {
 
 // MARK: Verse
 
-@available(iOS 15.4, macOS 12.3, *)
 public protocol VerseReferenceContainer: ChapterReferenceContainer {
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public extension VerseReferenceContainer {
 	
 	var verseId: Int {
@@ -287,7 +273,6 @@ public extension VerseReferenceContainer {
 	}
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public struct VerseReference: VerseReferenceContainer {
 	public static let totalIndices: Int = 3
 	public static let validIdBits: Int = verseIdBits
@@ -318,11 +303,9 @@ public struct VerseReference: VerseReferenceContainer {
 
 // MARK: Token
 
-@available(iOS 15.4, macOS 12.3, *)
 public protocol TokenReferenceContainer: VerseReferenceContainer {
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public extension TokenReferenceContainer {
 	
 	var tokenId: Int {
@@ -347,7 +330,6 @@ public extension TokenReferenceContainer {
 	}
 }
 
-@available(iOS 15.4, macOS 12.3, *)
 public struct TokenReference: TokenReferenceContainer {
 	public static let totalIndices: Int = 4
 	public static let validIdBits: Int = tokenIdBits

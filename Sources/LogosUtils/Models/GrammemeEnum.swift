@@ -15,8 +15,9 @@ public protocol GrammemeEnum: GrammemeType, CaseIterable {
 	static var caseByAbbreviation: [String: Self] { get }
 }
 
-// MARK: - Computed Properties
 public extension GrammemeEnum {
+	
+	// MARK: - Initilizers
 	
 	init?(abbreviation: String) {
 		guard let grammeme = Self.caseByAbbreviation[abbreviation] else {
@@ -25,18 +26,14 @@ public extension GrammemeEnum {
 		self = grammeme
 	}
 	
+	// MARK: - Members
+	
 	var abbreviation: String {
 		return abbreviations[0]
 	}
 }
 
-// MARK: - Methods
-public extension GrammemeEnum {
-}
-
-// ---------------------------------------------------
-// MARK: Declension
-// ---------------------------------------------------
+// MARK: - Declension
 public enum Declension: Int, GrammemeEnum {
 	case firstDeclension
 	case secondDeclension
@@ -77,9 +74,7 @@ public extension Declension {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Language
-// ---------------------------------------------------
+// MARK: - Language
 public enum Language: Int, GrammemeEnum {
 	case aramaic
 	case biblicalHebrew
@@ -112,9 +107,7 @@ public extension Language {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Grammatical Case
-// ---------------------------------------------------
+// MARK: - Grammatical Case
 public enum GrammaticalCase: Int, GrammemeEnum {
 	case nominative
 	case accusitive
@@ -150,9 +143,7 @@ public extension GrammaticalCase {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Grammatical Degree
-// ---------------------------------------------------
+// MARK: - Grammatical Degree
 public enum GrammaticalDegree: Int, GrammemeEnum {
 	case positive
 	case comparative
@@ -182,9 +173,7 @@ public extension GrammaticalDegree {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Gender
-// ---------------------------------------------------
+// MARK: - Gender
 public enum Gender: Int, GrammemeEnum {
 	case masculine
 	case feminine
@@ -230,9 +219,7 @@ public extension Gender {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Greek Tense
-// ---------------------------------------------------
+// MARK: - Greek Tense
 public enum Tense: Int, GrammemeEnum {
 	case aorist
 	case future
@@ -289,9 +276,7 @@ public extension Tense {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Verb Mode (including mood)
-// ---------------------------------------------------
+// MARK: - Verb Mode (including mood)
 public enum VerbForm: Int, GrammemeEnum {
 	// Non-finite forms
 	case infinitive
@@ -332,9 +317,7 @@ public extension VerbForm {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Hebrew State
-// ---------------------------------------------------
+// MARK: - Hebrew State
 public enum HebrewState: Int, GrammemeEnum {
 	case absolute
 	case construct
@@ -361,9 +344,7 @@ public extension HebrewState {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Hebrew Verb Mode
-// ---------------------------------------------------
+// MARK: - Hebrew Verb Mode
 public enum HebrewVerbMode: Int, GrammemeEnum {
 	case infinitive
 	case imperative
@@ -411,9 +392,7 @@ public extension HebrewVerbMode {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Hebrew Verb Stem
-// ---------------------------------------------------
+// MARK: - Hebrew Verb Stem
 public enum HebrewVerbStem: Int, GrammemeEnum {
 	case qal
 	case niphal
@@ -488,9 +467,7 @@ public extension HebrewVerbStem {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Number
-// ---------------------------------------------------
+// MARK: - Number
 public enum Number: Int, GrammemeEnum {
 	case singular
 	case dual
@@ -520,9 +497,7 @@ public extension Number {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Person
-// ---------------------------------------------------
+// MARK: - Person
 public enum Person: Int, GrammemeEnum {
 	case first
 	case second
@@ -556,9 +531,7 @@ public extension Person {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Noun Type
-// ---------------------------------------------------
+// MARK: - Noun Type
 public enum NounType: Int, GrammemeEnum {
 	case common
 	case proper
@@ -587,9 +560,7 @@ public extension NounType {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Punctuation
-// ---------------------------------------------------
+// MARK: - Punctuation
 public enum Punctuation: Int, GrammemeEnum {
 	case unknown
 	case paragraphMark
@@ -718,9 +689,7 @@ public extension Punctuation {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Voice
-// ---------------------------------------------------
+// MARK: - Voice
 public enum Voice: Int, GrammemeEnum {
 	case active
 	case activeImpersonal
@@ -778,9 +747,7 @@ public extension Voice {
 	}
 }
 
-// ---------------------------------------------------
-// MARK: Word Category
-// ---------------------------------------------------
+// MARK: - Word Category
 public enum WordClass: Int, GrammemeEnum {
 	
 	// MARK: Pronouns

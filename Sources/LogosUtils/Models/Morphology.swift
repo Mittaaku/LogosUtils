@@ -5,10 +5,6 @@
 
 import Foundation
 
-@available(iOS 16.0, macOS 13.0, *)
-public let grammemeSplitter = try! Regex(#";"#)
-
-@available(iOS 16.0, macOS 13.0, *)
 public struct Morphology: Equatable, Codable, Hashable, LosslessStringConvertible, RawRepresentable {
 	
 	// MARK: - Instance properties
@@ -123,4 +119,8 @@ public struct Morphology: Equatable, Codable, Hashable, LosslessStringConvertibl
 		result += strings.joined(separator: format.deliniator)
 		return result
 	}
+	
+	// MARK: - Static members
+	
+	public let grammemeSplitter = NSRegularExpression(#";"#)
 }
