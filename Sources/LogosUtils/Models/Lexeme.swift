@@ -5,50 +5,44 @@
 
 import Foundation
 
-public struct Lexeme: Codable, Hashable, Equatable, CustomStringConvertible, Identifiable {
+/// A protocol representing a lexeme, which is a basic unit of a language.
+///
+/// A lexeme typically corresponds to a word or a phrase with a specific meaning.
+///
+/// The `Lexeme` protocol inherits from several other protocols, including `Encodable`, `Hashable`,
+/// `Equatable`, `CustomStringConvertible`, and `Identifiable`, which provide additional functionality.
+@available(macOS 10.15, iOS 13.0, *)
+public protocol Lexeme: Encodable, Hashable, Equatable, CustomStringConvertible, Identifiable {
 	
-	// MARK: Instance properties
+	/// The unique identifier of the lexeme.
+	var lexicalID: String { get }
 	
-	public var lexicalID: String = ""
-	public var lexicalForm: String = ""
-	public var gloss: String? = nil
-	public var definition: String? = nil
-	public var wordFormMorphologies: [Morphology]? = nil
-	public var crasisLexicalIDs: [String]? = nil
-	public var searchMatchingString: String = ""
+	/// The textual representation of the lexeme.
+	var lexicalForm: String { get }
 	
-	// MARK: Initilization
+	/// The gloss or brief explanation of the lexeme.
+	var gloss: String? { get }
 	
-	public init() {
-	}
+	/// The detailed definition of the lexeme.
+	var definition: String? { get }
 	
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		// Required properties
-		lexicalID = try! values.decode(forKey: .lexicalID)
-		lexicalForm = try! values.decode(forKey: .lexicalForm)
-		// Optional properties
-		gloss = try! values.decodeIfPresent(forKey: .gloss)
-		definition = try! values.decodeIfPresent(forKey: .definition)
-		wordFormMorphologies = try! values.decodeIfPresent(forKey: .wordFormMorphologies) ?? []
-		crasisLexicalIDs = try! values.decodeIfPresent(forKey: .crasisLexicalIDs) ?? []
-		searchMatchingString = try! values.decodeIfPresent(forKey: .searchMatchingString) ?? makeSearchMatchingString()
-	}
+	/// The morphologies or grammatical features associated with the lexeme's different word forms.
+	var wordFormMorphologies: [Morphology]? { get }
 	
-	public init(duplicating lexeme: Lexeme) {
-		lexicalID = lexeme.lexicalID
-		lexicalForm = lexeme.lexicalForm
-		gloss = lexeme.gloss
-		definition = lexeme.definition
-		wordFormMorphologies = lexeme.wordFormMorphologies
-		crasisLexicalIDs = lexeme.crasisLexicalIDs
-		searchMatchingString = lexeme.searchMatchingString
-	}
+	/// The lexical IDs of other lexemes that combine with this lexeme to form a compound word.
+	var crasisLexicalIDs: [String]? { get }
+	
+	/// The string used for searching and matching the lexeme.
+	var searchMatchingString: String { get }
+}
+
+@available(macOS 10.15, iOS 13.0, *)
+extension Lexeme {
 	
 	// MARK: - Computed Properties
 	
 	public var description: String {
-		return "\(lexicalID).\(gloss ?? "?")"
+		return "\(lexicalID)-\(gloss ?? "?")"
 	}
 	
 	public var id: String {
@@ -62,7 +56,7 @@ public struct Lexeme: Codable, Hashable, Equatable, CustomStringConvertible, Ide
 	// MARK: - Methods
 	
 	public func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
+		var container = encoder.container(keyedBy: LexemeCodingKeys.self)
 		// Required properties
 		try! container.encode(lexicalID, forKey: .lexicalID)
 		try! container.encode(lexicalForm, forKey: .lexicalForm)
@@ -92,34 +86,21 @@ public struct Lexeme: Codable, Hashable, Equatable, CustomStringConvertible, Ide
 	
 	// MARK: - Custom operator
 	
-	public static func == (lhs: Lexeme, rhs: Lexeme) -> Bool {
+	public static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.id == rhs.id
-	}
-	
-	// MARK: - Nested types
-	
-	public enum CodingKeys: String, CodingKey, CaseIterable {
-		case lexicalID
-		case lexicalForm
-		case gloss
-		case definition
-		case wordFormMorphologies
-		case crasisLexicalIDs
-		case searchMatchingString
-		
-		public var stringValue: String {
-			return rawValue
-		}
 	}
 }
 
-/*
- 
- TODO:
- 
- var abbreviated: Bool?
- var atticGreekForm: Bool?
- var conjunction: Bool?
- var interrogative: Bool?
- */
-
+public enum LexemeCodingKeys: String, CodingKey, CaseIterable {
+	case lexicalID
+	case lexicalForm
+	case gloss
+	case definition
+	case wordFormMorphologies
+	case crasisLexicalIDs
+	case searchMatchingString
+	
+	public var stringValue: String {
+		return rawValue
+	}
+}
