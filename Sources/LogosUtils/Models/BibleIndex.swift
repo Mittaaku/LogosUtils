@@ -5,49 +5,77 @@
 
 import Foundation
 
+/// A protocol representing an index in the Bible.
 public protocol BibleIndex: RawRepresentable, Codable, Hashable, CustomStringConvertible, ExpressibleByIntegerLiteral, AdditiveArithmetic {
 	
+	/// The raw value of the index.
 	var rawValue: Int { get set }
 	
+	/// Initializes a Bible index with the given raw value.
+	/// - Parameter rawValue: The raw value of the index.
 	init(rawValue: Int)
 }
 
 public extension BibleIndex {
+	/// Initializes a Bible index by decoding from the given decoder.
+	/// - Parameter decoder: The decoder to use for decoding the index.
+	/// - Throws: An error if the decoding process fails.
 	init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		let rawValue = try container.decode(Int.self)
 		self.init(rawValue: rawValue)
 	}
 	
+	/// Encodes the Bible index using the given encoder.
+	/// - Parameter encoder: The encoder to use for encoding the index.
+	/// - Throws: An error if the encoding process fails.
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
 		try container.encode(rawValue)
 	}
 	
+	/// The ID of the Bible index.
 	var id: Int {
 		return rawValue
 	}
 	
+	/// A textual representation of the Bible index.
 	var description: String {
 		return String(rawValue)
 	}
 	
+	/// Adds two Bible indexes and returns their sum.
+	/// - Parameters:
+	///   - lhs: The left-hand side Bible index.
+	///   - rhs: The right-hand side Bible index.
+	/// - Returns: The sum of the two Bible indexes.
 	static func + (lhs: Self, rhs: Self) -> Self {
 		return Self(rawValue: lhs.rawValue + rhs.rawValue)
 	}
 	
+	/// Subtracts the second Bible index from the first and returns the difference.
+	/// - Parameters:
+	///   - lhs: The left-hand side Bible index.
+	///   - rhs: The right-hand side Bible index.
+	/// - Returns: The difference between the two Bible indexes.
 	static func - (lhs: Self, rhs: Self) -> Self {
 		return Self(rawValue: lhs.rawValue - rhs.rawValue)
 	}
 }
 
-public struct BookNumber: BibleIndex {
+/// A struct representing an index for a book in the Bible.
+public struct BookIndex: BibleIndex {
+	/// The raw value of the book index.
 	public var rawValue: Int
 	
+	/// Initializes a book index with the given raw value.
+	/// - Parameter rawValue: The raw value of the book index.
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
 	}
 	
+	/// Initializes a book index using the given integer literal.
+	/// - Parameter integerLiteral: The integer literal representing the book index.
 	public init(integerLiteral: Int) {
 		self.rawValue = integerLiteral
 	}
@@ -120,37 +148,55 @@ public struct BookNumber: BibleIndex {
 	public static var revelation = 66
 }
 
-public struct ChapterNumber: BibleIndex {
+/// A struct representing an index for a chapter in the Bible.
+public struct ChapterIndex: BibleIndex {
+	/// The raw value of the chapter index.
 	public var rawValue: Int
 	
+	/// Initializes a chapter index with the given raw value.
+	/// - Parameter rawValue: The raw value of the chapter index.
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
 	}
 	
+	/// Initializes a chapter index using the given integer literal.
+	/// - Parameter integerLiteral: The integer literal representing the chapter index.
 	public init(integerLiteral: Int) {
 		self.rawValue = integerLiteral
 	}
 }
 
-public struct VerseNumber: BibleIndex {
+/// A struct representing an index for a verse in the Bible.
+public struct VerseIndex: BibleIndex {
+	/// The raw value of the verse index.
 	public var rawValue: Int
 	
+	/// Initializes a verse index with the given raw value.
+	/// - Parameter rawValue: The raw value of the verse index.
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
 	}
 	
+	/// Initializes a verse index using the given integer literal.
+	/// - Parameter integerLiteral: The integer literal representing the verse index.
 	public init(integerLiteral: Int) {
 		self.rawValue = integerLiteral
 	}
 }
 
-public struct TokenNumber: BibleIndex {
+/// A struct representing an index for a token in the Bible.
+public struct TokenIndex: BibleIndex {
+	/// The raw value of the token index.
 	public var rawValue: Int
 	
+	/// Initializes a token index with the given raw value.
+	/// - Parameter rawValue: The raw value of the token index.
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
 	}
 	
+	/// Initializes a token index using the given integer literal.
+	/// - Parameter integerLiteral: The integer literal representing the token index.
 	public init(integerLiteral: Int) {
 		self.rawValue = integerLiteral
 	}

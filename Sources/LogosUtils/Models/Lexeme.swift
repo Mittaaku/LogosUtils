@@ -4,103 +4,93 @@
 //
 
 import Foundation
+import GRDB
 
-/// A protocol representing a lexeme, which is a basic unit of a language.
-///
-/// A lexeme typically corresponds to a word or a phrase with a specific meaning.
-///
-/// The `Lexeme` protocol inherits from several other protocols, including `Encodable`, `Hashable`,
-/// `Equatable`, `CustomStringConvertible`, and `Identifiable`, which provide additional functionality.
+/// A struct representing a lexeme or lemma.
 @available(macOS 10.15, iOS 13.0, *)
-public protocol Lexeme: Encodable, Hashable, Equatable, CustomStringConvertible, Identifiable {
+public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertible {
 	
-	/// The unique identifier of the lexeme.
-	var lexicalID: String { get }
+	// MARK: - Properties
 	
-	/// The textual representation of the lexeme.
-	var lexicalForm: String { get }
+	/// The unique identifier of the lexeme, which also functions as the `id`.
+	public var lexicalID: String
+	
+	/// The textual representation of the lexeme, also known as the lemma.
+	public var lexicalForm: String
 	
 	/// The gloss or brief explanation of the lexeme.
-	var gloss: String? { get }
+	public var gloss: String?
 	
 	/// The detailed definition of the lexeme.
-	var definition: String? { get }
+	public var definition: String?
 	
 	/// The morphologies or grammatical features associated with the lexeme's different word forms.
-	var wordFormMorphologies: [Morphology]? { get }
+	public var wordFormMorphologies: [Morphology] = []
 	
 	/// The lexical IDs of other lexemes that combine with this lexeme to form a compound word.
-	var crasisLexicalIDs: [String]? { get }
+	public var crasisLexicalIDs: [String] = []
 	
 	/// The string used for searching and matching the lexeme.
-	var searchMatchingString: String { get }
-}
-
-@available(macOS 10.15, iOS 13.0, *)
-extension Lexeme {
+	public var searchMatchingString: String = ""
 	
 	// MARK: - Computed Properties
 	
+	/// A textual description of the lexeme.
 	public var description: String {
 		return "\(lexicalID)-\(gloss ?? "?")"
 	}
 	
+	/// The unique identifier of the lexeme.
 	public var id: String {
 		return lexicalID
 	}
 	
+	/// Checks if the lexeme is a compound word.
 	public var isCrasis: Bool {
-		return crasisLexicalIDs?.count ?? 0 > 0
+		return !crasisLexicalIDs.isEmpty
 	}
 	
 	// MARK: - Methods
 	
-	public func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: LexemeCodingKeys.self)
-		// Required properties
-		try! container.encode(lexicalID, forKey: .lexicalID)
-		try! container.encode(lexicalForm, forKey: .lexicalForm)
-		// Optional properties
-		try! container.encodeIfPresent(gloss?.nonBlank, forKey: .gloss)
-		try! container.encodeIfPresent(definition?.nonBlank, forKey: .definition)
-		try! container.encodeIfPresent(wordFormMorphologies?.nonEmpty, forKey: .wordFormMorphologies)
-		try! container.encodeIfPresent(crasisLexicalIDs?.nonEmpty, forKey: .crasisLexicalIDs)
-		try! container.encodeIfPresent(searchMatchingString.nonBlank, forKey: .searchMatchingString)
-	}
-	
+	/// Generates a hash value for the lexeme.
+	///
+	/// - Parameters:
+	///     - hasher: The hasher to use in the hashing process.
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(lexicalID)
 	}
 	
+	/// Generates a description of the lexeme's morphology using the specified format.
+	///
+	/// - Parameters:
+	///     - format: The format to use for describing the morphology.
+	/// - Returns: A formatted description of the lexeme's morphology, or `nil` if there are no morphologies.
 	public func describeMorphology(using format: MorphologyDescriptionFormat) -> String? {
-		guard let wordFormMorphologies else {
-			return nil
-		}
-		let formattedMorphologies = wordFormMorphologies.compactMap { $0.describe(using: format) }
+		let formattedMorphologies = wordFormMorphologies.map { $0.describe(using: format) }
 		return formattedMorphologies.joined(separator: "; ")
 	}
 	
-	public func makeSearchMatchingString() -> String {
-		return "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
+	/// Validates the lexeme and returns one with updated properties.
+	///
+	/// - Returns: A validated and updated `Lexeme` instance if the validation passes, otherwise `nil`.
+	public func validated() -> Lexeme? {
+		guard !lexicalID.isEmpty, !lexicalForm.isEmpty else {
+			return nil
+		}
+		var result = self
+		result.searchMatchingString = "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
+		return result
 	}
 	
-	// MARK: - Custom operator
+	// MARK: - Custom operators
 	
-	public static func == (lhs: Self, rhs: Self) -> Bool {
+	/// Checks if two lexemes are equal by comparing their identifiers.
+	///
+	/// - Parameters:
+	///     - lhs: The left-hand side lexeme.
+	///     - rhs: The right-hand side lexeme.
+	/// - Returns: `true` if the lexemes have the same identifier, otherwise `false`.
+	public static func == (lhs: Lexeme, rhs: Lexeme) -> Bool {
 		lhs.id == rhs.id
-	}
-}
-
-public enum LexemeCodingKeys: String, CodingKey, CaseIterable {
-	case lexicalID
-	case lexicalForm
-	case gloss
-	case definition
-	case wordFormMorphologies
-	case crasisLexicalIDs
-	case searchMatchingString
-	
-	public var stringValue: String {
-		return rawValue
 	}
 }

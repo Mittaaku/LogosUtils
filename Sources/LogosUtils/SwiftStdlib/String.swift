@@ -345,6 +345,14 @@ public extension String {
 		return isBlank ? nil : self
 	}
 	
+	/// Sanitizes the string for use as a file name by removing invalid characters.
+	///
+	/// - Returns: A sanitized version of the string without any invalid characters.
+	func sanitizedForFileName() -> String {
+		let sanitizedString = self.components(separatedBy: CharacterSet.invalidFileNameCharacters).joined(separator: "")
+		return sanitizedString
+	}
+
 	/// Splits a string based on the provided regular expression.
 	///
 	/// - Parameters:

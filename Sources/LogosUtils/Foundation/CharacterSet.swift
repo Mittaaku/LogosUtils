@@ -14,5 +14,8 @@ public extension CharacterSet {
 	static var greekConsonants = CharacterSet(charactersIn: "ΒβΓγΔδΖζΘθΚκΛλΜμΝνΞξΠπΡρΣσςΤτΦφΧχΨψ")
 	
 	static var greekNonInflective = CharacterSet(charactersIn: "\u{300}\u{301}\u{313}\u{314}")
+	
+	/// Character set containing the invalid characters for file names.
+	static var invalidFileNameCharacters = CharacterSet(charactersIn: "\\/:*?\"<>|").union(.newlines).union(.illegalCharacters).union(.controlCharacters)
 }
 #endif

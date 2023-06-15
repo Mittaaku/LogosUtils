@@ -4,50 +4,53 @@
 //
 
 import Foundation
+import GRDB
 
-/// The `Token` protocol represents a token.
+/// A struct representing a linguistic token.
 ///
-/// Tokens are individual units of information or entities within a larger text. This class provides properties and methods to store and manage token-related data.
-///
-/// Use the `Token` class to represent tokens and perform operations related to tokenization, encoding, decoding, and comparison.
+/// This struct conforms to the `LinguisticUnit`, `Hashable`, `Equatable`, and `CustomStringConvertible` protocols.
 @available(macOS 10.15, iOS 13.0, *)
-public protocol Token: Encodable, Hashable, Equatable, CustomStringConvertible, Identifiable {
-
-	/// The primary reference associated with the token, which also serves as the `id`.
-	var reference: TokenReference { get }
+public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertible {
 	
-	/// A related reference associated with the token, if any.
-	var relatedReference: TokenReference? { get }
+	// MARK: - Properties
 	
-	/// The surface form of the token (the actual text).
-	var surfaceForm: String { get }
+	/// The reference to the token.
+	public var reference: TokenReference
 	
-	/// The lexical ID of the token, if available.
-	var lexicalID: String? { get }
+	/// The related reference to another token.
+	public var relatedReference: TokenReference? = nil
 	
-	/// The morphologies associated with the token, if any.
-	var morphologies: [Morphology]? { get }
+	/// The surface form of the token.
+	public var surfaceForm: String
 	
-	/// The translation of the token, if available.
-	var translation: String? { get }
-}
-
-@available(macOS 10.15, iOS 13.0, *)
-public extension Token {
+	/// The lexical ID of the token.
+	public var lexicalID: String? = nil
 	
-	// MARK: - Computed properties
+	/// The morphologies associated with the token.
+	public var morphologies: [Morphology]? = nil
 	
-	var description: String {
+	/// The translation of the token.
+	public var translation: String? = nil
+	
+	// MARK: - Computed Properties
+	
+	/// A textual description of the token.
+	public var description: String {
 		return "\(reference.decimalValue.description)-\(surfaceForm)"
 	}
 	
-	var id: TokenReference {
+	/// The ID of the token.
+	public var id: TokenReference {
 		return reference
 	}
 	
 	// MARK: - Methods
 	
-	func describeMorphology(using format: MorphologyDescriptionFormat) -> String? {
+	/// Describes the morphologies of the token using the specified format.
+	///
+	/// - Parameter format: The format to use for describing the morphologies.
+	/// - Returns: A string description of the token's morphologies, or `nil` if there are no morphologies.
+	public func describeMorphology(using format: MorphologyDescriptionFormat) -> String? {
 		guard let morphologies else {
 			return nil
 		}
@@ -55,38 +58,29 @@ public extension Token {
 		return formattedMorphologies.joined(separator: "; ")
 	}
 	
-	func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: TokenCodingKeys.self)
-		// Required properties
-		try! container.encode(reference, forKey: .reference)
-		try! container.encode(surfaceForm, forKey: .surfaceForm)
-		// Optional properties
-		try! container.encodeIfPresent(relatedReference, forKey: .relatedReference)
-		try! container.encodeIfPresent(lexicalID, forKey: .lexicalID)
-		try! container.encodeIfPresent(morphologies?.nonEmpty, forKey: .morphologies)
-		try! container.encodeIfPresent(translation, forKey: .translation)
-	}
-	
-	func hash(into hasher: inout Hasher) {
+	/// Generates a hash value for the token.
+	///
+	/// - Parameter hasher: The hasher to use for generating the hash value.
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(reference)
 	}
 	
-	// MARK: - Custom operators
-	
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.reference == rhs.reference
+	/// Validates the token and returns a validated instance.
+	///
+	/// - Returns: A validated and updated `Token` instance if the validation passes, otherwise `nil`.
+	public func validated() -> Token? {
+		return self
 	}
-}
-
-enum TokenCodingKeys: String, CodingKey, CaseIterable {
-	case reference
-	case relatedReference
-	case lexicalID
-	case surfaceForm
-	case morphologies
-	case translation
 	
-	public var stringValue: String {
-		return rawValue
+	// MARK: - Custom Operators
+	
+	/// Checks if two tokens are equal.
+	///
+	/// - Parameters:
+	///   - lhs: The left-hand side token.
+	///   - rhs: The right-hand side token.
+	/// - Returns: `true` if the tokens are equal, otherwise `false`.
+	public static func == (lhs: Token, rhs: Token) -> Bool {
+		lhs.reference == rhs.reference
 	}
 }
