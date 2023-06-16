@@ -11,6 +11,7 @@ import GRDB
 public protocol LinguisticDatabaseManager: AnyObject {
 	
 	associatedtype LinguisticUnitType: LinguisticUnit
+	associatedtype Properties: LinguisticDatabaseProperties
 	
 	/// The database queue used for database operations.
 	var databaseQueue: DatabaseQueue { get }
@@ -42,14 +43,32 @@ extension LinguisticDatabaseManager {
 	
 	// MARK: - Computed Properties
 	
-	/// The name of the linguistic database.
-	public var name: String {
-		return fetchSingleValue(inTable: Keys.generalTableName, inColumn: Keys.nameColumn)!
-	}
-	
 	/// The number of linguistic units (e.g., lexemes, tokens) in the database.
 	public var count: Int {
 		return countRows(inTable: LinguisticUnitType.databaseTableName)
+	}
+	
+	/// The language of the linguistic database.
+	public var language: Language {
+		return properties.language
+	}
+	
+	/// The name of the linguistic database.
+	public var name: String {
+		return properties.name
+	}
+	
+	public var properties: Properties {
+		var fetchedUnit: Properties? = nil
+		do {
+			// Execute the query
+			try databaseQueue.read { database in
+				fetchedUnit = try Properties.fetchOne(database)
+			}
+		} catch {
+			print("Error fetching \(Properties.self): \(error)")
+		}
+		return fetchedUnit!
 	}
 	
 	// MARK: - Methods
@@ -145,22 +164,24 @@ extension LinguisticDatabaseManager {
 		return fetchedProperty
 	}
 	
-	/// Inserts the specified linguistic units into the database.
+	/// Inserts the specified linguistic units into the database using a bulk insert approach.
 	///
-	/// - Parameter linguisticUnits: The linguistic units to insert.
+	/// - Parameter linguisticUnits: An array of linguistic units to insert.
 	/// - Returns: A Boolean value indicating whether the insertion was successful for all linguistic units.
-	@discardableResult public func insert(_ linguisticUnits: LinguisticUnitType...) -> Bool {
+	@discardableResult public func insert(_ linguisticUnits: [LinguisticUnitType]) -> Bool {
 		var count = 0
-		
 		do {
-			try databaseQueue.write { database in
-				for unit in linguisticUnits {
-					guard let validated = unit.validated() else {
-						print("Attempted to insert an invalid linguistic unit.")
-						continue
+			try databaseQueue.writeWithoutTransaction { database in
+				try database.inTransaction {
+					for unit in linguisticUnits {
+						guard let validated = unit.validated() else {
+							print("Attempted to insert an invalid linguistic unit.")
+							continue
+						}
+						try validated.insert(database, onConflict: .replace)
+						count += 1
 					}
-					try validated.insert(database, onConflict: .replace)
-					count += 1
+					return .commit
 				}
 			}
 		} catch {
@@ -170,6 +191,7 @@ extension LinguisticDatabaseManager {
 		// Return true if all the linguistic units were successfully added
 		return count == linguisticUnits.count
 	}
+
 	
 	// MARK: - Static Members
 	
@@ -184,15 +206,15 @@ extension LinguisticDatabaseManager {
 		return "\(folderPath)/\(name.sanitizedForFileName())"
 	}
 	
-	/// Creates a new linguistic database with the specified name and folder URL.
+	/// Creates a new linguistic database with the specified properties and folder URL.
 	///
 	/// - Parameters:
-	///   - name: The name of the linguistic database.
+	///   - properties: The properties of the linguistic database.
 	///   - folderURL: The URL of the folder where the database will be stored.
 	/// - Throws: An error if the database creation fails.
 	/// - Returns: The newly created database queue.
-	internal static func createNewDatabase(name: String, folderURL: URL) throws -> DatabaseQueue {
-		let databasePath = createDatabasePath(name: name, folderURL: folderURL)
+	internal static func createNewDatabase(properties: Properties, folderURL: URL) throws -> DatabaseQueue {
+		let databasePath = createDatabasePath(name: properties.name, folderURL: folderURL)
 		
 		// Check if a database with the same name already exists
 		let fileManager = FileManager.default
@@ -204,17 +226,11 @@ extension LinguisticDatabaseManager {
 		// Create a new database queue and return it
 		let databaseQueue = try DatabaseQueue(path: databasePath)
 		
+		// Create the table in the database
 		try databaseQueue.write { database in
-			// Create 'general' table
-			try database.create(table: Keys.generalTableName) { table in
-				table.column(Keys.nameColumn, .text).notNull()
-			}
-			
-			// Insert general properties
-			try database.execute(
-				sql: "INSERT INTO \(Keys.generalTableName) (\(Keys.nameColumn)) VALUES (?)",
-				arguments: [name]
-			)
+			try LinguisticUnitType.setupTable(inDatabase: database)
+			try Properties.setupTable(inDatabase: database)
+			try properties.insert(database)
 		}
 		
 		return databaseQueue
@@ -242,12 +258,3 @@ extension LinguisticDatabaseManager {
 		return databaseQueue
 	}
 }
-
-/// Constants for the general linguistic database columns.
-public enum GeneralLinguisticDatabaseColumns {
-	public static let generalTableName = "general"
-	public static let nameColumn = "name"
-}
-
-/// Typealias for the column keys.
-fileprivate typealias Keys = GeneralLinguisticDatabaseColumns

@@ -4,10 +4,14 @@
 //
 
 import Foundation
+import GRDB
 
-public protocol GrammemeType: Codable, Equatable, Hashable, LosslessStringConvertible, RawRepresentable where RawValue == Int {
+public protocol GrammemeType: Codable, Equatable, Hashable, LosslessStringConvertible, RawRepresentable, DatabaseValueConvertible where RawValue == Int {
+	
 	init?(abbreviation: String)
+	
 	var abbreviation: String { get }
+	
 	var fullName: String { get }
 }
 

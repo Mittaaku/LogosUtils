@@ -12,4 +12,6 @@ import GRDB
 public protocol LinguisticUnit: Codable, Identifiable, PersistableRecord, FetchableRecord where ID: DatabaseValueConvertible {
 	
 	func validated() -> Self?
+	
+	static func setupTable(inDatabase database: Database) throws
 }

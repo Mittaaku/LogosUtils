@@ -72,14 +72,32 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 		return self
 	}
 	
-	// MARK: - Custom Operators
+	// MARK: - Static Members and Custom Operators
 	
-	/// Checks if two tokens are equal.
+	public static let referenceColumnName = "reference"
+	public static let relatedReferenceColumnName = "relatedReference"
+	public static let surfaceFormColumnName = "surfaceForm"
+	public static let lexicalIDColumnName = "lexicalID"
+	public static let morphologiesColumnName = "morphologies"
+	public static let translationColumnName = "translation"
+	
+	public static func setupTable(inDatabase database: Database) throws {
+		try database.create(table: Token.databaseTableName) { table in
+			table.primaryKey(referenceColumnName, .integer).notNull()
+			table.column(relatedReferenceColumnName, .integer)
+			table.column(surfaceFormColumnName, .text).notNull()
+			table.column(lexicalIDColumnName, .text)
+			table.column(morphologiesColumnName, .blob)
+			table.column(translationColumnName, .text)
+		}
+	}
+	
+	/// Checks if two lexemes are equal by comparing their reference.
 	///
 	/// - Parameters:
 	///   - lhs: The left-hand side token.
 	///   - rhs: The right-hand side token.
-	/// - Returns: `true` if the tokens are equal, otherwise `false`.
+	/// - Returns: `true` if the tokens have the same reference, otherwise `false`.
 	public static func == (lhs: Token, rhs: Token) -> Bool {
 		lhs.reference == rhs.reference
 	}

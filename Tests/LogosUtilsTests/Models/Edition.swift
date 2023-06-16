@@ -20,7 +20,7 @@ class EditionTests: XCTestCase {
 		super.setUp()
 		
 		// Initialize the Edition
-		edition = Edition(createNewWithName: editionName, atFolderURL: folderURL)
+		edition = Edition(createNewWithProperties: Edition.Properties(name: editionName, language: .koineGreek), atFolderURL: folderURL)
 		databaseQueue = edition.databaseQueue
 	}
 	
@@ -41,7 +41,7 @@ class EditionTests: XCTestCase {
 		let token4 = Token(reference: TokenReference(book: 1, chapter: 1, verse: 2, token: 1), surfaceForm: "Token 4")
 		
 		// Insert test tokens into the database
-		let insertionResult = edition.insert(token1, token2, token3, token4)
+		let insertionResult = edition.insert([token1, token2, token3, token4])
 		XCTAssertTrue(insertionResult)
 		
 		// Assert number of items in database
@@ -70,7 +70,7 @@ class EditionTests: XCTestCase {
 		let token3 = Token(reference: reference3, surfaceForm: "Token 3")
 		
 		// Insert test tokens into the database
-		XCTAssertTrue(edition.insert(token1, token2, token3))
+		XCTAssertTrue(edition.insert([token1, token2, token3]))
 		
 		// Fetch tokens in the range
 		let range1 = reference1..<reference3
@@ -78,8 +78,10 @@ class EditionTests: XCTestCase {
 		
 		// Assert the fetched tokens
 		XCTAssertEqual(fetchedTokens1.count, 2)
-		XCTAssertEqual(fetchedTokens1[0], token1)
-		XCTAssertEqual(fetchedTokens1[1], token2)
+		if fetchedTokens1.count == 2 {
+			XCTAssertEqual(fetchedTokens1[0], token1)
+			XCTAssertEqual(fetchedTokens1[1], token2)
+		}
 		
 		// Fetch tokens in the range
 		let range2 = reference1...reference3
@@ -87,8 +89,10 @@ class EditionTests: XCTestCase {
 		
 		// Assert the fetched tokens
 		XCTAssertEqual(fetchedTokens2.count, 3)
-		XCTAssertEqual(fetchedTokens2[0], token1)
-		XCTAssertEqual(fetchedTokens2[1], token2)
-		XCTAssertEqual(fetchedTokens2[2], token3)
+		if fetchedTokens2.count == 3 {
+			XCTAssertEqual(fetchedTokens2[0], token1)
+			XCTAssertEqual(fetchedTokens2[1], token2)
+			XCTAssertEqual(fetchedTokens2[2], token3)
+		}
 	}
 }

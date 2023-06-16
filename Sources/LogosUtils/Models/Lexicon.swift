@@ -32,32 +32,28 @@ public class Lexicon: LinguisticDatabaseManager {
 	///   - folderURL: The URL of the folder where the lexicon will be stored.
 	///
 	/// - Warning: If a database with the same name already exists in the specified folder, it will be deleted before creating a new database.
-	public init(createNewWithName name: String, atFolderURL url: URL) {
+	public init(createNewWithProperties properties: Properties, atFolderURL url: URL) {
 		do {
-			databaseQueue = try Lexicon.createNewDatabase(name: name, folderURL: url)
+			databaseQueue = try Self.createNewDatabase(properties: properties, folderURL: url)
 
 			try databaseQueue.write { database in
-				// Create 'lexeme' table
-				try database.create(table: Lexeme.databaseTableName) { table in
-					table.primaryKey(Keys.lexicalIDColumn, .text).notNull()
-					table.column(Keys.lexicalFormColumn, .text).notNull()
-					table.column(Keys.glossColumn, .text)
-					table.column(Keys.definitionColumn, .text)
-					table.column(Keys.wordFormMorphologiesColumn, .blob)
-					table.column(Keys.crasisLexicalIDsColumn, .blob)
-					table.column(Keys.searchMatchingStringColumn, .text).notNull()
-				}
-				
 				// Create 'alternativeForms' table
-				try database.create(table: Keys.alternativeFormsTableName) { table in
-					table.primaryKey(Keys.alternativeFormColumn, .text).notNull()
-					table.column(Keys.lexicalIDColumn, .text).references(Lexeme.databaseTableName, onDelete: .cascade)
+				try database.create(table: Self.alternativeFormsTableName) { table in
+					table.primaryKey(Self.alternativeFormColumnName, .text).notNull()
+					table.column(Lexeme.lexicalIDColumnName, .text).references(Lexeme.databaseTableName, onDelete: .cascade)
 				}
 			}
 		} catch {
 			print("Error creating database queue: \(error)")
 			fatalError("Failed to create database queue.")
 		}
+	}
+	
+	// MARK: Computed Properties
+	
+	/// The number of alternative forms in the database.
+	public var alternativeFormsCount: Int {
+		return countRows(inTable: Self.alternativeFormsTableName)
 	}
 	
 	// MARK: - Database Operations
@@ -72,7 +68,7 @@ public class Lexicon: LinguisticDatabaseManager {
 			try databaseQueue.write { database in
 				for alternativeForm in alternativeForms {
 					try database.execute(
-						sql: "INSERT INTO \(Keys.alternativeFormsTableName) (\(Keys.lexicalIDColumn), \(Keys.alternativeFormColumn)) VALUES (?, ?)",
+						sql: "INSERT INTO \(Self.alternativeFormsTableName) (\(Lexeme.lexicalIDColumnName), \(Self.alternativeFormColumnName)) VALUES (?, ?)",
 						arguments: [lexemeID, alternativeForm]
 					)
 				}
@@ -90,10 +86,10 @@ public class Lexicon: LinguisticDatabaseManager {
 		var alternativeForms: [String] = []
 		do {
 			try databaseQueue.read { database in
-				let query = "SELECT \(Keys.alternativeFormColumn) FROM \(Keys.alternativeFormsTableName) WHERE \(Keys.lexicalIDColumn) = ?"
+				let query = "SELECT \(Self.alternativeFormColumnName) FROM \(Self.alternativeFormsTableName) WHERE \(Lexeme.lexicalIDColumnName) = ?"
 				
 				for row in try Row.fetchAll(database, sql: query, arguments: [lexemeID]) {
-					if let alternativeForm = row[Keys.alternativeFormColumn] as String? {
+					if let alternativeForm = row[Self.alternativeFormColumnName] as String? {
 						alternativeForms.append(alternativeForm)
 					}
 				}
@@ -112,8 +108,8 @@ public class Lexicon: LinguisticDatabaseManager {
 		let query = """
  SELECT lexeme.*
  FROM \(Lexeme.databaseTableName)
- LEFT JOIN \(Keys.alternativeFormsTableName) ON \(Lexeme.databaseTableName).\(Keys.lexicalIDColumn) = \(Keys.alternativeFormsTableName).\(Keys.lexicalIDColumn)
- WHERE \(Lexeme.databaseTableName).\(Keys.lexicalFormColumn) = ? OR \(Keys.alternativeFormsTableName).\(Keys.alternativeFormColumn) = ?
+ LEFT JOIN \(Self.alternativeFormsTableName) ON \(Lexeme.databaseTableName).\(Lexeme.lexicalIDColumnName) = \(Self.alternativeFormsTableName).\(Lexeme.lexicalIDColumnName)
+ WHERE \(Lexeme.databaseTableName).\(Lexeme.lexicalFormColumnName) = ? OR \(Self.alternativeFormsTableName).\(Self.alternativeFormColumnName) = ?
  LIMIT 1
  """
 		return fetchOne(usingQuery: query, arguments: [form, form])
@@ -124,22 +120,29 @@ public class Lexicon: LinguisticDatabaseManager {
 	/// - Parameter searchTerm: The search term to match.
 	/// - Returns: An array of lexemes that match the search term.
 	public func searchLexemes(with searchTerm: String) -> [Lexeme] {
-		let query = "SELECT * FROM \(Lexeme.databaseTableName) WHERE \(Keys.searchMatchingStringColumn) LIKE ?"
+		let query = "SELECT * FROM \(Lexeme.databaseTableName) WHERE \(Lexeme.searchMatchingStringColumnName) LIKE ?"
 		return fetchAll(usingQuery: query, arguments: ["%\(searchTerm)%"])
 	}
 	
-	// MARK: - Keys
+	// MARK: Static Members and Custom Operators
 	
-	private enum Keys {
-		static let alternativeFormColumn = "alternativeForm"
-		static let alternativeFormsTableName = "alternativeForms"
-		static let crasisLexicalIDsColumn = "crasisLexicalIDs"
-		static let definitionColumn = "definition"
-		static let glossColumn = "gloss"
-		static let lexicalFormColumn = "lexicalForm"
-		static let lexicalIDColumn = "lexicalID"
-		static let searchMatchingStringColumn = "searchMatchingString"
-		static let wordFormMorphologiesColumn = "wordFormMorphologies"
-		static let lexiconNameColumn = "lexiconName"
+	static let alternativeFormsTableName = "alternativeForms"
+	static let alternativeFormColumnName = "alternativeForm"
+	
+	// MARK: - Nested Types
+	
+	public struct Properties: LinguisticDatabaseProperties {
+		public var name: String
+		public var language: Language
+		
+		static let nameColumn = "name"
+		static let languageColumn = "language"
+		
+		public static func setupTable(inDatabase database: GRDB.Database) throws {
+			try database.create(table: Properties.databaseTableName) { table in
+				table.primaryKey(nameColumn, .text).notNull()
+				table.column(languageColumn, .blob).notNull()
+			}
+		}
 	}
 }

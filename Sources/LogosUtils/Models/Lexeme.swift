@@ -82,7 +82,27 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 		return result
 	}
 	
-	// MARK: - Custom operators
+	// MARK: - Static Members and Custom Operators
+	
+	public static let lexicalIDColumnName = "lexicalID"
+	public static let lexicalFormColumnName = "lexicalForm"
+	public static let glossColumnName = "gloss"
+	public static let definitionColumnName = "definition"
+	public static let wordFormMorphologiesColumnName = "wordFormMorphologies"
+	public static let crasisLexicalIDsColumnName = "crasisLexicalIDs"
+	public static let searchMatchingStringColumnName = "searchMatchingString"
+	
+	public static func setupTable(inDatabase database: Database) throws {
+		try database.create(table: Lexeme.databaseTableName) { table in
+			table.primaryKey(lexicalIDColumnName, .text).notNull()
+			table.column(lexicalFormColumnName, .text).notNull()
+			table.column(glossColumnName, .text)
+			table.column(definitionColumnName, .text)
+			table.column(wordFormMorphologiesColumnName, .blob)
+			table.column(crasisLexicalIDsColumnName, .blob)
+			table.column(searchMatchingStringColumnName, .text).notNull()
+		}
+	}
 	
 	/// Checks if two lexemes are equal by comparing their identifiers.
 	///
