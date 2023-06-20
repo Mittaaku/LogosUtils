@@ -41,7 +41,7 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	// MARK: - Init
 	
-	init(lexicalForm: String, concordanceID: String? = nil, gloss: String? = nil, definition: String? = nil, wordFormMorphologies: [Morphology] = [], crasisLexicalIDs: [Int] = [], alternativeForms: [String] = []) {
+	public init(lexicalForm: String, concordanceID: String? = nil, gloss: String? = nil, definition: String? = nil, wordFormMorphologies: [Morphology] = [], crasisLexicalIDs: [Int] = [], alternativeForms: [String] = []) {
 		self.lexicalForm = lexicalForm
 		self.concordanceID = concordanceID
 		self.gloss = gloss
