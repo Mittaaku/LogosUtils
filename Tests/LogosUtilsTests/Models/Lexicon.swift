@@ -14,8 +14,8 @@ class LexiconTests: XCTestCase {
 		name: "TestLexicon",
 		language: Language.english
 	)
+	let invalidLexeme = Lexeme(lexicalForm: "")
 	let batLexeme = Lexeme(
-		lexicalID: "b",
 		lexicalForm: "bat",
 		gloss: "A small flying mammal",
 		definition: "A nocturnal mammal capable of sustained flight",
@@ -23,22 +23,20 @@ class LexiconTests: XCTestCase {
 		crasisLexicalIDs: []
 	)
 	let catLexeme = Lexeme(
-		lexicalID: "c",
 		lexicalForm: "cat",
 		gloss: "A small domesticated carnivorous mammal",
 		definition: "A small four-legged animal often kept as a pet",
 		wordFormMorphologies: [],
-		crasisLexicalIDs: []
+		crasisLexicalIDs: [],
+		alternativeForms: ["kitten"]
 	)
 	let dogLexeme = Lexeme(
-		lexicalID: "d",
 		lexicalForm: "dog",
 		gloss: "A domesticated carnivorous mammal",
 		definition: "A mammal often kept as a pet or used for guarding or hunting",
 		wordFormMorphologies: [],
 		crasisLexicalIDs: []
 	)
-	let invalidLexeme = Lexeme(lexicalID: "", lexicalForm: "")
 	
 	var lexicon: Lexicon!
 	var databaseQueue: DatabaseQueue!
@@ -62,6 +60,22 @@ class LexiconTests: XCTestCase {
 	
 	// MARK: - Test Methods
 	
+	func testFetchAll() {
+		// Insert some lexemes for testing
+		lexicon.insert([batLexeme, catLexeme, dogLexeme])
+		
+		let allLexemes = lexicon.fetchAll()
+		
+		// Retrieve the number of lexemes and assert the expected count
+		XCTAssertEqual(allLexemes.count, 3, "The number of lexemes is incorrect.")
+		guard allLexemes.count == 3 else {
+			return
+		}
+		XCTAssertEqual(allLexemes[0].lexicalForm, "bat")
+		XCTAssertEqual(allLexemes[1].lexicalForm, "cat")
+		XCTAssertEqual(allLexemes[2].lexicalForm, "dog")
+	}
+	
 	func testInsertingInvalidLexemeDoesNotIncreaseCount() {
 		// Insert an invalid lexeme and assert that the count remains 0
 		lexicon.insert([invalidLexeme])
@@ -77,52 +91,55 @@ class LexiconTests: XCTestCase {
 		XCTAssertEqual(lexicon.count, 2, "The number of lexemes is incorrect.")
 	}
 	
-	func testFetchingAlternativeForms() throws {
-		// Prepare the lexeme to test against
-		let lexeme = catLexeme
-		
-		// Insert the lexeme into the lexicon
-		lexicon.insert([catLexeme])
-		
-		// Insert alternative forms for the lexeme
-		lexicon.insert(alternativeForms: ["kitty", "pussycat"], for: lexeme.lexicalID)
-		
-		// Fetch alternative forms for the lexeme
-		let alternativeForms = lexicon.fetchAlternativeForms(for: lexeme.lexicalID)
-		
-		// Assert that the fetched alternative forms match the expected forms
-		XCTAssertEqual(alternativeForms, ["kitty", "pussycat"])
-	}
 	
 	func testFetchLexemeByLexicalForm() throws {
 		// Insert the lexemes into the lexicon
 		lexicon.insert([batLexeme, catLexeme, dogLexeme])
 		
 		// Fetch a lexeme by lexical form
-		let fetchedLexeme = lexicon.fetch(byLexicalForm: "cat")
+		let fetchedLexeme = lexicon.fetchLexeme(withLexicalForm: "cat")
 		
 		// Assert that the fetched lexeme is not nil
 		XCTAssertNotNil(fetchedLexeme, "Failed to fetch lexeme by lexical form")
 		
 		// Assert that the fetched lexeme matches the original lexeme
-		XCTAssertEqual(fetchedLexeme, catLexeme, "The fetched lexeme does not match the original lexeme")
+		XCTAssertEqual(fetchedLexeme?.lexicalForm, catLexeme.lexicalForm, "The fetched lexeme does not match the original lexeme")
+	}
+	
+	func testFetchLexemeByAlternativeForms() throws {
+		// Insert the lexemes into the lexicon
+		lexicon.insert([catLexeme])
+		
+		// Fetch a lexeme by lexical form
+		let fetchedLexeme = lexicon.fetchLexemes(withAlternativeForm: "kitten").first
+		
+		// Assert that the fetched lexeme is not nil
+		XCTAssertNotNil(fetchedLexeme, "Failed to fetch lexeme by lexical form")
+		
+		// Assert that the fetched lexeme matches the original lexeme
+		XCTAssertEqual(fetchedLexeme?.alternativeForms.first, "kitten", "The fetched lexeme does not match the original lexeme")
 	}
 	
 	func testFetchLexemeByID() {
 		// Insert the lexeme
 		lexicon.insert([catLexeme])
 		
-		// Fetch the lexeme by ID
-		let fetchedLexeme = lexicon.fetchOne(withID: "c")
+		guard let fetchedLexeme = lexicon.fetchAll().first else {
+			XCTFail("Lexeme couldn't be fetched")
+			return
+		}
 		
-		XCTAssertEqual(fetchedLexeme?.lexicalForm, "cat", "Failed to fetch lexeme by ID")
+		// Fetch the lexeme by ID
+		let fetchedLexemeByID = lexicon.fetchOne(withID: fetchedLexeme.id)
+		
+		XCTAssertEqual(fetchedLexemeByID?.lexicalForm, "cat", "Failed to fetch lexeme by ID")
 	}
 	
 	func testFetchSingleValue() {
 		// Fetch the name from the Lexicon's properties table
 		let fetchedName: String? = lexicon.fetchSingleValue(
 			inTable: Lexicon.Properties.databaseTableName,
-			inColumn: Lexicon.Properties.nameColumn
+			inColumn: Lexicon.Properties.nameColumn.name
 		)
 		
 		XCTAssertEqual(fetchedName, lexiconProperties.name, "Fetched name does not match the expected value")
@@ -130,21 +147,6 @@ class LexiconTests: XCTestCase {
 	
 	func testName() {
 		XCTAssertEqual(lexicon.name, lexiconProperties.name, "Lexicon name does not match the expected value")
-	}
-	
-	func testInsertingAlternativeFormIncreasesCount() throws {
-		// Prepare the lexeme to test against
-		let lexeme = catLexeme
-		
-		// Insert the lexeme into the lexicon
-		lexicon.insert([lexeme])
-		
-		// Insert an alternative form for the lexeme
-		let alternativeForm = "kitty"
-		lexicon.insert(alternativeForms: [alternativeForm], for: lexeme.lexicalID)
-		
-		// Assert that the count increases after inserting the alternative form
-		XCTAssertEqual(lexicon.alternativeFormsCount, 1, "The count should increase after inserting an alternative form")
 	}
 	
 	func testInsertingDuplicateLexemeDoesNotIncreaseCount() {
@@ -159,7 +161,6 @@ class LexiconTests: XCTestCase {
 		
 		// Assert that the count remains 1 and the lexeme exists in the Lexicon
 		XCTAssertEqual(lexicon.count, 1, "There should only be one instance of the lexeme")
-		XCTAssertNotNil(lexicon.fetchOne(withID: lexeme.lexicalID), "The lexeme should exist in the Lexicon")
 	}
 	
 	func testInsertingLexemeIncreasesCount() {
@@ -175,6 +176,9 @@ class LexiconTests: XCTestCase {
 	}
 	
 	func testOpeningExistingLexicon() {
+		// Prepare the lexeme to test against
+		let lexeme = catLexeme
+		
 		// Create a temporary folder for the lexicon
 		let folderURL = FileManager.default.temporaryDirectory
 		let lexiconName = "ReopeningLexicon"
@@ -182,21 +186,22 @@ class LexiconTests: XCTestCase {
 		
 		// Create a new lexicon and insert a lexeme
 		let newLexicon = Lexicon(createNewWithProperties: lexiconProperties, atFolderURL: folderURL)
-		newLexicon.insert([catLexeme])
+		newLexicon.insert([lexeme])
 		try! newLexicon.databaseQueue.close()
 		
 		// Open the existing lexicon
 		let existingLexicon = Lexicon(openExistingWithName: lexiconName, atFolderURL: folderURL)
 		
 		// Fetch the previously inserted lexeme
-		let fetchedLexeme = existingLexicon.fetchOne(withID: "c")
+		let fetchedLexeme = existingLexicon.fetchAll().first
 		
-		XCTAssertEqual(fetchedLexeme?.lexicalForm, "cat", "Failed to fetch previously inserted lexeme from existing lexicon")
+		XCTAssertEqual(fetchedLexeme?.lexicalForm, lexeme.lexicalForm, "Failed to fetch previously inserted lexeme from existing lexicon")
 	}
 	
 	func testSearchingLexemes() {
 		// Insert the lexemes
 		lexicon.insert([batLexeme, catLexeme, dogLexeme])
+		XCTAssertEqual(lexicon.count, 3, "The number of lexemes is incorrect")
 		
 		// Search for lexemes matching "domesticated"
 		let matchingLexemes = lexicon.searchLexemes(with: "domesticated")

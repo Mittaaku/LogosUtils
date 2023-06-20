@@ -145,6 +145,19 @@ extension LinguisticDatabaseManager {
 		return fetchedUnits
 	}
 	
+	public func fetchAll() -> [LinguisticUnitType] {
+		var fetchedUnits: [LinguisticUnitType] = []
+		do {
+			// Execute the query
+			try databaseQueue.read { database in
+				fetchedUnits = try LinguisticUnitType.fetchAll(database)
+			}
+		} catch {
+			print("Error fetching \(LinguisticUnitType.self): \(error)")
+		}
+		return fetchedUnits
+	}
+	
 	/// Fetches a property from the database for the specified table and column.
 	///
 	/// - Parameters:

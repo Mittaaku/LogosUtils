@@ -12,11 +12,14 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	// MARK: - Properties
 	
-	/// The unique identifier of the lexeme, which also functions as the `id`.
-	public var lexicalID: String
+	/// The unique identifier of the lexeme.
+	public var id: Int?
 	
 	/// The textual representation of the lexeme, also known as the lemma.
 	public var lexicalForm: String
+	
+	/// The concordance ID of the lexeme.
+	public var concordanceID: String?
 	
 	/// The gloss or brief explanation of the lexeme.
 	public var gloss: String?
@@ -27,22 +30,20 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	/// The morphologies or grammatical features associated with the lexeme's different word forms.
 	public var wordFormMorphologies: [Morphology] = []
 	
-	/// The lexical IDs of other lexemes that combine with this lexeme to form a compound word.
-	public var crasisLexicalIDs: [String] = []
+	/// The lexical IDs of the other lexemes which are combined to form this lexeme.
+	public var crasisLexicalIDs: [Int] = []
 	
 	/// The string used for searching and matching the lexeme.
-	public var searchMatchingString: String = ""
+	@TabSeparatedArray public private(set) var searchableStrings = [String]()
+	
+	/// The alternative forms of this lexeme.
+	@TabSeparatedArray public var alternativeForms = [String]()
 	
 	// MARK: - Computed Properties
 	
 	/// A textual description of the lexeme.
 	public var description: String {
-		return "\(lexicalID)-\(gloss ?? "?")"
-	}
-	
-	/// The unique identifier of the lexeme.
-	public var id: String {
-		return lexicalID
+		return "(Lexeme: \(lexicalForm))"
 	}
 	
 	/// Checks if the lexeme is a compound word.
@@ -57,7 +58,7 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	/// - Parameters:
 	///     - hasher: The hasher to use in the hashing process.
 	public func hash(into hasher: inout Hasher) {
-		hasher.combine(lexicalID)
+		hasher.combine(lexicalForm)
 	}
 	
 	/// Generates a description of the lexeme's morphology using the specified format.
@@ -74,33 +75,39 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	///
 	/// - Returns: A validated and updated `Lexeme` instance if the validation passes, otherwise `nil`.
 	public func validated() -> Lexeme? {
-		guard !lexicalID.isEmpty, !lexicalForm.isEmpty else {
+		guard !lexicalForm.isBlank else {
 			return nil
 		}
 		var result = self
-		result.searchMatchingString = "#\(lexicalID);\(lexicalForm);\(gloss ?? "")"
+		result.searchableStrings.append(lexicalForm)
+		result.searchableStrings.append(gloss ?? "")
+		result.searchableStrings.append(contentsOf: alternativeForms)
 		return result
 	}
 	
 	// MARK: - Static Members and Custom Operators
 	
-	public static let lexicalIDColumnName = "lexicalID"
-	public static let lexicalFormColumnName = "lexicalForm"
-	public static let glossColumnName = "gloss"
-	public static let definitionColumnName = "definition"
-	public static let wordFormMorphologiesColumnName = "wordFormMorphologies"
-	public static let crasisLexicalIDsColumnName = "crasisLexicalIDs"
-	public static let searchMatchingStringColumnName = "searchMatchingString"
+	public static let idColumn = Column(CodingKeys.id)
+	public static let lexicalFormColumn = Column(CodingKeys.lexicalForm)
+	public static let concordanceIDColumn = Column(CodingKeys.concordanceID)
+	public static let glossColumn = Column(CodingKeys.gloss)
+	public static let definitionColumn = Column(CodingKeys.definition)
+	public static let wordFormMorphologiesColumn = Column(CodingKeys.wordFormMorphologies)
+	public static let crasisLexicalIDsColumn = Column(CodingKeys.crasisLexicalIDs)
+	public static let searchableStringsColumn = Column(CodingKeys.searchableStrings)
+	public static let alternativeFormsColumn = Column(CodingKeys.alternativeForms)
 	
 	public static func setupTable(inDatabase database: Database) throws {
-		try database.create(table: Lexeme.databaseTableName) { table in
-			table.primaryKey(lexicalIDColumnName, .text).notNull()
-			table.column(lexicalFormColumnName, .text).notNull()
-			table.column(glossColumnName, .text)
-			table.column(definitionColumnName, .text)
-			table.column(wordFormMorphologiesColumnName, .blob)
-			table.column(crasisLexicalIDsColumnName, .blob)
-			table.column(searchMatchingStringColumnName, .text).notNull()
+		try database.create(table: databaseTableName) { table in
+			table.autoIncrementedPrimaryKey(idColumn.name)
+			table.column(lexicalFormColumn.name, .text).notNull().unique() // Enforce uniqueness on "lexicalForm" column
+			table.column(concordanceIDColumn.name, .text)
+			table.column(glossColumn.name, .text)
+			table.column(definitionColumn.name, .text)
+			table.column(wordFormMorphologiesColumn.name, .blob)
+			table.column(crasisLexicalIDsColumn.name, .blob)
+			table.column(searchableStringsColumn.name, .text).notNull()
+			table.column(alternativeFormsColumn.name, .text).notNull()
 		}
 	}
 	

@@ -8,43 +8,60 @@ import XCTest
 
 class LexemeTests: XCTestCase {
 	
-	func testDescription() {
-		let lexeme = Lexeme(lexicalID: "1", lexicalForm: "word", gloss: "description")
-		XCTAssertEqual(lexeme.description, "1-description")
+	func testLexemeDescription() {
+		let lexeme = Lexeme(lexicalForm: "apple")
 		
-		let lexemeWithoutGloss = Lexeme(lexicalID: "2", lexicalForm: "word")
-		XCTAssertEqual(lexemeWithoutGloss.description, "2-?")
+		XCTAssertEqual(lexeme.description, "(Lexeme: apple)")
 	}
 	
-	func testID() {
-		let lexeme = Lexeme(lexicalID: "1", lexicalForm: "word")
-		XCTAssertEqual(lexeme.id, "1")
-	}
-	
-	func testIsCrasis() {
-		var lexeme = Lexeme(lexicalID: "1", lexicalForm: "word")
+	func testLexemeIsCrasis() {
+		var lexeme = Lexeme(lexicalForm: "apple")
+		
 		XCTAssertFalse(lexeme.isCrasis)
 		
-		lexeme.crasisLexicalIDs = ["2", "3"]
+		lexeme.crasisLexicalIDs = [1, 2, 3]
+		
 		XCTAssertTrue(lexeme.isCrasis)
 	}
 	
-	func testHash() {
-		let lexeme = Lexeme(lexicalID: "1", lexicalForm: "word")
-		var hasher = Hasher()
-		lexeme.hash(into: &hasher)
-		let hashValue = hasher.finalize()
-		XCTAssertNotEqual(hashValue, 0)
+	func testLexemeHash() {
+		let lexeme1 = Lexeme(lexicalForm: "apple")
+		let lexeme2 = Lexeme(lexicalForm: "apple")
+		
+		XCTAssertEqual(lexeme1.hashValue, lexeme2.hashValue)
 	}
 	
-	func testEquality() {
-		let lexeme1 = Lexeme(lexicalID: "1", lexicalForm: "word")
-		let lexeme2 = Lexeme(lexicalID: "1", lexicalForm: "differentWord")
-		let lexeme3 = Lexeme(lexicalID: "2", lexicalForm: "word")
-		let lexeme4 = Lexeme(lexicalID: "2", lexicalForm: "word")
+	func testLexemeValidated() {
+		var lexeme = Lexeme(lexicalForm: "apple")
+		lexeme.alternativeForms = ["fruit"]
+		lexeme.gloss = "A round fruit"
 		
-		XCTAssertEqual(lexeme1, lexeme2)
-		XCTAssertNotEqual(lexeme1, lexeme3)
-		XCTAssertEqual(lexeme3, lexeme4)
+		let validatedLexeme = lexeme.validated()
+		
+		XCTAssertNotNil(validatedLexeme)
+		XCTAssertEqual(validatedLexeme?.searchableStrings, ["apple", "A round fruit", "fruit"])
 	}
+	
+	// MARK: - Lexeme Equatable Tests
+	
+	func testLexemeAlternativeForms() {
+		var lexeme = Lexeme(lexicalForm: "apple")
+		
+		// Test initial state
+		XCTAssertTrue(lexeme.alternativeForms.isEmpty)
+		
+		// Add alternative forms
+		lexeme.alternativeForms = ["fruit", "pomme", "apfel"]
+		
+		XCTAssertEqual(lexeme.alternativeForms, ["fruit", "pomme", "apfel"])
+		
+		// Update alternative forms
+		lexeme.alternativeForms.append("manzana")
+		
+		XCTAssertEqual(lexeme.alternativeForms, ["fruit", "pomme", "apfel", "manzana"])
+		
+		// Test projected value
+		XCTAssertEqual(lexeme.$alternativeForms, "fruit\tpomme\tapfel\tmanzana")
+	}
+
 }

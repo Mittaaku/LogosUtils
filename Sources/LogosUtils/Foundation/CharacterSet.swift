@@ -15,6 +15,8 @@ public extension CharacterSet {
 	
 	static var greekNonInflective = CharacterSet(charactersIn: "\u{300}\u{301}\u{313}\u{314}")
 	
+	static var tabular = CharacterSet(charactersIn: "\t")
+	
 	/// Character set containing the invalid characters for file names.
 	static var invalidFileNameCharacters = CharacterSet(charactersIn: "\\/:*?\"<>|").union(.newlines).union(.illegalCharacters).union(.controlCharacters)
 }
