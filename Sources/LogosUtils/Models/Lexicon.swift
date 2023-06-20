@@ -111,6 +111,11 @@ public class Lexicon: LinguisticDatabaseManager {
 		public var name: String
 		public var language: Language
 		
+		public init(name: String, language: Language) {
+			self.name = name
+			self.language = language
+		}
+		
 		static let nameColumn = Column(CodingKeys.name)
 		static let languageColumn = Column(CodingKeys.language)
 		
