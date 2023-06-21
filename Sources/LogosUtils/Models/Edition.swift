@@ -77,7 +77,7 @@ public class Edition: LinguisticDatabaseManager {
 		public var name: String
 		public var language: Language
 		
-		init(name: String, language: Language) {
+		public init(name: String, language: Language) {
 			self.name = name
 			self.language = language
 		}
