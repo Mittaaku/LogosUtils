@@ -28,7 +28,7 @@ public extension BibleIndex {
 	
 	/// Initializes a Bible index with the given interger.
 	/// - Parameter i: The interger of the index.
-	init(_ i: Int) throws {
+	init(_ i: Int) {
 		self.init(rawValue: i)
 	}
 	
