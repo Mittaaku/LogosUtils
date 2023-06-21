@@ -26,6 +26,12 @@ public extension BibleIndex {
 		self.init(rawValue: rawValue)
 	}
 	
+	/// Initializes a Bible index with the given interger.
+	/// - Parameter i: The interger of the index.
+	init(_ i: Int) throws {
+		self.init(rawValue: i)
+	}
+	
 	/// Encodes the Bible index using the given encoder.
 	/// - Parameter encoder: The encoder to use for encoding the index.
 	/// - Throws: An error if the encoding process fails.
