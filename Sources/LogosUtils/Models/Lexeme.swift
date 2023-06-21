@@ -12,19 +12,19 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	// MARK: - Properties
 	
-	/// The unique identifier of the lexeme.
-	public var id: Int?
+	/// The unique identifier of the lexeme in the database.
+	public internal(set) var id: String?
 	
 	/// The textual representation of the lexeme, also known as the lemma.
 	public var lexicalForm: String
 	
-	/// The concordance ID of the lexeme.
+	/// The concordance ID of the lexeme, if any.
 	public var concordanceID: String?
 	
-	/// The gloss or brief explanation of the lexeme.
+	/// The gloss or brief explanation of the lexeme, if any.
 	public var gloss: String?
 	
-	/// The detailed definition of the lexeme.
+	/// The detailed definition of the lexeme, if any.
 	public var definition: String?
 	
 	/// The morphologies or grammatical features associated with the lexeme's different word forms.

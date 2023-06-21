@@ -86,6 +86,43 @@ public class Lexicon: LinguisticDatabaseManager {
 		return result
 	}
 	
+	/// Inserts the specified linguistic units into the database using a bulk insert approach.
+	///
+	/// - Parameter linguisticUnits: An array of linguistic units to insert.
+	/// - Returns: A Boolean value indicating whether the insertion was successful for all linguistic units.
+	@discardableResult public func insert(_ lexemes: Lexeme ...) -> Bool {
+		var count = 0
+		do {
+			try databaseQueue.writeWithoutTransaction { database in
+				try database.inTransaction {
+					for lexeme in lexemes {
+						var uniqueID = person.id
+						var counter = 1
+						while try Person.fetchOne(db, key: uniqueID) != nil {
+							uniqueID = "\(person.id)-\(counter)"
+							counter += 1
+						}
+						person.id = uniqueID
+						try person.insert(db)
+						
+						guard let validated = unit.validated() else {
+							print("Attempted to insert an invalid linguistic unit.")
+							continue
+						}
+						try validated.insert(database, onConflict: .replace)
+						count += 1
+					}
+					return .commit
+				}
+			}
+		} catch {
+			print("Error inserting \(LinguisticUnitType.self): \(error)")
+		}
+		
+		// Return true if all the linguistic units were successfully added
+		return count == linguisticUnits.count
+	}
+	
 	/// Searches for lexemes in the lexicon's database based on a partial match in the searchMatchingString column.
 	///
 	/// - Parameter searchTerm: The search term to match.
