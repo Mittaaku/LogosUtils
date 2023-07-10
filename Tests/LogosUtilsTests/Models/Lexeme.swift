@@ -35,8 +35,8 @@ class LexemeTests: XCTestCase {
 		var lexeme = Lexeme(lexicalForm: "apple")
 		lexeme.alternativeForms = ["fruit"]
 		lexeme.gloss = "A round fruit"
-		
-		let validatedLexeme = lexeme.validated()
+	
+		let validatedLexeme = lexeme.makeValidated(withID: "apple")
 		
 		XCTAssertNotNil(validatedLexeme)
 		XCTAssertEqual(validatedLexeme?.searchableStrings, ["apple", "A round fruit", "fruit"])

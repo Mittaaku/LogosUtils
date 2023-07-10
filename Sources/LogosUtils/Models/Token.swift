@@ -32,6 +32,17 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	/// The translation of the token.
 	public var translation: String? = nil
 	
+	// MARK: - Init
+	
+	public init(reference: TokenReference, relatedReference: TokenReference? = nil, surfaceForm: String, lexicalID: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
+		self.reference = reference
+		self.relatedReference = relatedReference
+		self.surfaceForm = surfaceForm
+		self.lexicalID = lexicalID
+		self.morphologies = morphologies
+		self.translation = translation
+	}
+	
 	// MARK: - Computed Properties
 	
 	/// A textual description of the token.
@@ -68,7 +79,7 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	/// Validates the token and returns a validated instance.
 	///
 	/// - Returns: A validated and updated `Token` instance if the validation passes, otherwise `nil`.
-	public func validated() -> Token? {
+	public func makeValidated() -> Token? {
 		return self
 	}
 	

@@ -90,22 +90,29 @@ public class Lexicon: LinguisticDatabaseManager {
 	///
 	/// - Parameter linguisticUnits: An array of linguistic units to insert.
 	/// - Returns: A Boolean value indicating whether the insertion was successful for all linguistic units.
-	@discardableResult public func insert(_ lexemes: Lexeme ...) -> Bool {
+	@discardableResult public func insert(_ lexemes: [Lexeme]) -> Bool {
 		var count = 0
 		do {
 			try databaseQueue.writeWithoutTransaction { database in
 				try database.inTransaction {
 					for lexeme in lexemes {
-						var uniqueID = person.id
-						var counter = 1
-						while try Person.fetchOne(db, key: uniqueID) != nil {
-							uniqueID = "\(person.id)-\(counter)"
-							counter += 1
+						// Make unique ID
+						let id: String
+						if let concordanceID = lexeme.concordanceID {
+							id = concordanceID
+						} else {
+							let prefix = lexeme.lexicalForm
+							var uniqueID = prefix
+							var counter = 1
+							while try Lexeme.fetchOne(database, key: uniqueID) != nil {
+								uniqueID = "\(prefix)-\(counter)"
+								counter += 1
+							}
+							id = uniqueID
 						}
-						person.id = uniqueID
-						try person.insert(db)
 						
-						guard let validated = unit.validated() else {
+						// Validate and insert
+						guard let validated = lexeme.makeValidated(withID: id) else {
 							print("Attempted to insert an invalid linguistic unit.")
 							continue
 						}
@@ -120,8 +127,10 @@ public class Lexicon: LinguisticDatabaseManager {
 		}
 		
 		// Return true if all the linguistic units were successfully added
-		return count == linguisticUnits.count
+		return count == lexemes.count
 	}
+	
+	
 	
 	/// Searches for lexemes in the lexicon's database based on a partial match in the searchMatchingString column.
 	///
