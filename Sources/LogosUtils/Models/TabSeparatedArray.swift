@@ -18,6 +18,7 @@ public struct TabSeparatedArray: Codable {
 		}
 	}
 	
+	
 	public var projectedValue: String {
 		return storage.joined(separator: "\t")
 	}
