@@ -41,7 +41,7 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 		self.lexicalID = lexicalID
 		self.morphologies = morphologies
 		self.translation = translation
-	} 
+	}
 	
 	// MARK: - Computed Properties
 	
