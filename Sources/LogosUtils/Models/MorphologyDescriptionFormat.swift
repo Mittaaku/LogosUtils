@@ -18,5 +18,8 @@ public enum MorphologyDescriptionFormat {
 		case .commaDelineatedAbbreviation, .commaDelineatedFullName:
 			return ", "
 		}
+		
 	}
 }
+
+
