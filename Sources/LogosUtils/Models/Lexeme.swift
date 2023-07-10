@@ -86,7 +86,7 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	/// Validates the lexeme and returns one with updated properties.
 	///
 	/// - Returns: A validated and updated `Lexeme` instance if the validation passes, otherwise `nil`.
-	public func validated() -> Lexeme? {
+	public func makeValidated(withID id: String) -> Lexeme? {
 		guard !lexicalForm.isBlank else {
 			return nil
 		}
@@ -94,6 +94,7 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 		result.searchableStrings.append(lexicalForm)
 		result.searchableStrings.append(gloss ?? "")
 		result.searchableStrings.append(contentsOf: alternativeForms)
+		result.id = id
 		return result
 	}
 	
@@ -111,8 +112,8 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	public static func setupTable(inDatabase database: Database) throws {
 		try database.create(table: databaseTableName) { table in
-			table.autoIncrementedPrimaryKey(idColumn.name)
-			table.column(lexicalFormColumn.name, .text).notNull().unique() // Enforce uniqueness on "lexicalForm" column
+			table.primaryKey(idColumn.name, .text)
+			table.column(lexicalFormColumn.name, .text).notNull()
 			table.column(concordanceIDColumn.name, .text)
 			table.column(glossColumn.name, .text)
 			table.column(definitionColumn.name, .text)

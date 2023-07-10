@@ -177,35 +177,6 @@ extension LinguisticDatabaseManager {
 		return fetchedProperty
 	}
 	
-	/// Inserts the specified linguistic units into the database using a bulk insert approach.
-	///
-	/// - Parameter linguisticUnits: An array of linguistic units to insert.
-	/// - Returns: A Boolean value indicating whether the insertion was successful for all linguistic units.
-	@discardableResult public func insert(_ linguisticUnits: [LinguisticUnitType]) -> Bool {
-		var count = 0
-		do {
-			try databaseQueue.writeWithoutTransaction { database in
-				try database.inTransaction {
-					for unit in linguisticUnits {
-						guard let validated = unit.validated() else {
-							print("Attempted to insert an invalid linguistic unit.")
-							continue
-						}
-						try validated.insert(database, onConflict: .replace)
-						count += 1
-					}
-					return .commit
-				}
-			}
-		} catch {
-			print("Error inserting \(LinguisticUnitType.self): \(error)")
-		}
-		
-		// Return true if all the linguistic units were successfully added
-		return count == linguisticUnits.count
-	}
-
-	
 	// MARK: - Static Members
 	
 	/// Creates the path for a linguistic database with the specified name and folder URL.

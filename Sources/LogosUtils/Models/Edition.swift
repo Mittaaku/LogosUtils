@@ -71,6 +71,34 @@ public class Edition: LinguisticDatabaseManager {
 		return fetchAll(usingQuery: query, arguments: [range.lowerBound, range.upperBound.next])
 	}
 	
+	/// Inserts the specified token into the database using a bulk insert approach.
+	///
+	/// - Parameter tokens: An array of tokens to insert.
+	/// - Returns: A Boolean value indicating whether the insertion was successful for all tokens.
+	@discardableResult public func insert(_ tokens: [Token]) -> Bool {
+		var count = 0
+		do {
+			try databaseQueue.writeWithoutTransaction { database in
+				try database.inTransaction {
+					for token in tokens {
+						guard let validated = token.makeValidated() else {
+							print("Attempted to insert an invalid token.")
+							continue
+						}
+						try validated.insert(database, onConflict: .replace)
+						count += 1
+					}
+					return .commit
+				}
+			}
+		} catch {
+			print("Error inserting \(LinguisticUnitType.self): \(error)")
+		}
+		
+		// Return true if all the linguistic units were successfully added
+		return count == tokens.count
+	}
+	
 	// MARK: - Nested Types
 	
 	public struct Properties: LinguisticDatabaseProperties {
