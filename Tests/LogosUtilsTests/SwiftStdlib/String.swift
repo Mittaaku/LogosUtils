@@ -50,6 +50,17 @@ final class StringExtensionsTests: XCTestCase {
 		XCTAssertFalse("Γειά σας".consistsOfLatinWithWhitespace)
 	}
 	
+	func testConsistsOfPunctuation() {
+		XCTAssertTrue("..;?".consistsOfPunctuation)
+		XCTAssertFalse("Γειά σας".consistsOfPunctuation)
+		XCTAssertFalse("".consistsOfPunctuation)
+	}
+	
+	func testConsistsOfPunctuationWithWhitespace() {
+		XCTAssertTrue("Hello".consistsOfLatinWithWhitespace)
+		XCTAssertFalse("Γειά σας".consistsOfLatinWithWhitespace)
+	}
+	
 	func testConsistsOfHebrew() {
 		XCTAssertTrue("שלום".consistsOfHebrew)
 		XCTAssertFalse("Hello".consistsOfHebrew)

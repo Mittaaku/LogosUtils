@@ -66,6 +66,7 @@ public extension String {
 	private static let hebrewWithWhitespaceRegex = try! NSRegularExpression(pattern: #"^[\s\p{script=Hebrew}]+$"#)
 	private static let latinRegex = try! NSRegularExpression(pattern: #"^\p{script=Latin}+$"#)
 	private static let latinWithWhitespaceRegex = try! NSRegularExpression(pattern: #"^[\s\p{script=Latin}]+$"#)
+	private static let punctuationRegex = try! NSRegularExpression(pattern: #"^[\p{Punctuation}]+$"#)
 	private static let whitespaceRegex = try! NSRegularExpression(pattern: #"^\s+$"#)
 	
 	/// Returns a Boolean value indicating whether the string is in camelCase format.
@@ -106,6 +107,11 @@ public extension String {
 	/// Returns a Boolean value indicating whether the string consists only of Latin characters and whitespace.
 	var consistsOfLatinWithWhitespace: Bool {
 		return Self.latinWithWhitespaceRegex ~= self
+	}
+	
+	/// Returns a Boolean value indicating whether the string consists only of punctuation characters.
+	var consistsOfPunctuation: Bool {
+		return Self.punctuationRegex ~= self
 	}
 	
 	/// Returns a Boolean value indicating whether the string consists only of whitespace characters.

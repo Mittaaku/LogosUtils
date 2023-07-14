@@ -55,6 +55,11 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 		return reference
 	}
 	
+	/// Checks whether the token is a punctuation token.
+	public var isPunctuation: Bool {
+		return morphologies?.first?.punctuation != nil || surfaceForm.consistsOfPunctuation
+	}
+	
 	// MARK: - Methods
 	
 	/// Describes the morphologies of the token using the specified format.
