@@ -86,10 +86,10 @@ public class Lexicon: LinguisticDatabaseManager {
 		return result
 	}
 	
-	/// Inserts the specified linguistic units into the database using a bulk insert approach.
+	/// Inserts the provided lexemes into the database using a bulk insert approach.
 	///
-	/// - Parameter linguisticUnits: An array of linguistic units to insert.
-	/// - Returns: A Boolean value indicating whether the insertion was successful for all linguistic units.
+	/// - Parameter lexemes: An array of lexemes to insert.
+	/// - Returns: A Boolean value indicating whether the insertion was successful for all lexemes.
 	@discardableResult public func insert(_ lexemes: [Lexeme]) -> Bool {
 		var count = 0
 		do {
@@ -113,7 +113,7 @@ public class Lexicon: LinguisticDatabaseManager {
 						
 						// Validate and insert
 						guard let validated = lexeme.makeValidated(withID: id) else {
-							print("Attempted to insert an invalid linguistic unit.")
+							print("Attempted to insert an invalid lexeme.")
 							continue
 						}
 						try validated.insert(database, onConflict: .replace)

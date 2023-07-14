@@ -67,10 +67,6 @@ public protocol BibleReferenceContainer: Equatable, Comparable, Codable, Hashabl
 }
 
 public extension BibleReferenceContainer {
-	/// Initializes a Bible reference container with a raw value of zero.
-	init() {
-		self.init(rawValue: 0)
-	}
 	
 	// MARK: - Coding
 	
@@ -184,6 +180,11 @@ public extension BibleReferenceContainer {
 		default:
 			return .identical
 		}
+	}
+	
+	// A reference that is invalid because each index is 0.
+	static var invalid: Self {
+		return .init(rawValue: 0)
 	}
 }
 

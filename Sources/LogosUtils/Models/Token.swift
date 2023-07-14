@@ -18,23 +18,23 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	public var reference: TokenReference
 	
 	/// The related reference to another token.
-	public var relatedReference: TokenReference? = nil
+	public var relatedReference: TokenReference?
 	
 	/// The surface form of the token.
 	public var surfaceForm: String
 	
 	/// The lexical ID of the token.
-	public var lexicalID: String? = nil
+	public var lexicalID: String?
 	
 	/// The morphologies associated with the token.
-	public var morphologies: [Morphology]? = nil
+	public var morphologies: [Morphology]?
 	
 	/// The translation of the token.
-	public var translation: String? = nil
+	public var translation: String?
 	
 	// MARK: - Init
 	
-	public init(reference: TokenReference, relatedReference: TokenReference? = nil, surfaceForm: String, lexicalID: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
+	public init(reference: TokenReference = .invalid, relatedReference: TokenReference? = nil, surfaceForm: String = "", lexicalID: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
 		self.reference = reference
 		self.relatedReference = relatedReference
 		self.surfaceForm = surfaceForm
@@ -80,6 +80,9 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	///
 	/// - Returns: A validated and updated `Token` instance if the validation passes, otherwise `nil`.
 	public func makeValidated() -> Token? {
+		guard reference.isValid, !surfaceForm.isBlank else {
+			return nil
+		}
 		return self
 	}
 	

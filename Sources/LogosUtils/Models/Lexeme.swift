@@ -28,20 +28,20 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	public var definition: String?
 	
 	/// The morphologies or grammatical features associated with the lexeme's different word forms.
-	public var wordFormMorphologies = [Morphology]()
+	public var wordFormMorphologies: [Morphology]
 	
 	/// The lexical IDs of the other lexemes which are combined to form this lexeme.
-	public var crasisLexicalIDs = [Int]()
+	public var crasisLexicalIDs: [Int]
 	
 	/// The alternative forms of this lexeme.
-	@TabSeparatedArray public var alternativeForms = [String]()
+	@TabSeparatedArray public var alternativeForms: [String]
 	
 	/// The string used for searching and matching the lexeme.
 	@TabSeparatedArray public private(set) var searchableStrings = [String]()
 	
 	// MARK: - Init
 	
-	public init(lexicalForm: String, concordanceID: String? = nil, gloss: String? = nil, definition: String? = nil, wordFormMorphologies: [Morphology] = [], crasisLexicalIDs: [Int] = [], alternativeForms: [String] = []) {
+	public init(lexicalForm: String = "", concordanceID: String? = nil, gloss: String? = nil, definition: String? = nil, wordFormMorphologies: [Morphology] = [], crasisLexicalIDs: [Int] = [], alternativeForms: [String] = []) {
 		self.lexicalForm = lexicalForm
 		self.concordanceID = concordanceID
 		self.gloss = gloss
