@@ -26,9 +26,6 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	/// The lexical ID of the token.
 	public var lexicalID: String?
 	
-	/// The lexical form of the token.
-	public var lexicalForm: String?
-	
 	/// The morphologies associated with the token.
 	public var morphologies: [Morphology]?
 	
@@ -37,12 +34,11 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	
 	// MARK: - Init
 	
-	public init(reference: TokenReference = .invalid, relatedReference: TokenReference? = nil, surfaceForm: String = "", lexicalID: String? = nil, lexicalForm: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
+	public init(reference: TokenReference = .invalid, relatedReference: TokenReference? = nil, surfaceForm: String = "", lexicalID: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
 		self.reference = reference
 		self.relatedReference = relatedReference
 		self.surfaceForm = surfaceForm
 		self.lexicalID = lexicalID
-		self.lexicalForm = lexicalForm
 		self.morphologies = morphologies
 		self.translation = translation
 	}
