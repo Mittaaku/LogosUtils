@@ -37,11 +37,12 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	
 	// MARK: - Init
 	
-	public init(reference: TokenReference = .invalid, relatedReference: TokenReference? = nil, surfaceForm: String = "", lexicalID: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
+	public init(reference: TokenReference = .invalid, relatedReference: TokenReference? = nil, surfaceForm: String = "", lexicalID: String? = nil, lexicalForm: String? = nil, morphologies: [Morphology]? = nil, translation: String? = nil) {
 		self.reference = reference
 		self.relatedReference = relatedReference
 		self.surfaceForm = surfaceForm
 		self.lexicalID = lexicalID
+		self.lexicalForm = lexicalForm
 		self.morphologies = morphologies
 		self.translation = translation
 	}
@@ -100,6 +101,7 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	public static let relatedReferenceColumnName = "relatedReference"
 	public static let surfaceFormColumnName = "surfaceForm"
 	public static let lexicalIDColumnName = "lexicalID"
+	public static let lexicalFormColumnName = "lexicalForm"
 	public static let morphologiesColumnName = "morphologies"
 	public static let translationColumnName = "translation"
 	
@@ -109,6 +111,7 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 			table.column(relatedReferenceColumnName, .integer)
 			table.column(surfaceFormColumnName, .text).notNull()
 			table.column(lexicalIDColumnName, .text)
+			table.column(lexicalFormColumnName, .text)
 			table.column(morphologiesColumnName, .blob)
 			table.column(translationColumnName, .text)
 		}
