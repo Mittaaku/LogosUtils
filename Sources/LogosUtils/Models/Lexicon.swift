@@ -43,20 +43,20 @@ public class Lexicon: LinguisticDatabaseManager {
 	
 	// MARK: - Database Operations
 	
-	/// Fetches a lexeme from the lexicon's database by primary lexical form
+	/// Fetches lexemes from the lexicon's database by primary lexical form
 	///
 	/// - Parameter form: The form to search for.
 	/// - Returns: The fetched lexeme, or `nil` if no lexeme is found.
-	public func fetchOne(withLexicalForm form: String) -> Lexeme? {
-		var result: Lexeme? = nil
+	public func fetchAll(withLexicalForm form: String) -> [Lexeme] {
+		var result: [Lexeme] = []
 		do {
 			try databaseQueue.read { database in
 				result = try Lexeme
 					.filter(Lexeme.lexicalFormColumn == form)
-					.fetchOne(database)
+					.fetchAll(database)
 			}
 		} catch {
-			print("Error fetching lexeme by lexical form: \(error)")
+			print("Error fetching lexemes by lexical form: \(error)")
 		}
 		return result
 	}
