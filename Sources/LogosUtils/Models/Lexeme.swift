@@ -28,7 +28,7 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	public var wordFormMorphologies: [Morphology]
 	
 	/// The lexical IDs of the other lexemes which are combined to form this lexeme.
-	public var crasisLexicalIDs: [Int]
+	public var crasisLexicalIDs: [String]
 	
 	/// The alternative forms of this lexeme.
 	@TabSeparatedArray public var alternativeForms: [String]
