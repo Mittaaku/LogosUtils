@@ -266,4 +266,36 @@ final class StringExtensionsTests: XCTestCase {
 		let emptyString = ""
 		XCTAssertEqual(emptyString.strippingDiacritics, emptyString)
 	}
+	
+	func testCamelCaseConversion() {
+		// Test case 1: All lowercase words
+		let input1 = "hello world example"
+		let expectedOutput1 = "helloWorldExample"
+		XCTAssertEqual(input1.camelcased(), expectedOutput1)
+		
+		// Test case 2: Mixed case words
+		let input2 = "hello_World_Example"
+		let expectedOutput2 = "helloWorldExample"
+		XCTAssertEqual(input2.camelcased(), expectedOutput2)
+		
+		// Test case 3: All uppercase words
+		let input3 = "HELLO_WORLD_EXAMPLE"
+		let expectedOutput3 = "helloWorldExample"
+		XCTAssertEqual(input3.camelcased(), expectedOutput3)
+		
+		// Test case 4: Single word
+		let input4 = "hello"
+		let expectedOutput4 = "hello"
+		XCTAssertEqual(input4.camelcased(), expectedOutput4)
+		
+		// Test case 5: Empty string
+		let input5 = ""
+		let expectedOutput5 = ""
+		XCTAssertEqual(input5.camelcased(), expectedOutput5)
+		
+		// Test case 6: Mixed alphanumerical words
+		let input6 = "HE11O_1ST_W0R1D_EXAMP1E"
+		let expectedOutput6 = "he11o1stW0r1dExamp1e"
+		XCTAssertEqual(input3.camelcased(), expectedOutput3)
+	}
 }

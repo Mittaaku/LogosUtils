@@ -11,13 +11,37 @@ class BibleIndexTests: XCTestCase {
 	// MARK: - BookIndex Tests
 	
 	func testBookIndexCreation() {
-		let bookIndex = BookIndex(rawValue: 5)
-		XCTAssertEqual(bookIndex.rawValue, 5)
+		let bookIndex = BookIndex(1)
+		XCTAssertEqual(bookIndex.rawValue, 1)
+		XCTAssertEqual(bookIndex.description, "1")
+		
+		let bookIndexFromName1 = BookIndex(englishName: "Genesis")
+		XCTAssertEqual(bookIndexFromName1?.rawValue, 1)
+		
+		let bookIndexFromName2 = BookIndex(englishName: "2 Cor")
+		XCTAssertEqual(bookIndexFromName2?.rawValue, 47)
+		
+		let bookIndexFromName3 = BookIndex(englishName: "firstKings")
+		XCTAssertEqual(bookIndexFromName3?.rawValue, 11)
+		
+		let invalidBookIndexFromName = BookIndex(englishName: "Invalid")
+		XCTAssertNil(invalidBookIndexFromName)
 	}
 	
 	func testBookIndexIntegerLiteralCreation() {
 		let bookIndex: BookIndex = 10
 		XCTAssertEqual(bookIndex.rawValue, 10)
+	}
+	
+	func testBookIndexArithmetic() {
+		let bookIndex1 = BookIndex(1)
+		let bookIndex2 = BookIndex(2)
+		
+		let sum = bookIndex1 + bookIndex2
+		XCTAssertEqual(sum.rawValue, 3)
+		
+		let diff = bookIndex2 - bookIndex1
+		XCTAssertEqual(diff.rawValue, 1)
 	}
 	
 	func testBibleIndexFromDecoder() throws {
@@ -76,6 +100,17 @@ class BibleIndexTests: XCTestCase {
 		XCTAssertEqual(chapterIndex.rawValue, 3)
 	}
 	
+	func testChapterIndexArithmetic() {
+		let chapterIndex1 = ChapterIndex(1)
+		let chapterIndex2 = ChapterIndex(2)
+		
+		let sum = chapterIndex1 + chapterIndex2
+		XCTAssertEqual(sum.rawValue, 3)
+		
+		let diff = chapterIndex2 - chapterIndex1
+		XCTAssertEqual(diff.rawValue, 1)
+	}
+	
 	// MARK: - VerseIndex Tests
 	
 	func testVerseIndexCreation() {
@@ -88,6 +123,17 @@ class BibleIndexTests: XCTestCase {
 		XCTAssertEqual(verseIndex.rawValue, 15)
 	}
 	
+	func testVerseIndexArithmetic() {
+		let verseIndex1 = VerseIndex(1)
+		let verseIndex2 = VerseIndex(2)
+		
+		let sum = verseIndex1 + verseIndex2
+		XCTAssertEqual(sum.rawValue, 3)
+		
+		let diff = verseIndex2 - verseIndex1
+		XCTAssertEqual(diff.rawValue, 1)
+	}
+	
 	// MARK: - TokenIndex Tests
 	
 	func testTokenIndexCreation() {
@@ -98,5 +144,16 @@ class BibleIndexTests: XCTestCase {
 	func testTokenIndexIntegerLiteralCreation() {
 		let tokenIndex: TokenIndex = 200
 		XCTAssertEqual(tokenIndex.rawValue, 200)
+	}
+	
+	func testTokenIndexArithmetic() {
+		let tokenIndex1 = TokenIndex(1)
+		let tokenIndex2 = TokenIndex(2)
+		
+		let sum = tokenIndex1 + tokenIndex2
+		XCTAssertEqual(sum.rawValue, 3)
+		
+		let diff = tokenIndex2 - tokenIndex1
+		XCTAssertEqual(diff.rawValue, 1)
 	}
 }

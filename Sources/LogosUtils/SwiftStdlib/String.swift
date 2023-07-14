@@ -136,6 +136,30 @@ public extension String {
 			.capitalized // If input is in llamaCase
 	}
 	
+	/// Converts a string to camel case.
+	///
+	/// - Returns: The camel case representation of the string.
+	func camelcased() -> String {
+		guard !isEmpty else {
+			return self
+		}
+		
+		// Split the string into individual words
+		let words = self.components(separatedBy: CharacterSet.alphanumerics.inverted)
+		
+		// Capitalize each word
+		let capitalizedWords = words.map { $0.capitalized }
+		
+		// Join the capitalized words together
+		let joinedString = capitalizedWords.joined()
+		
+		// Make the first character lowercase
+		let firstCharacterIndex = index(startIndex, offsetBy: 1)
+		let camelCaseString = joinedString.replacingCharacters(in: startIndex..<firstCharacterIndex, with: String(self[startIndex]).lowercased())
+		
+		return camelCaseString
+	}
+	
 	/// Converts HTML to Markdown.
 	var htmlToMarkdown: String {
 		var markdown = self

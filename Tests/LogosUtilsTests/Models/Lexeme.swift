@@ -19,7 +19,7 @@ class LexemeTests: XCTestCase {
 		
 		XCTAssertFalse(lexeme.isCrasis)
 		
-		lexeme.crasisLexicalIDs = [1, 2, 3]
+		lexeme.crasisLexicalIDs = ["1", "2", "3"]
 		
 		XCTAssertTrue(lexeme.isCrasis)
 	}
