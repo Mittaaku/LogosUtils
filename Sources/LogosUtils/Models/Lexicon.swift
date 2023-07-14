@@ -95,28 +95,28 @@ public class Lexicon: LinguisticDatabaseManager {
 		do {
 			try databaseQueue.writeWithoutTransaction { database in
 				try database.inTransaction {
-					for lexeme in lexemes {
-						// Make unique ID
-						let id: String
-						if let concordanceID = lexeme.concordanceID {
-							id = concordanceID
+					// Validate Lexemes and make unique lexicalIDs
+					let validLexemes: [Lexeme] = try lexemes.compactMap {
+						guard var validLexeme = $0.makeValidated() else {
+							return nil
+						}
+						if let lexicalID = validLexeme.lexicalID.nonBlank {
+							validLexeme.lexicalID = lexicalID
 						} else {
-							let prefix = lexeme.lexicalForm
-							var uniqueID = prefix
+							var uniqueID = validLexeme.lexicalForm
 							var counter = 1
 							while try Lexeme.fetchOne(database, key: uniqueID) != nil {
-								uniqueID = "\(prefix)-\(counter)"
+								uniqueID = "\(validLexeme.lexicalForm)-\(counter)"
 								counter += 1
 							}
-							id = uniqueID
+							validLexeme.lexicalID = uniqueID
 						}
-						
-						// Validate and insert
-						guard let validated = lexeme.makeValidated(withID: id) else {
-							print("Attempted to insert an invalid lexeme.")
-							continue
-						}
-						try validated.insert(database, onConflict: .replace)
+						return validLexeme
+					}
+					
+					// Insert Lexemes
+					for lexeme in validLexemes {
+						try lexeme.insert(database, onConflict: .replace)
 						count += 1
 					}
 					return .commit
@@ -129,8 +129,6 @@ public class Lexicon: LinguisticDatabaseManager {
 		// Return true if all the linguistic units were successfully added
 		return count == lexemes.count
 	}
-	
-	
 	
 	/// Searches for lexemes in the lexicon's database based on a partial match in the searchMatchingString column.
 	///

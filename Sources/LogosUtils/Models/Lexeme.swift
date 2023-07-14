@@ -12,20 +12,17 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	// MARK: - Properties
 	
-	/// The unique identifier of the lexeme in the database.
-	public internal(set) var id: String?
+	/// The unique identifier of the lexeme in the database, which will be the Strongs Number in Biblical Hebrew and Koine Greek lexemes.
+	public var lexicalID: String
 	
 	/// The textual representation of the lexeme, also known as the lemma.
 	public var lexicalForm: String
 	
-	/// The concordance ID of the lexeme, if any.
-	public var concordanceID: String?
-	
 	/// The gloss or brief explanation of the lexeme, if any.
-	public var gloss: String?
+	public var gloss: String
 	
 	/// The detailed definition of the lexeme, if any.
-	public var definition: String?
+	public var definition: String
 	
 	/// The morphologies or grammatical features associated with the lexeme's different word forms.
 	public var wordFormMorphologies: [Morphology]
@@ -41,9 +38,9 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	// MARK: - Init
 	
-	public init(lexicalForm: String = "", concordanceID: String? = nil, gloss: String? = nil, definition: String? = nil, wordFormMorphologies: [Morphology] = [], crasisLexicalIDs: [Int] = [], alternativeForms: [String] = []) {
+	public init(lexicalID: String = "", lexicalForm: String = "", gloss: String = "", definition: String = "", wordFormMorphologies: [Morphology] = [], crasisLexicalIDs: [Int] = [], alternativeForms: [String] = []) {
+		self.lexicalID = lexicalID
 		self.lexicalForm = lexicalForm
-		self.concordanceID = concordanceID
 		self.gloss = gloss
 		self.definition = definition
 		self.wordFormMorphologies = wordFormMorphologies
@@ -56,6 +53,11 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	/// A textual description of the lexeme.
 	public var description: String {
 		return "(Lexeme: \(lexicalForm))"
+	}
+	
+	/// The unique identifier of the lexeme in the database, which will be the Strongs Number in Biblical Hebrew and Koine Greek lexemes. This property is an alias for the original property `lexicalID`.
+	public var id: String {
+		return lexicalID
 	}
 	
 	/// Checks if the lexeme is a compound word.
@@ -86,23 +88,23 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	/// Validates the lexeme and returns one with updated properties.
 	///
 	/// - Returns: A validated and updated `Lexeme` instance if the validation passes, otherwise `nil`.
-	public func makeValidated(withID id: String) -> Lexeme? {
+	public func makeValidated() -> Lexeme? {
 		guard !lexicalForm.isBlank else {
 			return nil
 		}
 		var result = self
 		result.searchableStrings.append(lexicalForm)
-		result.searchableStrings.append(gloss ?? "")
+		if !gloss.isBlank {
+			result.searchableStrings.append(gloss)
+		}
 		result.searchableStrings.append(contentsOf: alternativeForms)
-		result.id = id
 		return result
 	}
 	
 	// MARK: - Static Members and Custom Operators
 	
-	public static let idColumn = Column(CodingKeys.id)
+	public static let lexicalIDColumn = Column(CodingKeys.lexicalID)
 	public static let lexicalFormColumn = Column(CodingKeys.lexicalForm)
-	public static let concordanceIDColumn = Column(CodingKeys.concordanceID)
 	public static let glossColumn = Column(CodingKeys.gloss)
 	public static let definitionColumn = Column(CodingKeys.definition)
 	public static let wordFormMorphologiesColumn = Column(CodingKeys.wordFormMorphologies)
@@ -112,11 +114,10 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	
 	public static func setupTable(inDatabase database: Database) throws {
 		try database.create(table: databaseTableName) { table in
-			table.primaryKey(idColumn.name, .text)
+			table.primaryKey(lexicalIDColumn.name, .text).notNull()
 			table.column(lexicalFormColumn.name, .text).notNull()
-			table.column(concordanceIDColumn.name, .text)
-			table.column(glossColumn.name, .text)
-			table.column(definitionColumn.name, .text)
+			table.column(glossColumn.name, .text).notNull()
+			table.column(definitionColumn.name, .text).notNull()
 			table.column(wordFormMorphologiesColumn.name, .blob)
 			table.column(crasisLexicalIDsColumn.name, .blob)
 			table.column(searchableStringsColumn.name, .text).notNull()
@@ -131,6 +132,6 @@ public struct Lexeme: LinguisticUnit, Equatable, Hashable, CustomStringConvertib
 	///     - rhs: The right-hand side lexeme.
 	/// - Returns: `true` if the lexemes have the same identifier, otherwise `false`.
 	public static func == (lhs: Lexeme, rhs: Lexeme) -> Bool {
-		lhs.id == rhs.id
+		lhs.lexicalID == rhs.lexicalID
 	}
 }

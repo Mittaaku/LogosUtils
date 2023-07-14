@@ -16,16 +16,16 @@ class LexiconTests: XCTestCase {
 	)
 	let invalidLexeme = Lexeme(lexicalForm: "")
 	let batLexeme = Lexeme(
+		lexicalID: "1",
 		lexicalForm: "bat",
-		concordanceID: "1",
 		gloss: "A small flying mammal",
 		definition: "A nocturnal mammal capable of sustained flight",
 		wordFormMorphologies: [],
 		crasisLexicalIDs: []
 	)
 	let catLexeme = Lexeme(
+		lexicalID: "2",
 		lexicalForm: "cat",
-		concordanceID: "2",
 		gloss: "A small domesticated carnivorous mammal",
 		definition: "A small four-legged animal often kept as a pet",
 		wordFormMorphologies: [],
@@ -33,8 +33,8 @@ class LexiconTests: XCTestCase {
 		alternativeForms: ["kitten"]
 	)
 	let dogLexeme = Lexeme(
+		lexicalID: "3",
 		lexicalForm: "dog",
-		concordanceID: "3",
 		gloss: "A domesticated carnivorous mammal",
 		definition: "A mammal often kept as a pet or used for guarding or hunting",
 		wordFormMorphologies: [],
