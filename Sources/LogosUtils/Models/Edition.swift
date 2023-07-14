@@ -39,7 +39,7 @@ public class Edition: LinguisticDatabaseManager {
 	///
 	/// - Parameter ref: The reference.
 	/// - Returns: The token found at the specific reference, if any.
-	public func fetchToken(atReference ref: TokenReference) -> Token? {
+	public func fetchOne(atReference ref: TokenReference) -> Token? {
 		let query = "SELECT * FROM \(Token.databaseTableName) WHERE \(Token.referenceColumnName) == ?"
 		return fetchOne(usingQuery: query, arguments: [ref])
 	}
@@ -48,7 +48,7 @@ public class Edition: LinguisticDatabaseManager {
 	///
 	/// - Parameter ref: The reference range.
 	/// - Returns: An array of tokens within the reference range.
-	public func fetchTokens(inReference ref: some BibleReferenceContainer) -> [Token] {
+	public func fetchAll(inReference ref: some BibleReferenceContainer) -> [Token] {
 		let query = "SELECT * FROM \(Token.databaseTableName) WHERE \(Token.referenceColumnName) >= ? AND \(Token.referenceColumnName) < ? ORDER BY \(Token.referenceColumnName) ASC"
 		return fetchAll(usingQuery: query, arguments: [ref, ref.next])
 	}
@@ -57,7 +57,7 @@ public class Edition: LinguisticDatabaseManager {
 	///
 	/// - Parameter range: The half-open range of reference values.
 	/// - Returns: An array of tokens within the reference range.
-	public func fetchTokens(inRange range: Range<some BibleReferenceContainer>) -> [Token] {
+	public func fetchAll(inRange range: Range<some BibleReferenceContainer>) -> [Token] {
 		let query = "SELECT * FROM \(Token.databaseTableName) WHERE \(Token.referenceColumnName) >= ? AND \(Token.referenceColumnName) < ? ORDER BY \(Token.referenceColumnName) ASC"
 		return fetchAll(usingQuery: query, arguments: [range.lowerBound, range.upperBound])
 	}
@@ -66,7 +66,7 @@ public class Edition: LinguisticDatabaseManager {
 	///
 	/// - Parameter range: The closed range of reference values.
 	/// - Returns: An array of tokens within the reference range.
-	public func fetchTokens(inRange range: ClosedRange<some BibleReferenceContainer>) -> [Token] {
+	public func fetchAll(inRange range: ClosedRange<some BibleReferenceContainer>) -> [Token] {
 		let query = "SELECT * FROM \(Token.databaseTableName) WHERE \(Token.referenceColumnName) >= ? AND \(Token.referenceColumnName) < ? ORDER BY \(Token.referenceColumnName) ASC"
 		return fetchAll(usingQuery: query, arguments: [range.lowerBound, range.upperBound.next])
 	}

@@ -100,7 +100,7 @@ class LexiconTests: XCTestCase {
 		lexicon.insert([batLexeme, catLexeme, dogLexeme])
 		
 		// Fetch a lexeme by lexical form
-		let fetchedLexeme = lexicon.fetchLexeme(withLexicalForm: "cat")
+		let fetchedLexeme = lexicon.fetchOne(withLexicalForm: "cat")
 		
 		// Assert that the fetched lexeme is not nil
 		XCTAssertNotNil(fetchedLexeme, "Failed to fetch lexeme by lexical form")
@@ -114,7 +114,7 @@ class LexiconTests: XCTestCase {
 		lexicon.insert([catLexeme])
 		
 		// Fetch a lexeme by lexical form
-		let fetchedLexeme = lexicon.fetchLexemes(withAlternativeForm: "kitten").first
+		let fetchedLexeme = lexicon.fetchAll(withAlternativeForm: "kitten").first
 		
 		// Assert that the fetched lexeme is not nil
 		XCTAssertNotNil(fetchedLexeme, "Failed to fetch lexeme by lexical form")

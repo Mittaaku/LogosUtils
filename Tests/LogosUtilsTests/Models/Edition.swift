@@ -48,7 +48,7 @@ class EditionTests: XCTestCase {
 		XCTAssertEqual(edition.count, 4)
 		
 		// Fetch tokens in the reference range
-		let fetchedTokens = edition.fetchTokens(inReference: reference1.verseReference)
+		let fetchedTokens = edition.fetchAll(inReference: reference1.verseReference)
 		
 		// Assert the fetched tokens
 		if fetchedTokens.count == 3 {
@@ -74,7 +74,7 @@ class EditionTests: XCTestCase {
 		
 		// Fetch tokens in the range
 		let range1 = reference1..<reference3
-		let fetchedTokens1 = edition.fetchTokens(inRange: range1)
+		let fetchedTokens1 = edition.fetchAll(inRange: range1)
 		
 		// Assert the fetched tokens
 		XCTAssertEqual(fetchedTokens1.count, 2)
@@ -85,7 +85,7 @@ class EditionTests: XCTestCase {
 		
 		// Fetch tokens in the range
 		let range2 = reference1...reference3
-		let fetchedTokens2 = edition.fetchTokens(inRange: range2)
+		let fetchedTokens2 = edition.fetchAll(inRange: range2)
 		
 		// Assert the fetched tokens
 		XCTAssertEqual(fetchedTokens2.count, 3)

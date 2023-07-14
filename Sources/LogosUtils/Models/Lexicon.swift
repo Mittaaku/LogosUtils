@@ -47,7 +47,7 @@ public class Lexicon: LinguisticDatabaseManager {
 	///
 	/// - Parameter form: The form to search for.
 	/// - Returns: The fetched lexeme, or `nil` if no lexeme is found.
-	public func fetchLexeme(withLexicalForm form: String) -> Lexeme? {
+	public func fetchOne(withLexicalForm form: String) -> Lexeme? {
 		var result: Lexeme? = nil
 		do {
 			try databaseQueue.read { database in
@@ -65,7 +65,7 @@ public class Lexicon: LinguisticDatabaseManager {
 	///
 	/// - Parameter form: The form to search for.
 	/// - Returns: The fetched lexeme, or `nil` if no lexeme is found.
-	public func fetchLexemes(withAlternativeForm form: String) -> [Lexeme] {
+	public func fetchAll(withAlternativeForm form: String) -> [Lexeme] {
 		let searchPattern = "%\(form)%"
 		var result = [Lexeme]()
 		do {
