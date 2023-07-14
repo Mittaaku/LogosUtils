@@ -26,10 +26,13 @@ public struct Token: LinguisticUnit, Hashable, Equatable, CustomStringConvertibl
 	/// The lexical ID of the token.
 	public var lexicalID: String?
 	
+	/// The lexical form of the token.
+	public var lexicalForm: String?
+	
 	/// The morphologies associated with the token.
 	public var morphologies: [Morphology]?
 	
-	/// The translation of the token.
+	/// The English translation of the token.
 	public var translation: String?
 	
 	// MARK: - Init
